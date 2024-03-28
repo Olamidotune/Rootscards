@@ -37,8 +37,10 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+ 
       body: SafeArea(
         child: SingleChildScrollView(
+          
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(30.0),
@@ -85,7 +87,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         const Align(
                           alignment: Alignment.topLeft,
-                          child: Text("Email"),
+                          child: Text("Email",
+                          style:  TextStyle(
+                          color: BLACK,
+                        ),
+                          ),
                         ),
                         SizedBox(
                           height: 0.5.h,
@@ -100,7 +106,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             }
                             return "Please provide a valid email address";
                           },
-                          style: const TextStyle(),
+                          style: const TextStyle(
+                            color: BLACK
+                          ),
                           autofillHints: const [AutofillHints.email],
                           decoration: InputDecoration(
                             prefixIcon:
@@ -211,7 +219,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height / 3,
+                          height: MediaQuery.of(context).size.height * 0.46,
                         ),
                         const Text(
                           "rootcards.com",
@@ -262,7 +270,6 @@ class _SignInScreenState extends State<SignInScreen> {
           debugPrint('Xpub1: $xpub1');
           debugPrint('Xpub2: $xpub2');
 
-          // Save xpub1 and xpub2 to shared preferences
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('xpub1', xpub1);
           await prefs.setString('xpub2', xpub2);
@@ -310,5 +317,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
     }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
   }
 }

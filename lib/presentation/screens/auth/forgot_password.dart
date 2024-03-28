@@ -119,11 +119,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height / 2.2,
+                             height: MediaQuery.of(context).size.height * 0.55,
                         ),
-                        const Text(
-                          "rootcards.com",
-                          style: TextStyle(fontWeight: FontWeight.w600),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context)
+                                .popAndPushNamed(SignInScreen.routeName);
+                          },
+                          child: const Text(
+                            "go home",
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
                         )
                       ],
                     ),
@@ -144,15 +150,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     setState(() => _busy = true);
 
-    // Define your API endpoint for password reset
+ 
     final url = Uri.parse('https://api.idonland.com/user/forgotPassword');
 
-    // Create a basic authentication string by combining username and password
+
     final String basicAuth =
-        'Basic ' + base64Encode(utf8.encode('x-api:$email'));
+        'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
 
     try {
-      // Make a POST request with basic authentication headers
       final response = await http.post(
         url,
         headers: <String, String>{

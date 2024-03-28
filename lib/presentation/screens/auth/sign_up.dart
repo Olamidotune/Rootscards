@@ -9,9 +9,9 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final FocusNode _phoneNumberFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
 
-  bool _obscurePassword = false;
+  bool _obscurePassword = true;
   bool _busy = false;
 
   @override
@@ -231,7 +231,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         focusNode: _passwordFocusNode,
                         textInputAction: TextInputAction.go,
                         obscureText: _obscurePassword,
-                        onFieldSubmitted: (_) => _signUp,
+                        onFieldSubmitted: (_) {
+                          if (_formKey.currentState!.validate()) {
+                            _signUp(
+                                _emailController.text,
+                                _fullNameController.text,
+                                _passwordController.text,
+                                _passwordController.text,
+                                "individual",
+                                "nil",
+                                context);
+                            setState(() => _busy = !_busy);
+                          }
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Please provide a password.";
@@ -294,7 +306,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         textAlign: TextAlign.center,
                       ),
                       SizedBox(
-                        height: MediaQuery.of(context).size.height / 12,
+                        height: MediaQuery.of(context).size.height * 0.23,
                       ),
                       const Text(
                         "rootcards.com",
@@ -352,7 +364,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           );
           setState(() => _busy = false);
-          Navigator.of(context).pushNamedAndRemoveUntil(SignInAuthScreen.routeName, (_) => false);
+          Navigator.of(context).popAndPushNamed(
+            SignInScreen.routeName,
+          );
         } else {
           // User is not authenticated, handle the error
           debugPrint('Sign Up Failed. Status Code: $status');
@@ -389,5 +403,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       );
       setState(() => _busy = false);
     }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
   }
 }

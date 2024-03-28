@@ -1,8 +1,5 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
@@ -109,29 +106,4 @@ class OnBoardingScreenTwo extends StatelessWidget {
     );
   }
 
-  Future<void> getDeviceInformation() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    AndroidDeviceInfo androidInfo;
-    IosDeviceInfo iosInfo;
-
-    try {
-      if (Platform.isAndroid) {
-        androidInfo = await deviceInfo.androidInfo;
-        print('Device ID: ${androidInfo.manufacturer}');
-        print('Entry: android');
-        print('Device Name: ${androidInfo.device}');
-        print('Device Type: ${androidInfo.model}');
-        print('Device Model: ${androidInfo.product}');
-      } else if (Platform.isIOS) {
-        iosInfo = await deviceInfo.iosInfo;
-        print('Device ID: ${iosInfo.identifierForVendor}');
-        print('Entry: ios');
-        print('Device Name: ${iosInfo.name}');
-        print('Device Type: ${iosInfo.model}');
-        print('Device Model: ${iosInfo.systemName}');
-      }
-    } catch (e) {
-      print('Failed to get device information: $e');
-    }
-  }
 }

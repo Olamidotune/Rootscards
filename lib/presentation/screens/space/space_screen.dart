@@ -1,7 +1,11 @@
-import 'package:email_validator/email_validator.dart';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -14,10 +18,10 @@ class SpaceScreen extends StatefulWidget {
 }
 
 class _SpaceScreenState extends State<SpaceScreen> {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _spaceNameController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 // ignore: prefer_final_fields
-  // bool _busy = false;
+  bool _busy = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +35,9 @@ class _SpaceScreenState extends State<SpaceScreen> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(
+                  height: 5.h,
+                ),
                 Text(
                   "Start",
                   style: context.textTheme.titleLarge?.copyWith(
@@ -44,30 +51,25 @@ class _SpaceScreenState extends State<SpaceScreen> {
                 const Text(
                   "We need you to create your space",
                 ),
-                SizedBox(
-                  height: 4.h,
-                ),
                 Form(
                   key: _formKey,
                   child: AutofillGroup(
                     child: Column(
                       children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text("Email"),
-                        ),
                         SizedBox(
                           height: 0.5.h,
                         ),
                         TextFormField(
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _emailController,
-                          textInputAction: TextInputAction.next,
+                          onFieldSubmitted: (_) =>
+                              _createSpace(_spaceNameController.text),
+                          keyboardType: TextInputType.text,
+                          controller: _spaceNameController,
+                          textInputAction: TextInputAction.go,
                           validator: (value) {
-                            if (EmailValidator.validate(value?.trim() ?? "")) {
-                              return null;
+                            if (value!.isEmpty) {
+                              return "please provide a space name";
                             }
-                            return "Please provide a valid email address";
+                            return null;
                           },
                           style: const TextStyle(),
                           autofillHints: const [AutofillHints.email],
@@ -90,9 +92,20 @@ class _SpaceScreenState extends State<SpaceScreen> {
                             ),
                           ),
                         ),
-                          SizedBox(height: MediaQuery.of(context).size.height /2,),
-                        GetStartedButton(),
-                        SizedBox(height: MediaQuery.of(context).size.height /95,),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.56,
+                        ),
+                        GetStartedButton(
+                          onTap: () {
+                            _createSpace(_spaceNameController.text);
+                            setState(() {
+                              _busy = !_busy;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height / 95,
+                        ),
                         const Text(
                           "\nrootcards.com",
                           style: TextStyle(fontWeight: FontWeight.w600),
@@ -107,5 +120,50 @@ class _SpaceScreenState extends State<SpaceScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _createSpace(String spaceName) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? bearerToken = prefs.getString('authid');
+
+    if (bearerToken == null) {
+      debugPrint('Bearer token not found in shared preferences');
+      return;
+    }
+
+    String apiUrl = 'https://api.idonland.com/rootscard/index';
+
+    Map<String, String> requestBody = {
+      'spaceName': _spaceNameController.text.trim(),
+    };
+
+    try {
+      http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
+          HttpHeaders.contentTypeHeader: 'application/json',
+        },
+        body: json.encode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        // Authentication successful
+        Map<String, dynamic> responseData = json.decode(response.body);
+        debugPrint('Authentication successful: $responseData');
+        // Perform further actions as needed
+      } else {
+        // Authentication failed
+        debugPrint(
+            'Authentication failed. Status Code: ${response.statusCode}');
+        // Handle authentication failure
+      }
+    } catch (e) {
+      debugPrint('Failed to authenticate: $e');
+      // Handle exceptions
+    }
   }
 }

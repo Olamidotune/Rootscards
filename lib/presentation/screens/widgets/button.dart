@@ -1,3 +1,5 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
 
@@ -45,11 +47,12 @@ class Button extends StatelessWidget {
             ),
           )),
         ),
+        onPressed: onPressed,
         child: busy
             ? Container(
                 width: 20.0,
                 height: 20.0,
-                child: CircularProgressIndicator(
+                child: const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
@@ -66,7 +69,6 @@ class Button extends StatelessWidget {
                     icon,
                     color: iconColor != null ? iconColor : Colors.black,
                   )),
-        onPressed: onPressed,
       ),
     );
   }
