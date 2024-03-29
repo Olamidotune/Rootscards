@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 
 import 'package:flutter/material.dart';
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
@@ -67,7 +68,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                         TextFormField(
                           onFieldSubmitted: (_) =>
-                              resetPassword(_emailController.text),
+                              _resetPassword(_emailController.text),
                           keyboardType: TextInputType.emailAddress,
                           controller: _emailController,
                           textInputAction: TextInputAction.next,
@@ -106,7 +107,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           "Reset Password",
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              resetPassword(_emailController.text);
+                              _resetPassword(_emailController.text);
                             }
                           },
                         ),
@@ -119,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
-                             height: MediaQuery.of(context).size.height * 0.55,
+                          height: MediaQuery.of(context).size.height * 0.54,
                         ),
                         GestureDetector(
                           onTap: () {
@@ -143,63 +144,120 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     );
   }
 
-  Future<void> resetPassword(String email) async {
+  Future<void> _resetPassword(String email) async {
     if (_busy) return;
 
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _busy = true);
 
- 
+    // Define your API endpoint for password reset
     final url = Uri.parse('https://api.idonland.com/user/forgotPassword');
 
-
+    // Create a basic authentication string by combining username and password
     final String basicAuth =
-        'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
+        'Basic ' + base64Encode(utf8.encode('x-api:$email'));
 
     try {
+      // Make a POST request with basic authentication headers
       final response = await http.post(
         url,
         headers: <String, String>{
           'Authorization': basicAuth,
-          'Content-Type': 'application/json', // Adjust content type as required
+          'Content-Type': 'application/json',
         },
         body: jsonEncode(<String, String>{
-          'email':
-              email, // Include any additional parameters required by your API
+          'email': email,
         }),
       );
 
-      // Check if the request was successful (status code 200)
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData['status'];
 
         if (status == "200") {
-          // ignore: use_build_context_synchronously
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              backgroundColor: Colors.green,
-              content: Text("Sucessful \nwe sent next step to your email"),
-              duration: Duration(seconds: 5),
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.green,
+              elevation: 2,
+              leading: const Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              content: RichText(
+                text: const TextSpan(
+                  text: "Successful",
+                  style: TextStyle(
+                      color: BLACK,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                  children: [
+                    TextSpan(
+                      text: "\nWe sent next steps to your email",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
             ),
           );
-          Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
+          Future.delayed(const Duration(seconds: 3), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+            Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
+          });
           print('Password reset successful');
           setState(() => _busy = false);
         }
-      } else {
-        // Handle error
-        print('Password reset failed: ${response.statusCode}');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text("Email does not exist"),
-          duration: Duration(seconds: 2),
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          backgroundColor: Colors.white,
+          shadowColor: Colors.red,
+          elevation: 2,
+          leading: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          content: RichText(
+            text: const TextSpan(
+              text: "An error occured",
+              style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+              children: [
+                TextSpan(
+                  text: "\nEmail does not exist",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+          actions: const [
+            Icon(
+              Icons.close,
+            ),
+          ],
         ),
       );
+      Future.delayed(const Duration(seconds: 3), () {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      });
       print('Error resetting password: $e');
       setState(() => _busy = false);
     }

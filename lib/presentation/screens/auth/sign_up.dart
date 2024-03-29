@@ -47,7 +47,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Signup",
+                "Sign Up",
                 style: context.textTheme.titleLarge?.copyWith(
                   color: Colors.black,
                   fontSize: 45,
@@ -66,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () => Navigator.of(context)
                             .popAndPushNamed(SignInScreen.routeName),
-                      text: " Signin",
+                      text: " Sign in",
                       style: const TextStyle(
                         color: THEME,
                       ),
@@ -356,28 +356,73 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() => _busy = false);
         if (status == '200') {
           debugPrint('Sign Up Successful: $responseData');
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green,
-              content: Text("Welcome $email"),
-              duration: const Duration(seconds: 2),
+       ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.green,
+              elevation: 2,
+              leading: const Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              content: RichText(
+                text: const TextSpan(
+                  text: "Successful",
+                 style: TextStyle(
+                      color: BLACK,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                  children: [
+                    TextSpan(
+                      text: "\nYour account was created successfully",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
             ),
           );
-          setState(() => _busy = false);
-          Navigator.of(context).popAndPushNamed(
+          Future.delayed(const Duration(seconds: 3), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+             Navigator.of(context).popAndPushNamed(
             SignInScreen.routeName,
           );
+          });
+          setState(() => _busy = false);
+         
         } else {
           // User is not authenticated, handle the error
           debugPrint('Sign Up Failed. Status Code: $status');
           String errorMessage = responseData['data']['message'];
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(errorMessage),
-              duration: const Duration(seconds: 2),
+              ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: const Icon(
+              Icons.error,
+              color: Colors.red,
             ),
-          );
+            content: Text(errorMessage),
+            actions: const [
+              Icon(
+                Icons.close,
+              ),
+            ],
+          ),
+        );
+        Future.delayed(const Duration(seconds: 2), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
           setState(() => _busy = false);
         }
       } else {
@@ -394,13 +439,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     } catch (e) {
       debugPrint('Something went wrong: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
-          content: Text("Something went wrong"),
-          duration: Duration(seconds: 2),
-        ),
-      );
+ 
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          const MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+            content: Text("Something went wrong"),
+            actions: [
+              Icon(
+                Icons.close,
+              ),
+            ],
+          ),
+        );
+        Future.delayed(const Duration(seconds: 2), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+    
       setState(() => _busy = false);
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -37,10 +37,8 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
- 
       body: SafeArea(
         child: SingleChildScrollView(
-          
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(30.0),
@@ -49,7 +47,7 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Signin",
+                  "Sign In",
                   style: context.textTheme.titleLarge?.copyWith(
                     color: Colors.black,
                     fontSize: 45,
@@ -69,7 +67,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ..onTap = () => Navigator.of(context)
                               .popAndPushNamed(SignUpScreen.routeName),
                         //come back to make a function here
-                        text: " Signup",
+                        text: " Sign up",
                         style: const TextStyle(
                           color: THEME,
                         ),
@@ -87,10 +85,11 @@ class _SignInScreenState extends State<SignInScreen> {
                       children: [
                         const Align(
                           alignment: Alignment.topLeft,
-                          child: Text("Email",
-                          style:  TextStyle(
-                          color: BLACK,
-                        ),
+                          child: Text(
+                            "Email",
+                            style: TextStyle(
+                              color: BLACK,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -106,9 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             }
                             return "Please provide a valid email address";
                           },
-                          style: const TextStyle(
-                            color: BLACK
-                          ),
+                          style: const TextStyle(color: BLACK),
                           autofillHints: const [AutofillHints.email],
                           decoration: InputDecoration(
                             prefixIcon:
@@ -274,25 +271,90 @@ class _SignInScreenState extends State<SignInScreen> {
           await prefs.setString('xpub1', xpub1);
           await prefs.setString('xpub2', xpub2);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.green,
-              content: Text("Welcome ${_emailController.text}"),
-              duration: const Duration(seconds: 2),
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.green,
+              elevation: 2,
+              leading: const Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              content: RichText(
+                text: const TextSpan(
+                  text: "Successful",
+                  style: TextStyle(
+                      color: BLACK,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                  children: [
+                    TextSpan(
+                      text: "\nWe sent next steps to your email",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
             ),
           );
-          Navigator.of(context).popAndPushNamed(SignInAuthScreen.routeName);
+          setState(() => _busy = false);
+          Future.delayed(const Duration(seconds: 3), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+            Navigator.of(context).popAndPushNamed(
+              SignInAuthScreen.routeName,
+            );
+          });
         } else {
           setState(() => _busy = false);
           debugPrint('Sign Up Failed. Status Code: $responseData');
           String errorMessage = responseData['data']['message'];
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(errorMessage),
-              duration: const Duration(seconds: 2),
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.red,
+              elevation: 2,
+              leading: const Icon(
+                Icons.error,
+                color: Colors.red,
+              ),
+              content: RichText(
+                text: TextSpan(
+                  text: "An error occurred",
+                  style: const TextStyle(
+                      color: BLACK,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                  children: [
+                    TextSpan(
+                      text: "\n$errorMessage",
+                      style: const TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
             ),
           );
+          Future.delayed(const Duration(seconds: 2), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+          });
         }
       } else {
         debugPrint('Sign In Failed. Status Code: ${response.statusCode}');
@@ -309,13 +371,27 @@ class _SignInScreenState extends State<SignInScreen> {
     } catch (e) {
       setState(() => _busy = false);
       debugPrint('Something went wrong: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          backgroundColor: Colors.red,
+
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        const MaterialBanner(
+          backgroundColor: Colors.white,
+          shadowColor: Colors.red,
+          elevation: 2,
+          leading: Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
           content: Text("Something went wrong"),
-          duration: Duration(seconds: 2),
+          actions: [
+            Icon(
+              Icons.close,
+            ),
+          ],
         ),
       );
+      Future.delayed(const Duration(seconds: 2), () {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      });
     }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);

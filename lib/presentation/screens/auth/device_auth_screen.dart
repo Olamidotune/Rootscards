@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
 import 'dart:convert';
 import 'dart:io';
@@ -7,6 +7,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
@@ -203,22 +204,72 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
         if (status == "200") {
           debugPrint('Auth Successful: $responseData');
           String authid = responseData['data']['authid'];
-
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('authid', authid);
-
+         ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.green,
+              elevation: 2,
+              leading: Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              content: RichText(
+                text: TextSpan(
+                  text: "Successful",
+                  style: TextStyle(
+                      color: BLACK,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                  children: const [
+                    TextSpan(
+                      text: "\nYour changes have been saved sucessfully",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
+            ),
+          );
+          Future.delayed(Duration(seconds: 3), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+             Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+          });
           setState(() => _busy = false);
-          Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+         
         } else {
           debugPrint('Auth Failed: $responseData');
           String errorMessage = responseData['data']['message'];
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              backgroundColor: Colors.red,
-              content: Text(errorMessage),
-              duration: const Duration(seconds: 2),
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: Icon(
+              Icons.error,
+              color: Colors.red,
             ),
-          );
+            content: Text(errorMessage),
+            actions: const [
+              Icon(
+                Icons.close,
+              ),
+            ],
+          ),
+        );
+        Future.delayed(Duration(seconds: 3), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
           setState(() => _busy = false);
         }
       } else {

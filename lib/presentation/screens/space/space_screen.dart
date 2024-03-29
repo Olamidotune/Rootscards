@@ -1,8 +1,11 @@
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors
+
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,8 +63,9 @@ class _SpaceScreenState extends State<SpaceScreen> {
                           height: 0.5.h,
                         ),
                         TextFormField(
-                          onFieldSubmitted: (_) =>
-                              _createSpace(_spaceNameController.text),
+                          onFieldSubmitted: (_) => _createSpace(
+                            _spaceNameController.text.trim(),
+                          ),
                           keyboardType: TextInputType.text,
                           controller: _spaceNameController,
                           textInputAction: TextInputAction.go,
@@ -97,10 +101,13 @@ class _SpaceScreenState extends State<SpaceScreen> {
                         ),
                         GetStartedButton(
                           onTap: () {
-                            _createSpace(_spaceNameController.text);
+                            if(_formKey.currentState!.validate()){
+                              _createSpace(_spaceNameController.text.trim());
+                            debugPrint(_spaceNameController.text.trim());
                             setState(() {
                               _busy = !_busy;
                             });
+                            }
                           },
                         ),
                         SizedBox(
@@ -137,7 +144,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
     String apiUrl = 'https://api.idonland.com/rootscard/index';
 
     Map<String, String> requestBody = {
-      'spaceName': _spaceNameController.text.trim(),
+      'spaceName': spaceName,
     };
 
     try {
@@ -149,21 +156,125 @@ class _SpaceScreenState extends State<SpaceScreen> {
         },
         body: json.encode(requestBody),
       );
-
       if (response.statusCode == 200) {
-        // Authentication successful
         Map<String, dynamic> responseData = json.decode(response.body);
-        debugPrint('Authentication successful: $responseData');
-        // Perform further actions as needed
+        String status = responseData["status"];
+        if (status == "200") {
+          debugPrint('Space Created Successful: $responseData');
+          String authid = responseData['data']['authid'];
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('authid', authid);
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.green,
+              elevation: 2,
+              leading: Icon(
+                Icons.check,
+                color: Colors.green,
+              ),
+              content: RichText(
+                text: TextSpan(
+                  text: "Successful",
+                 style: TextStyle(
+                      color: BLACK,
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15),
+                  children: const [
+                    TextSpan(
+                      text: "\nwe sent next steps to your email",
+                      style: TextStyle(
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.normal,
+                          fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
+            ),
+          );
+          Future.delayed(Duration(seconds: 3), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+          });
+          setState(() => _busy = false);
+        }
+        debugPrint('Space Creation Failed: $responseData');
+        String errorMessage = responseData['data']['message'];
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+            content: Text(errorMessage),
+            actions: const [
+              Icon(
+                Icons.close,
+              ),
+            ],
+          ),
+        );
+        Future.delayed(Duration(seconds: 3), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+        setState(() => _busy = false);
       } else {
-        // Authentication failed
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+            content: Text("Something went wrong"),
+            actions: const [
+              Icon(
+                Icons.close,
+              ),
+            ],
+          ),
+        );
+        Future.delayed(Duration(seconds: 3), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+
         debugPrint(
             'Authentication failed. Status Code: ${response.statusCode}');
-        // Handle authentication failure
       }
     } catch (e) {
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          backgroundColor: Colors.white,
+          shadowColor: Colors.red,
+          elevation: 2,
+          leading: Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          content: Text("Failed to authenticate"),
+          actions: const [
+            Icon(
+              Icons.close,
+            ),
+          ],
+        ),
+      );
+      Future.delayed(Duration(seconds: 3), () {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      });
+
       debugPrint('Failed to authenticate: $e');
-      // Handle exceptions
     }
   }
 }
