@@ -69,7 +69,7 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   height: 15,
                 ),
                 Text(
-                  "We noticed you are signing into your rootshive account from a device or location we do not recognize.To confirm this is you sent an email with an authentication code to $email",
+                  "We noticed you are signing into your rootshive \n account from a device or location we do not recognize.\nTo confirm this is you sent an email with an authentication code to $email",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10.sp),
                 ),

@@ -20,34 +20,44 @@ class OnBoardingScreenOne extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                Image.asset(
-                  "assets/images/ss.png",
-                ),
-                Positioned(
-                  bottom: 50,
-                  child: Image.asset("assets/images/cube.png"),
-                ),
-                Positioned(
-                  top: 90,
-                  left: 45.w,
-                  child: Image.asset(
-                    "assets/images/round.png",
-                    width: 80.w,
-                    height: 180,
-                  ),
-                ),
-                Positioned.fill(
-                  child: FractionalTranslation(
-                    translation: Offset(0.0, 0.0),
-                    child: Center(
-                      child: Image.asset("assets/images/man.png"),
-                    ),
-                  ),
-                ),
-              ],
+          SizedBox(
+  height: MediaQuery.of(context).size.height / 2, // Half of the screen height
+  child: Stack(
+    children: [
+      Image.asset(
+        "assets/images/ss.png",
+        fit: BoxFit.cover, // Ensure the image covers the entire container
+        width: MediaQuery.of(context).size.width, // Adjust width to fill the screen
+      ),
+      Positioned(
+        bottom: 50,
+        child: Image.asset("assets/images/cube.png"),
+      ),
+      Positioned(
+        top: 90,
+        left: MediaQuery.of(context).size.width * 0.70, // Adjust left position dynamically
+        child: Image.asset(
+          "assets/images/round.png",
+          width: MediaQuery.of(context).size.width * 0.3, // Adjust width dynamically
+          height: MediaQuery.of(context).size.width * 0.3 * (180 / 80), // Maintain aspect ratio
+        ),
+      ),
+      Positioned.fill(
+        child: FractionalTranslation(
+          translation: Offset(0.0, 0.0),
+          child: Center(
+            child: Image.asset(
+              "assets/images/man.png",
+              height:MediaQuery.of(context).size.height ,
+              width: MediaQuery.of(context).size.width , // Adjust width dynamically
             ),
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
             SizedBox(
               height: 5.h,
             ),
@@ -78,8 +88,8 @@ class OnBoardingScreenOne extends StatelessWidget {
                 ),
               ),
             ),
-             SizedBox(
-              height: MediaQuery.of(context).size.height / 18,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.20,
             ),
             Align(
               alignment: Alignment.bottomRight,

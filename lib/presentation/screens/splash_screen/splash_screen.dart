@@ -20,10 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) =>  OnBoardingScreen()),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
+        );
+      }
     });
   }
 
@@ -34,41 +36,35 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
+            SizedBox(
+              height: MediaQuery.of(context).size.height /
+                  2, // Half of the screen height
+              child: Stack(
+                children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
                         image: AssetImage("assets/images/ss.png"),
-                        fit: BoxFit.fill),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.red.withOpacity(0.5),
-                        Colors.purple,
-                      ],
-                    ),
-                  ),
-                  child: Image.asset(
-                    "assets/images/ss.png",
-                  ),
-                ),
-                const Positioned.fill(
-                  child: FractionalTranslation(
-                    translation: Offset(0.0, 0.3),
-                    child: Center(
-                      child: Text(
-                        "rootscards",
-                        style: TextStyle(color: Colors.white, fontSize: 30),
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
-                ),
-              ],
+                  const Positioned.fill(
+                    child: FractionalTranslation(
+                      translation: Offset(0.0, 0.0),
+                      child: Center(
+                        child: Text(
+                          "rootscards",
+                          style: TextStyle(color: Colors.white, fontSize: 30),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             SizedBox(
-              height: 30.h,
+              height: 40.h,
             ),
             const Text(
               "Be Seen, Be Heard. Show off \n All of you, in one Link.",

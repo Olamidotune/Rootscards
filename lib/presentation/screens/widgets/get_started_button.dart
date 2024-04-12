@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sizer/sizer.dart';
 
 class GetStartedButton extends StatelessWidget {
   final Function()? onTap;
@@ -23,7 +24,8 @@ class GetStartedButton extends StatelessWidget {
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),
               )
-            : Image.asset("assets/images/getstarted_button.png"),
+            : Image.asset("assets/images/getstarted_button.png",
+            width: 43.w ,),
       ),
     );
   }

@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
-
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/extensions/build_context.dart';

@@ -21,56 +21,75 @@ class OnBoardingScreenTwo extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Stack(
-              children: [
-                Image.asset(
-                  "assets/images/yees.png",
-                  fit: BoxFit.fitWidth,
-                ),
-                Positioned.fill(
-                  child: FractionalTranslation(
-                    translation: Offset(0.0, 0.0),
-                    child: Image.asset(
-                      "assets/images/circle.png",
+            Container(
+              height: MediaQuery.of(context).size.height /
+                  2, // Half of the screen height
+              child: Stack(
+                children: [
+                  Image.asset(
+                    "assets/images/yees.png",
+                    fit: BoxFit.fitWidth,
+                    width: MediaQuery.of(context)
+                        .size
+                        .width, // Adjust width to fill the screen
+                    height: MediaQuery.of(context).size.height /
+                        2, // Half of the screen height
+                  ),
+                  Positioned.fill(
+                    child: FractionalTranslation(
+                      translation: Offset(0.0, 0.0),
+                      child: Image.asset(
+                        "assets/images/circle.png",
+                        fit: BoxFit
+                            .contain, // Ensure the image fits within the container
+                        width: MediaQuery.of(context).size.width *
+                            0.5, // Adjust width dynamically
+                        height: MediaQuery.of(context).size.height *
+                            0.5, // Adjust height dynamically
+                      ),
                     ),
                   ),
-                ),
-                Positioned.fill(
-                  child: FractionalTranslation(
-                    translation: Offset(0.0, 0.0),
-                    child: Center(
-                      child: Image.asset("assets/images/doodle_stroke.png"),
+                  Positioned.fill(
+                    child: FractionalTranslation(
+                      translation: Offset(0.0, 0.0),
+                      child: Center(
+                        child: Image.asset(
+                          "assets/images/doodle_stroke.png",
+                          width: MediaQuery.of(context).size.width *
+                              (180 / 80), // Adjust width dynamically
+                        ),
+                      ),
                     ),
                   ),
-                ),
-                Positioned.fill(
-                  child: FractionalTranslation(
-                    translation: Offset(
-                      0.0,
-                      0.25,
-                    ),
-                    child: Center(
-                      child: Image.asset("assets/images/woman.png"),
+                  Positioned.fill(
+                    child: FractionalTranslation(
+                      translation:
+                          Offset(0.0, 0.25), // Adjust vertical position
+                      child: Center(
+                        child: Image.asset(
+                          "assets/images/woman.png",
+                          width: MediaQuery.of(context)
+                              .size
+                              .width, // Adjust width dynamically
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            SizedBox(height: 15.h),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.15,
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: Align(
                 alignment: Alignment.bottomLeft,
-                child: GestureDetector(
-                  onTap: () {
-                    // getDeviceInformation();
-                  },
-                  child: Text(
-                    "Stand Out!.",
-                    style: context.textTheme.titleLarge?.copyWith(
-                      fontSize: 36,
-                      color: Colors.black,
-                    ),
+                child: Text(
+                  "Stand Out!.",
+                  style: context.textTheme.titleLarge?.copyWith(
+                    fontSize: 36,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -92,7 +111,7 @@ class OnBoardingScreenTwo extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 5.h,
+              height: MediaQuery.of(context).size.height * 0.13,
             ),
             Align(
               alignment: Alignment.bottomRight,
@@ -105,5 +124,4 @@ class OnBoardingScreenTwo extends StatelessWidget {
       ),
     );
   }
-
 }

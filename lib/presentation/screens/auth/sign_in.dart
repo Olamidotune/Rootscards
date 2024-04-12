@@ -66,7 +66,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => Navigator.of(context)
                               .popAndPushNamed(SignUpScreen.routeName),
-                        //come back to make a function here
                         text: " Sign up",
                         style: const TextStyle(
                           color: THEME,
@@ -76,7 +75,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 4.h,
+                  height: 2.h,
                 ),
                 Form(
                   key: _formKey,
@@ -210,7 +209,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         SizedBox(
                           height: 1.5.h,
                         ),
-                        const Text(
+                         Text(
                           "A creators handy tool..\nShow off all of you, in one link.",
                           style: TextStyle(fontSize: 12),
                           textAlign: TextAlign.center,
@@ -218,7 +217,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         SizedBox(
                           height: MediaQuery.of(context).size.height * 0.46,
                         ),
-                        const Text(
+                         Text(
                           "rootcards.com",
                           style: TextStyle(fontWeight: FontWeight.w600),
                         )

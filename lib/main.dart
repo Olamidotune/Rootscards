@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
@@ -47,26 +47,26 @@ class MyApp extends StatelessWidget {
               displaySmall: TextStyle(color: Colors.black),
             ),
           ),
-          darkTheme: ThemeData(
-            brightness: Brightness.dark,
-            fontFamily: 'McLaren',
-            textTheme: const TextTheme(
-              bodySmall: TextStyle(color: BLACK),
-              bodyLarge: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
-              bodyMedium: TextStyle(color: BLACK),
-              titleLarge: TextStyle(color: BLACK),
-              titleMedium: TextStyle(color: BLACK),
-              titleSmall: TextStyle(color: BLACK),
-              displayLarge: TextStyle(color: BLACK),
-              displayMedium: TextStyle(color: BLACK),
-              displaySmall: TextStyle(color: BLACK),
-            ),
-            scaffoldBackgroundColor: Colors.black,
-          ),
-          initialRoute: SplashScreen.routeName,
+          // darkTheme: ThemeData(
+          //   brightness: Brightness.dark,
+          //   fontFamily: 'McLaren',
+          //   textTheme: const TextTheme(
+          //     bodySmall: TextStyle(color: Colors.white),
+          //     bodyLarge: TextStyle(
+          //       color: Colors.white,
+          //       fontWeight: FontWeight.w500,
+          //     ),
+          //     bodyMedium: TextStyle(color: Colors.white),
+          //     titleLarge: TextStyle(color: Colors.white),
+          //     titleMedium: TextStyle(color: Colors.white),
+          //     titleSmall: TextStyle(color: Colors.white),
+          //     displayLarge: TextStyle(color: Colors.white),
+          //     displayMedium: TextStyle(color: Colors.white),
+          //     displaySmall: TextStyle(color: Colors.white),
+          //   ),
+          //   scaffoldBackgroundColor: Colors.white,
+          // ),
+          home: AppWrapper(),
           routes: {
             SplashScreen.routeName: (context) => const SplashScreen(),
             OnBoardingScreen.routeName: (context) => const OnBoardingScreen(),
