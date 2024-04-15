@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace
+// ignore_for_file: sized_box_for_whitespace, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
@@ -67,7 +67,7 @@ class Button extends StatelessWidget {
                   )
                 : Icon(
                     icon,
-                    color: iconColor != null ? iconColor : Colors.black,
+                    color: iconColor ?? Colors.black,
                   )),
       ),
     );

@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -40,8 +41,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         body: SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(30.0),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
+          alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -277,45 +279,54 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 3.5.h,
-                      ),
-                      Button(
-                        busy: _busy,
-                        "Create my account",
-                        onPressed: () {
-                          if (_formKey.currentState!.validate()) {
-                            _signUp(
-                                _emailController.text,
-                                _fullNameController.text,
-                                _passwordController.text,
-                                _passwordController.text,
-                                "individual",
-                                "nil",
-                                context);
-                            setState(() => _busy = !_busy);
-                          }
-                        },
-                      ),
-                      SizedBox(
-                        height: 1.5.h,
-                      ),
-                      const Text(
-                        "By tapping create my account and using \n Rootscards you agree to our Terms of Service & \n Privacy Policy.",
-                        style: TextStyle(fontSize: 12),
-                        textAlign: TextAlign.center,
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.23,
-                      ),
-                      const Text(
-                        "rootcards.com",
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      )
                     ],
                   ),
                 ),
               ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),
+              Button(
+                busy: _busy,
+                "Create my account",
+                onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _signUp(
+                        _emailController.text,
+                        _fullNameController.text,
+                        _passwordController.text,
+                        _passwordController.text,
+                        "individual",
+                        "nil",
+                        context);
+                    setState(() => _busy = !_busy);
+                  }
+                },
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * .02,
+              ),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "By tapping create my account and using\nRootscards you agree to our Terms of Service&\n Privacy Policy.",
+                  style: TextStyle(fontSize: 12),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? 11
+                    : MediaQuery.of(context).size.height / 4,
+              ),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "rootcards.com",
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+              )
             ],
           ),
         ),
@@ -343,6 +354,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'referer': referer,
     };
 
+    await HelperFunction.saveUserEmailSF(email);
+
     try {
       final http.Response response = await http.post(
         Uri.parse(apiUrl),
@@ -356,7 +369,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         setState(() => _busy = false);
         if (status == '200') {
           debugPrint('Sign Up Successful: $responseData');
-       ScaffoldMessenger.of(context).showMaterialBanner(
+          ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.white,
               shadowColor: Colors.green,
@@ -368,7 +381,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               content: RichText(
                 text: const TextSpan(
                   text: "Successful",
-                 style: TextStyle(
+                  style: TextStyle(
                       color: BLACK,
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.bold,
@@ -391,38 +404,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
           );
-          Future.delayed(const Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 2), () {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-             Navigator.of(context).popAndPushNamed(
-            SignInScreen.routeName,
-          );
+            Navigator.of(context).popAndPushNamed(
+              SignInScreen.routeName,
+            );
           });
           setState(() => _busy = false);
-         
         } else {
           // User is not authenticated, handle the error
           debugPrint('Sign Up Failed. Status Code: $status');
           String errorMessage = responseData['data']['message'];
-              ScaffoldMessenger.of(context).showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.red,
-            elevation: 2,
-            leading: const Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            content: Text(errorMessage),
-            actions: const [
-              Icon(
-                Icons.close,
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.red,
+              elevation: 2,
+              leading: const Icon(
+                Icons.error,
+                color: Colors.red,
               ),
-            ],
-          ),
-        );
-        Future.delayed(const Duration(seconds: 2), () {
-          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-        });
+              content: Text(errorMessage),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
+            ),
+          );
+          Future.delayed(const Duration(seconds: 2), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+          });
           setState(() => _busy = false);
         }
       } else {
@@ -439,31 +451,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
       }
     } catch (e) {
       debugPrint('Something went wrong: $e');
- 
-        ScaffoldMessenger.of(context).showMaterialBanner(
-          const MaterialBanner(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.red,
-            elevation: 2,
-            leading: Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            content: Text("Something went wrong"),
-            actions: [
-              Icon(
-                Icons.close,
-              ),
-            ],
+
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        const MaterialBanner(
+          backgroundColor: Colors.white,
+          shadowColor: Colors.red,
+          elevation: 2,
+          leading: Icon(
+            Icons.error,
+            color: Colors.red,
           ),
-        );
-        Future.delayed(const Duration(seconds: 2), () {
-          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-        });
-    
+          content: Text("Something went wrong"),
+          actions: [
+            Icon(
+              Icons.close,
+            ),
+          ],
+        ),
+      );
+      Future.delayed(const Duration(seconds: 2), () {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      });
+
       setState(() => _busy = false);
     }
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', email);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setString('email', email);
   }
 }

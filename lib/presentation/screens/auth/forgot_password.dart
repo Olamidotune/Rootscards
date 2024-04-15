@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
@@ -118,8 +119,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.54,
-                        ),
+                height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? 11
+                    : MediaQuery.of(context).size.height * 0.5,
+              ),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context)
@@ -154,7 +158,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     // Create a basic authentication string by combining username and password
     final String basicAuth =
-        'Basic ' + base64Encode(utf8.encode('x-api:$email'));
+        'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
 
     try {
       // Make a POST request with basic authentication headers
