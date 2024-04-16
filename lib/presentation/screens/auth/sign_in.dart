@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
@@ -135,8 +136,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               height: 1.h,
                             ),
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 const Text(
                                   "Password",
@@ -231,13 +231,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: TextStyle(fontSize: 12),
                       textAlign: TextAlign.center,
                     ),
-              
-                  SizedBox(
-                height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? 11
-                    : MediaQuery.of(context).size.height / 2.2,
-              ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height <=
+                              MIN_SUPPORTED_SCREEN_HEIGHT
+                          ? MediaQuery.of(context).size.height * 0.2
+                          : MediaQuery.of(context).size.height * 0.38,
+                    ),
                     Text(
                       "rootcards.com",
                       style: TextStyle(fontWeight: FontWeight.w600),
@@ -251,13 +250,65 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-  
-  
+
   Future<void> _signIn(
       String email, String password, BuildContext context) async {
     if (_busy) return;
     if (!_formKey.currentState!.validate()) return;
     setState(() => _busy = true);
+
+    // Start a timer for 1 minute
+    Timer(Duration(minutes: 1), () {
+      if (_busy) {
+        // If the request is still ongoing after 1 minute, show a material banner
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+            content: RichText(
+              text: TextSpan(
+                text: "Oops!",
+                style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+                children: const [
+                  TextSpan(
+                    text: "\nRequest timed out. Please try again.",
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                },
+                icon: Icon(Icons.close),
+              ),
+            ],
+          ),
+        );
+        Future.delayed(const Duration(seconds: 3), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+
+        setState(() => _busy = false);
+      }
+    });
+
     String apiUrl = 'https://api.idonland.com/';
     Map<String, String> requestBody = {
       'email': email,
@@ -270,6 +321,7 @@ class _SignInScreenState extends State<SignInScreen> {
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
+        // _resetTimer();
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData['status'];
         if (status == "201") {
@@ -317,7 +369,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           );
           setState(() => _busy = false);
-          Future.delayed(const Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 1), () {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             Navigator.of(context).popAndPushNamed(
               SignInAuthScreen.routeName,
@@ -382,7 +434,7 @@ class _SignInScreenState extends State<SignInScreen> {
       setState(() => _busy = false);
       debugPrint('Something went wrong: $e');
       ScaffoldMessenger.of(context).showMaterialBanner(
-        const MaterialBanner(
+        MaterialBanner(
           backgroundColor: Colors.white,
           shadowColor: Colors.red,
           elevation: 2,
@@ -390,8 +442,26 @@ class _SignInScreenState extends State<SignInScreen> {
             Icons.error,
             color: Colors.red,
           ),
-          content: Text("Something went wrong"),
-          actions: [
+          content: RichText(
+            text: const TextSpan(
+              text: "Oops!",
+              style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+              children: [
+                TextSpan(
+                  text: "\nCheck your internet connection and try again.",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+          actions: const [
             Icon(
               Icons.close,
             ),
@@ -405,4 +475,52 @@ class _SignInScreenState extends State<SignInScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
   }
+
+  // void _resetTimer() {
+  //   // Cancel the timer and restart it for another minute
+  //   _timer?.cancel();
+  //   _timer = Timer(Duration(minutes: 1), () {
+  //     // Show material banner after 1 minute
+
+  //     ScaffoldMessenger.of(context).showMaterialBanner(
+  //       MaterialBanner(
+  //         backgroundColor: Colors.white,
+  //         shadowColor: Colors.red,
+  //         elevation: 2,
+  //         leading: Icon(
+  //           Icons.error,
+  //           color: Colors.red,
+  //         ),
+  //         content: RichText(
+  //           text: const TextSpan(
+  //             text: "Oops!",
+  //             style: TextStyle(
+  //                 color: BLACK,
+  //                 fontFamily: "Poppins",
+  //                 fontWeight: FontWeight.bold,
+  //                 fontSize: 15),
+  //             children: [
+  //               TextSpan(
+  //                 text: "\nCheck your internet connection and try again.",
+  //                 style: TextStyle(
+  //                     fontFamily: "Poppins",
+  //                     fontWeight: FontWeight.normal,
+  //                     fontSize: 11),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //         actions: const [
+  //           Icon(
+  //             Icons.close,
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //     Future.delayed(const Duration(seconds: 2), () {
+  //       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+  //     });
+  //     setState(() => _busy = false);
+  //   });
+  // }
 }

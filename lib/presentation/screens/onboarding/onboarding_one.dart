@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/next_button.dart';
 import 'package:sizer/sizer.dart';
@@ -89,7 +90,10 @@ class OnBoardingScreenOne extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.20,
+             height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? MediaQuery.of(context).size.height * 0.12
+                    : MediaQuery.of(context).size.height * 0.15,
             ),
             Align(
               alignment: Alignment.bottomRight,

@@ -318,7 +318,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: MediaQuery.of(context).size.height <=
                         MIN_SUPPORTED_SCREEN_HEIGHT
                     ? 11
-                    : MediaQuery.of(context).size.height / 4,
+                    : MediaQuery.of(context).size.height * 0.1,
               ),
               const Align(
                 alignment: Alignment.center,

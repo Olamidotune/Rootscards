@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
@@ -69,19 +70,25 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   height: 15,
                 ),
                 Text(
-                  "We noticed you are signing into your rootshive \n account from a device or location we do not recognize.\nTo confirm this is you sent an email with an authentication code to $email",
+                  "We noticed you are signing into your rootshive account from a device or location we do not recognize.\nTo confirm this is you sent an email with an authentication code to $email",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 10.sp),
                 ),
                 SizedBox(
-                  height: 5.h,
+                  height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? MediaQuery.of(context).size.height * 0.05
+                    : 5.h
                 ),
                 Text(
                   "Authorization Code *",
                    style: TextStyle(fontSize: 10.sp),
                 ),
                 SizedBox(
-                  height: 4.h,
+                   height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? MediaQuery.of(context).size.height * 0.05
+                    : 3.h
                   
                 ),
                 PinCodeTextField(
@@ -89,7 +96,7 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   keyboardType: TextInputType.number,
                   hideCharacter: true,
                   controller: _otpController,
-                  autofocus: true,
+                  autofocus: false,
                   pinBoxHeight: 50,
                   pinBoxWidth: 50,
                   maxLength: 4,
@@ -102,7 +109,10 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                       ProvidedPinBoxDecoration.defaultPinBoxDecoration,
                 ),
                 SizedBox(
-                  height: 10.h,
+                height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? MediaQuery.of(context).size.height * 0.05
+                    : 4.h
                 ),
                 Button(
                   busy: _busy,
@@ -113,7 +123,10 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   },
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height / 9,
+                   height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? MediaQuery.of(context).size.height * 0.05
+                    : MediaQuery.of(context).size.height * 0.06,
                 ),
                 Text(
                   "Can't find the authorization code? check the spam\nfolder or sign in again to get a fresh code.",

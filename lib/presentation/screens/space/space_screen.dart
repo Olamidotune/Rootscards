@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -97,24 +98,32 @@ class _SpaceScreenState extends State<SpaceScreen> {
                           ),
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.56,
+                            height: MediaQuery.of(context).size.height <=
+                        MIN_SUPPORTED_SCREEN_HEIGHT
+                    ? MediaQuery.of(context).size.height * 0.45
+                    : MediaQuery.of(context).size.height * 0.56,
+                          // height: MediaQuery.of(context).size.height * 0.56,
                         ),
                         GetStartedButton(
                           onTap: () {
-                            if(_formKey.currentState!.validate()){
+                            if (_formKey.currentState!.validate()) {
                               _createSpace(_spaceNameController.text.trim());
-                            debugPrint(_spaceNameController.text.trim());
-                            setState(() {
-                              _busy = !_busy;
-                            });
+                              debugPrint(_spaceNameController.text.trim());
+                              setState(() {
+                                _busy = !_busy;
+                              });
                             }
                           },
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height / 95,
+                          height: MediaQuery.of(context).size.height <=
+                                  MIN_SUPPORTED_SCREEN_HEIGHT
+                              ? MediaQuery.of(context).size.height * 0.03
+                              : MediaQuery.of(context).size.height / 95
+                          // height: MediaQuery.of(context).size.height / 95,
                         ),
                         const Text(
-                          "\nrootcards.com",
+                          "rootcards.com",
                           style: TextStyle(fontWeight: FontWeight.w600),
                         )
                       ],
@@ -176,7 +185,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
               content: RichText(
                 text: TextSpan(
                   text: "Successful",
-                 style: TextStyle(
+                  style: TextStyle(
                       color: BLACK,
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.bold,
