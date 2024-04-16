@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
 import 'package:sizer/sizer.dart';
@@ -21,7 +22,7 @@ class OnBoardingScreenTwo extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height /
                   2, // Half of the screen height
               child: Stack(
@@ -79,7 +80,10 @@ class OnBoardingScreenTwo extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.15,
+              height: MediaQuery.of(context).size.height <=
+                      MIN_SUPPORTED_SCREEN_HEIGHT
+                  ? MediaQuery.of(context).size.height * 0.1
+                  : MediaQuery.of(context).size.height * 0.15,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -102,16 +106,20 @@ class OnBoardingScreenTwo extends StatelessWidget {
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
-                  "Optimize what works with Insights to know\nand understand your audience, allowing\nyou fly high.",
+                  "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.black,
                   ),
+                  textAlign: TextAlign.start,
                 ),
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.13,
+              height: MediaQuery.of(context).size.height <=
+                      MIN_SUPPORTED_SCREEN_HEIGHT
+                  ? MediaQuery.of(context).size.height * 0.12
+                  : MediaQuery.of(context).size.height * 0.09,
             ),
             Align(
               alignment: Alignment.bottomRight,

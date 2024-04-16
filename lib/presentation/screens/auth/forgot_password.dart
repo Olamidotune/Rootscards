@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -121,8 +123,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         SizedBox(
                 height: MediaQuery.of(context).size.height <=
                         MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? 11
-                    : MediaQuery.of(context).size.height * 0.5,
+                    ? MediaQuery.of(context).size.height * 0.35
+                    : MediaQuery.of(context).size.height * 0.45,
               ),
                         GestureDetector(
                           onTap: () {
@@ -178,6 +180,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         String status = responseData['status'];
 
         if (status == "200") {
+  
           ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.white,
