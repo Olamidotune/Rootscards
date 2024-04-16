@@ -8,11 +8,11 @@ import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/sign_up.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -251,26 +251,14 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-
-
-  //testing new branch
   
-
+  
   Future<void> _signIn(
-    String email,
-    String password,
-    BuildContext context,
-  ) async {
+      String email, String password, BuildContext context) async {
     if (_busy) return;
-
     if (!_formKey.currentState!.validate()) return;
-
-    await HelperFunction.saveUserEmailSF(email);
-
     setState(() => _busy = true);
-
     String apiUrl = 'https://api.idonland.com/';
-
     Map<String, String> requestBody = {
       'email': email,
       'password': password,
@@ -281,19 +269,18 @@ class _SignInScreenState extends State<SignInScreen> {
         body: json.encode(requestBody),
         headers: {'Content-Type': 'application/json'},
       );
-
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData['status'];
-
         if (status == "201") {
           String xpub1 = responseData['data']['xpub1'];
           String xpub2 = responseData['data']['xpub2'];
-
           debugPrint('Sign In Successful: $responseData');
-          await HelperFunction.saveXpub1SF(xpub1);
-          await HelperFunction.saveXpub1SF(xpub2);
-
+          debugPrint('Xpub1: $xpub1');
+          debugPrint('Xpub2: $xpub2');
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('xpub1', xpub1);
+          await prefs.setString('xpub2', xpub2);
           ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.white,
@@ -394,7 +381,6 @@ class _SignInScreenState extends State<SignInScreen> {
     } catch (e) {
       setState(() => _busy = false);
       debugPrint('Something went wrong: $e');
-
       ScaffoldMessenger.of(context).showMaterialBanner(
         const MaterialBanner(
           backgroundColor: Colors.white,
@@ -416,7 +402,7 @@ class _SignInScreenState extends State<SignInScreen> {
         ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
       });
     }
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('email', email);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
   }
 }

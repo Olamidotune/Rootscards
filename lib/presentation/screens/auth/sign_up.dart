@@ -10,9 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -354,7 +354,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'referer': referer,
     };
 
-    await HelperFunction.saveUserEmailSF(email);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('email', email);
 
     try {
       final http.Response response = await http.post(
