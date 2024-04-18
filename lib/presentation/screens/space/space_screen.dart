@@ -98,30 +98,27 @@ class _SpaceScreenState extends State<SpaceScreen> {
                           ),
                         ),
                         SizedBox(
-                            height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? MediaQuery.of(context).size.height * 0.45
-                    : MediaQuery.of(context).size.height * 0.56,
+                          height: MediaQuery.of(context).size.height <=
+                                  MIN_SUPPORTED_SCREEN_HEIGHT
+                              ? MediaQuery.of(context).size.height * 0.45
+                              : MediaQuery.of(context).size.height * 0.56,
                           // height: MediaQuery.of(context).size.height * 0.56,
                         ),
                         GetStartedButton(
+                          busy: _busy,
                           onTap: () {
                             if (_formKey.currentState!.validate()) {
                               _createSpace(_spaceNameController.text.trim());
                               debugPrint(_spaceNameController.text.trim());
-                              setState(() {
-                                _busy = !_busy;
-                              });
                             }
                           },
                         ),
                         SizedBox(
-                          height: MediaQuery.of(context).size.height <=
-                                  MIN_SUPPORTED_SCREEN_HEIGHT
-                              ? MediaQuery.of(context).size.height * 0.03
-                              : MediaQuery.of(context).size.height / 95
-                          // height: MediaQuery.of(context).size.height / 95,
-                        ),
+                            height: MediaQuery.of(context).size.height <=
+                                    MIN_SUPPORTED_SCREEN_HEIGHT
+                                ? MediaQuery.of(context).size.height * 0.03
+                                : MediaQuery.of(context).size.height / 95
+                            ),
                         const Text(
                           "rootcards.com",
                           style: TextStyle(fontWeight: FontWeight.w600),
@@ -140,6 +137,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
 
   Future<void> _createSpace(String spaceName) async {
     if (_busy) return;
+    if (!_formKey.currentState!.validate()) return;
     setState(() => _busy = true);
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -157,14 +155,16 @@ class _SpaceScreenState extends State<SpaceScreen> {
     };
 
     try {
-      http.Response response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
-          HttpHeaders.contentTypeHeader: 'application/json',
-        },
-        body: json.encode(requestBody),
-      );
+      http.Response response = await http
+          .post(
+            Uri.parse(apiUrl),
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
+              HttpHeaders.contentTypeHeader: 'application/json',
+            },
+            body: json.encode(requestBody),
+          )
+          .timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData["status"];
@@ -225,9 +225,12 @@ class _SpaceScreenState extends State<SpaceScreen> {
               color: Colors.red,
             ),
             content: Text(errorMessage),
-            actions: const [
-              Icon(
-                Icons.close,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                },
+                icon: Icon(Icons.close),
               ),
             ],
           ),
@@ -262,6 +265,8 @@ class _SpaceScreenState extends State<SpaceScreen> {
             'Authentication failed. Status Code: ${response.statusCode}');
       }
     } catch (e) {
+      setState(() => _busy = false);
+      debugPrint('Something went wrong: $e');
       ScaffoldMessenger.of(context).showMaterialBanner(
         MaterialBanner(
           backgroundColor: Colors.white,
@@ -271,18 +276,36 @@ class _SpaceScreenState extends State<SpaceScreen> {
             Icons.error,
             color: Colors.red,
           ),
-          content: Text("Failed to authenticate"),
-          actions: const [
-            Icon(
-              Icons.close,
+          content: RichText(
+            text: const TextSpan(
+              text: "Oops!",
+              style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+              children: [
+                TextSpan(
+                  text: "\nCheck your internet connection and try again.",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11),
+                ),
+              ],
             ),
+          ),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Future.delayed(Duration(seconds: 3), () {
+                    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                  });
+                },
+                icon: Icon(Icons.close))
           ],
         ),
       );
-      Future.delayed(Duration(seconds: 3), () {
-        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-      });
-
       debugPrint('Failed to authenticate: $e');
     }
   }

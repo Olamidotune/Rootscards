@@ -12,6 +12,7 @@ import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/sign_up.dart';
+import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -257,58 +258,6 @@ class _SignInScreenState extends State<SignInScreen> {
     if (!_formKey.currentState!.validate()) return;
     setState(() => _busy = true);
 
-    // Start a timer for 1 minute
-    Timer(Duration(minutes: 1), () {
-      if (_busy) {
-        // If the request is still ongoing after 1 minute, show a material banner
-        ScaffoldMessenger.of(context).showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.red,
-            elevation: 2,
-            leading: Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            content: RichText(
-              text: TextSpan(
-                text: "Oops!",
-                style: TextStyle(
-                  color: BLACK,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-                children: const [
-                  TextSpan(
-                    text: "\nRequest timed out. Please try again.",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.normal,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                },
-                icon: Icon(Icons.close),
-              ),
-            ],
-          ),
-        );
-        Future.delayed(const Duration(seconds: 3), () {
-          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-        });
-
-        setState(() => _busy = false);
-      }
-    });
-
     String apiUrl = 'https://api.idonland.com/';
     Map<String, String> requestBody = {
       'email': email,
@@ -319,9 +268,8 @@ class _SignInScreenState extends State<SignInScreen> {
         Uri.parse(apiUrl),
         body: json.encode(requestBody),
         headers: {'Content-Type': 'application/json'},
-      );
+      ).timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
-        // _resetTimer();
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData['status'];
         if (status == "201") {
@@ -369,11 +317,21 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           );
           setState(() => _busy = false);
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 1), () async {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-            Navigator.of(context).popAndPushNamed(
-              SignInAuthScreen.routeName,
-            );
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            bool isAuth = prefs.getBool("isAuth") ?? false;
+            if (isAuth) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                SpaceScreen.routeName,
+                (_) => false,
+              );
+            } else {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                SignInAuthScreen.routeName,
+                (_) => false,
+              );
+            }
           });
         } else {
           setState(() => _busy = false);
@@ -475,52 +433,4 @@ class _SignInScreenState extends State<SignInScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('email', email);
   }
-
-  // void _resetTimer() {
-  //   // Cancel the timer and restart it for another minute
-  //   _timer?.cancel();
-  //   _timer = Timer(Duration(minutes: 1), () {
-  //     // Show material banner after 1 minute
-
-  //     ScaffoldMessenger.of(context).showMaterialBanner(
-  //       MaterialBanner(
-  //         backgroundColor: Colors.white,
-  //         shadowColor: Colors.red,
-  //         elevation: 2,
-  //         leading: Icon(
-  //           Icons.error,
-  //           color: Colors.red,
-  //         ),
-  //         content: RichText(
-  //           text: const TextSpan(
-  //             text: "Oops!",
-  //             style: TextStyle(
-  //                 color: BLACK,
-  //                 fontFamily: "Poppins",
-  //                 fontWeight: FontWeight.bold,
-  //                 fontSize: 15),
-  //             children: [
-  //               TextSpan(
-  //                 text: "\nCheck your internet connection and try again.",
-  //                 style: TextStyle(
-  //                     fontFamily: "Poppins",
-  //                     fontWeight: FontWeight.normal,
-  //                     fontSize: 11),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //         actions: const [
-  //           Icon(
-  //             Icons.close,
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //     Future.delayed(const Duration(seconds: 2), () {
-  //       ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-  //     });
-  //     setState(() => _busy = false);
-  //   });
-  // }
 }

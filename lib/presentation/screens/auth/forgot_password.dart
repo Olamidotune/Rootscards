@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -121,11 +122,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           textAlign: TextAlign.center,
                         ),
                         SizedBox(
-                height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? MediaQuery.of(context).size.height * 0.35
-                    : MediaQuery.of(context).size.height * 0.45,
-              ),
+                          height: MediaQuery.of(context).size.height <=
+                                  MIN_SUPPORTED_SCREEN_HEIGHT
+                              ? MediaQuery.of(context).size.height * 0.35
+                              : MediaQuery.of(context).size.height * 0.45,
+                        ),
                         GestureDetector(
                           onTap: () {
                             Navigator.of(context)
@@ -173,14 +174,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         body: jsonEncode(<String, String>{
           'email': email,
         }),
-      );
+      ).timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData['status'];
 
         if (status == "200") {
-  
           ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.white,
@@ -216,13 +216,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ],
             ),
           );
-          Future.delayed(const Duration(seconds: 3), () {
+          Future.delayed(const Duration(seconds: 1), () {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
           });
           print('Password reset successful');
           setState(() => _busy = false);
-        }
+        } 
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showMaterialBanner(
@@ -236,7 +236,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           ),
           content: RichText(
             text: const TextSpan(
-              text: "An error occured",
+              text: "Oops!",
               style: TextStyle(
                   color: BLACK,
                   fontFamily: "Poppins",
@@ -244,7 +244,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   fontSize: 15),
               children: [
                 TextSpan(
-                  text: "\nEmail does not exist",
+                  text: "\nAn error occured",
                   style: TextStyle(
                       fontFamily: "Poppins",
                       fontWeight: FontWeight.normal,
@@ -263,7 +263,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       Future.delayed(const Duration(seconds: 3), () {
         ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
       });
-      print('Error resetting password: $e');
+      debugPrint('Error resetting password: $e');
       setState(() => _busy = false);
     }
   }
