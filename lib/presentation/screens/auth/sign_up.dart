@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
@@ -243,7 +244,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 "individual",
                                 "nil",
                                 context);
-                            setState(() => _busy = !_busy);
                           }
                         },
                         validator: (value) {
@@ -299,7 +299,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         "individual",
                         "nil",
                         context);
-                    setState(() => _busy = !_busy);
                   }
                 },
               ),
@@ -344,6 +343,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
     BuildContext context,
   ) async {
     String apiUrl = 'https://api.idonland.com/signup';
+
+    if (_busy) return;
+    if (_formKey.currentState!.validate()) return;
+    setState(() {
+      setState(() => _busy = true);
+    });
+
+    Timer(const Duration(minutes: 1), () {
+      if (_busy) {
+        ScaffoldMessenger.of(context).showMaterialBanner(
+          MaterialBanner(
+            backgroundColor: Colors.white,
+            shadowColor: Colors.red,
+            elevation: 2,
+            leading: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+            content: RichText(
+              text: const TextSpan(
+                text: "Oops!",
+                style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+                children: [
+                  TextSpan(
+                    text: "\nRequest timed out. Please try again.",
+                    style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              IconButton(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+                },
+                icon: const Icon(Icons.close),
+              ),
+            ],
+          ),
+        );
+        Future.delayed(const Duration(seconds: 3), () {
+          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+        });
+        setState(() => _busy = false);
+      }
+    });
 
     Map<String, String> requestBody = {
       'email': email,
@@ -454,16 +508,34 @@ class _SignUpScreenState extends State<SignUpScreen> {
       debugPrint('Something went wrong: $e');
 
       ScaffoldMessenger.of(context).showMaterialBanner(
-        const MaterialBanner(
+        MaterialBanner(
           backgroundColor: Colors.white,
           shadowColor: Colors.red,
           elevation: 2,
-          leading: Icon(
+          leading: const Icon(
             Icons.error,
             color: Colors.red,
           ),
-          content: Text("Something went wrong"),
-          actions: [
+          content: RichText(
+            text: const TextSpan(
+              text: "Oops!",
+              style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+              children: [
+                TextSpan(
+                  text: "\nCheck your internet connection and try again.",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+          actions: const [
             Icon(
               Icons.close,
             ),
@@ -476,7 +548,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       setState(() => _busy = false);
     }
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('email', email);
   }
 }

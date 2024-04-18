@@ -3,11 +3,17 @@ import 'package:sizer/sizer.dart';
 
 class GetStartedButton extends StatelessWidget {
   final Function()? onTap;
+  final Color? textColor;
+  final Color? disabledTextColor;
   final bool busy;
+  final IconData? icon;
   const GetStartedButton({
     super.key,
     this.onTap,
     this.busy = false,
+    this.textColor,
+    this.disabledTextColor,
+    this.icon,
   });
 
   @override
@@ -21,11 +27,13 @@ class GetStartedButton extends StatelessWidget {
                 width: 20.0,
                 height: 20.0,
                 child: const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.black),
                 ),
               )
-            : Image.asset("assets/images/getstarted_button.png",
-            width: 43.w ,),
+            : Image.asset(
+                "assets/images/getstarted_button.png",
+                width: 43.w,
+              ),
       ),
     );
   }

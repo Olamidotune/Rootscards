@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -75,22 +76,19 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   style: TextStyle(fontSize: 10.sp),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? MediaQuery.of(context).size.height * 0.05
-                    : 5.h
-                ),
+                    height: MediaQuery.of(context).size.height <=
+                            MIN_SUPPORTED_SCREEN_HEIGHT
+                        ? MediaQuery.of(context).size.height * 0.05
+                        : 5.h),
                 Text(
                   "Authorization Code *",
-                   style: TextStyle(fontSize: 10.sp),
+                  style: TextStyle(fontSize: 10.sp),
                 ),
                 SizedBox(
-                   height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? MediaQuery.of(context).size.height * 0.05
-                    : 3.h
-                  
-                ),
+                    height: MediaQuery.of(context).size.height <=
+                            MIN_SUPPORTED_SCREEN_HEIGHT
+                        ? MediaQuery.of(context).size.height * 0.05
+                        : 3.h),
                 PinCodeTextField(
                   isCupertino: true,
                   keyboardType: TextInputType.number,
@@ -109,24 +107,22 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                       ProvidedPinBoxDecoration.defaultPinBoxDecoration,
                 ),
                 SizedBox(
-                height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? MediaQuery.of(context).size.height * 0.05
-                    : 4.h
-                ),
+                    height: MediaQuery.of(context).size.height <=
+                            MIN_SUPPORTED_SCREEN_HEIGHT
+                        ? MediaQuery.of(context).size.height * 0.05
+                        : 4.h),
                 Button(
                   busy: _busy,
                   "Confirm",
                   onPressed: () {
                     _authenticateDevice(_otpController.text);
-                    setState(() => _busy = !_busy);
                   },
                 ),
                 SizedBox(
-                   height: MediaQuery.of(context).size.height <=
-                        MIN_SUPPORTED_SCREEN_HEIGHT
-                    ? MediaQuery.of(context).size.height * 0.05
-                    : MediaQuery.of(context).size.height * 0.06,
+                  height: MediaQuery.of(context).size.height <=
+                          MIN_SUPPORTED_SCREEN_HEIGHT
+                      ? MediaQuery.of(context).size.height * 0.05
+                      : MediaQuery.of(context).size.height * 0.06,
                 ),
                 Text(
                   "Can't find the authorization code? check the spam\nfolder or sign in again to get a fresh code.",
@@ -143,9 +139,9 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
 
   Future<void> _authenticateDevice(String otp) async {
     if (_busy) return;
-
-    setState(() => _busy = true);
-
+    setState(() {
+      setState(() => _busy = true);
+    });
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? xpub1 = prefs.getString('xpub1');
     String? xpub2 = prefs.getString('xpub2');
@@ -208,7 +204,7 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
           HttpHeaders.contentTypeHeader: 'application/json',
         },
         body: encodedBody,
-      );
+      ).timeout(Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
@@ -219,7 +215,7 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
           String authid = responseData['data']['authid'];
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('authid', authid);
-         ScaffoldMessenger.of(context).showMaterialBanner(
+          ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.white,
               shadowColor: Colors.green,
@@ -254,35 +250,34 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
               ],
             ),
           );
-          Future.delayed(Duration(seconds: 3), () {
+          Future.delayed(Duration(seconds: 1), () {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-             Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+            Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
           });
           setState(() => _busy = false);
-         
         } else {
           debugPrint('Auth Failed: $responseData');
           String errorMessage = responseData['data']['message'];
-        ScaffoldMessenger.of(context).showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.red,
-            elevation: 2,
-            leading: Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            content: Text(errorMessage),
-            actions: const [
-              Icon(
-                Icons.close,
+          ScaffoldMessenger.of(context).showMaterialBanner(
+            MaterialBanner(
+              backgroundColor: Colors.white,
+              shadowColor: Colors.red,
+              elevation: 2,
+              leading: Icon(
+                Icons.error,
+                color: Colors.red,
               ),
-            ],
-          ),
-        );
-        Future.delayed(Duration(seconds: 3), () {
-          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-        });
+              content: Text(errorMessage),
+              actions: const [
+                Icon(
+                  Icons.close,
+                ),
+              ],
+            ),
+          );
+          Future.delayed(Duration(seconds: 3), () {
+            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+          });
           setState(() => _busy = false);
         }
       } else {
@@ -292,6 +287,44 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
       }
     } catch (e) {
       debugPrint('Failed to authenticate device: $e');
+      ScaffoldMessenger.of(context).showMaterialBanner(
+        MaterialBanner(
+          backgroundColor: Colors.white,
+          shadowColor: Colors.red,
+          elevation: 2,
+          leading: Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+          content: RichText(
+            text: const TextSpan(
+              text: "Oops!",
+              style: TextStyle(
+                  color: BLACK,
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15),
+              children: [
+                TextSpan(
+                  text: "\nCheck your internet connection and try again.",
+                  style: TextStyle(
+                      fontFamily: "Poppins",
+                      fontWeight: FontWeight.normal,
+                      fontSize: 11),
+                ),
+              ],
+            ),
+          ),
+          actions: const [
+            Icon(
+              Icons.close,
+            ),
+          ],
+        ),
+      );
+      Future.delayed(const Duration(seconds: 2), () {
+        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
+      });
       setState(() => _busy = false);
     }
   }
