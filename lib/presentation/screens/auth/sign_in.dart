@@ -12,6 +12,7 @@ import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/sign_up.dart';
+import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -316,11 +317,21 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           );
           setState(() => _busy = false);
-          Future.delayed(const Duration(seconds: 1), () {
+          Future.delayed(const Duration(seconds: 1), () async {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-            Navigator.of(context).popAndPushNamed(
-              SignInAuthScreen.routeName,
-            );
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            bool isAuth = prefs.getBool("isAuth") ?? false;
+            if (isAuth) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                SpaceScreen.routeName,
+                (_) => false,
+              );
+            } else {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                SignInAuthScreen.routeName,
+                (_) => false,
+              );
+            }
           });
         } else {
           setState(() => _busy = false);
@@ -378,7 +389,7 @@ class _SignInScreenState extends State<SignInScreen> {
         );
       }
     } catch (e) {
-        setState(() => _busy = false);
+      setState(() => _busy = false);
       debugPrint('Something went wrong: $e');
       ScaffoldMessenger.of(context).showMaterialBanner(
         MaterialBanner(

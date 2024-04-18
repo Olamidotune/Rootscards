@@ -196,15 +196,17 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
     String otpEndpoint = "https://api.idonland.com/user/authorizeDevice";
 
     try {
-      http.Response response = await http.post(
-        Uri.parse(otpEndpoint),
-        headers: {
-          HttpHeaders.authorizationHeader:
-              'Basic ${base64Encode(utf8.encode("$xpub1:$xpub2"))}',
-          HttpHeaders.contentTypeHeader: 'application/json',
-        },
-        body: encodedBody,
-      ).timeout(Duration(seconds: 30));
+      http.Response response = await http
+          .post(
+            Uri.parse(otpEndpoint),
+            headers: {
+              HttpHeaders.authorizationHeader:
+                  'Basic ${base64Encode(utf8.encode("$xpub1:$xpub2"))}',
+              HttpHeaders.contentTypeHeader: 'application/json',
+            },
+            body: encodedBody,
+          )
+          .timeout(Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
@@ -215,6 +217,7 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
           String authid = responseData['data']['authid'];
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('authid', authid);
+          await prefs.setBool("isAuth", true);
           ScaffoldMessenger.of(context).showMaterialBanner(
             MaterialBanner(
               backgroundColor: Colors.white,
@@ -252,7 +255,10 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
           );
           Future.delayed(Duration(seconds: 1), () {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-            Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              SpaceScreen.routeName,
+              (_) => false,
+            );
           });
           setState(() => _busy = false);
         } else {

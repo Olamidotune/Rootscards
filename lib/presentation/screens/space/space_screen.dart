@@ -118,7 +118,6 @@ class _SpaceScreenState extends State<SpaceScreen> {
                                     MIN_SUPPORTED_SCREEN_HEIGHT
                                 ? MediaQuery.of(context).size.height * 0.03
                                 : MediaQuery.of(context).size.height / 95
-                            // height: MediaQuery.of(context).size.height / 95,
                             ),
                         const Text(
                           "rootcards.com",
@@ -137,7 +136,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
   }
 
   Future<void> _createSpace(String spaceName) async {
-    // if (_busy) return;
+    if (_busy) return;
     if (!_formKey.currentState!.validate()) return;
     setState(() => _busy = true);
 
@@ -156,18 +155,16 @@ class _SpaceScreenState extends State<SpaceScreen> {
     };
 
     try {
-      http.Response response = await Future.delayed(Duration(seconds: 30), () {
-        return http
-            .post(
-              Uri.parse(apiUrl),
-              headers: {
-                HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
-                HttpHeaders.contentTypeHeader: 'application/json',
-              },
-              body: json.encode(requestBody),
-            )
-            .timeout(Duration(seconds: 30));
-      });
+      http.Response response = await http
+          .post(
+            Uri.parse(apiUrl),
+            headers: {
+              HttpHeaders.authorizationHeader: 'Bearer $bearerToken',
+              HttpHeaders.contentTypeHeader: 'application/json',
+            },
+            body: json.encode(requestBody),
+          )
+          .timeout(Duration(seconds: 30));
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
         String status = responseData["status"];
