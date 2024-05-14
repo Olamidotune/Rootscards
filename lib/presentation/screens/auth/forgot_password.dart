@@ -220,7 +220,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
             Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
           });
-          print('Password reset successful');
+          debugPrint('Password reset successful');
           setState(() => _busy = false);
         } 
       }

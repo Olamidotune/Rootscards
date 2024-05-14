@@ -12,7 +12,6 @@ import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/sign_up.dart';
-import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -278,6 +277,7 @@ class _SignInScreenState extends State<SignInScreen> {
           debugPrint('Sign In Successful: $responseData');
           debugPrint('Xpub1: $xpub1');
           debugPrint('Xpub2: $xpub2');
+          debugPrint(email);
           SharedPreferences prefs = await SharedPreferences.getInstance();
           await prefs.setString('xpub1', xpub1);
           await prefs.setString('xpub2', xpub2);
@@ -319,19 +319,10 @@ class _SignInScreenState extends State<SignInScreen> {
           setState(() => _busy = false);
           Future.delayed(const Duration(seconds: 1), () async {
             ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            bool isAuth = prefs.getBool("isAuth") ?? false;
-            if (isAuth) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                SpaceScreen.routeName,
-                (_) => false,
-              );
-            } else {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                SignInAuthScreen.routeName,
-                (_) => false,
-              );
-            }
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              SignInAuthScreen.routeName,
+              (_) => false,
+            );
           });
         } else {
           setState(() => _busy = false);

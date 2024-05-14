@@ -9,10 +9,10 @@ class AppWrapper extends StatefulWidget {
   const AppWrapper({Key? key}) : super(key: key);
 
   @override
-  _AppWrapperState createState() => _AppWrapperState();
+  AppWrapperState createState() => AppWrapperState();
 }
 
-class _AppWrapperState extends State<AppWrapper> {
+class AppWrapperState extends State<AppWrapper> {
   bool _isSignedIn = false;
 
   @override

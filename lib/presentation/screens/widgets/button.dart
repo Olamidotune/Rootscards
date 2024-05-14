@@ -1,4 +1,4 @@
-// ignore_for_file: sized_box_for_whitespace, use_key_in_widget_constructors
+// ignore_for_file: sized_box_for_whitespace, use_key_in_widget_constructors, curly_braces_in_flow_control_structures
 
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
@@ -16,7 +16,7 @@ class Button extends StatelessWidget {
   final bool busy;
   final bool pill;
 
-  Button(this.text,
+ const Button(this.text,
       {this.onPressed,
       this.color,
       this.icon,
@@ -43,7 +43,7 @@ class Button extends StatelessWidget {
           shape: MaterialStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(this.pill ? 40 : 10.0),
+              Radius.circular(pill ? 40 : 10.0),
             ),
           )),
         ),
