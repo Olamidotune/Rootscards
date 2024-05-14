@@ -23,7 +23,7 @@ class GetStartedButton extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: busy
-            ? Container(
+            ? SizedBox(
                 width: 20.0,
                 height: 20.0,
                 child: const CircularProgressIndicator(
