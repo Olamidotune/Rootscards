@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-
-class NextButton extends StatelessWidget {
+import 'package:sizer/sizer.dart';
+class SkipButton extends StatelessWidget {
   final Function()? onTap;
-  const NextButton({super.key, this.onTap});
+  const SkipButton({super.key, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +10,14 @@ class NextButton extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal:30.0),
       child: GestureDetector(
         onTap: onTap,
-          // child: Image.asset("assets/images/next_button.png"),
-          child: SvgPicture.asset("assets/svgs/next_button.svg"),
+          child: Image.asset("assets/images/skip_button.png",
+          width: 15.w,
+          ),
       ),
     );
   }
 }
+
+
+
+

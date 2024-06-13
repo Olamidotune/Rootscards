@@ -1,9 +1,9 @@
-import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
+import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
+import 'package:sizer/sizer.dart';
 
 class TestOnboarding extends StatefulWidget {
   static const String routeName = "test_onboarding_screen";
@@ -32,6 +32,12 @@ class _TestOnboardingState extends State<TestOnboarding> {
     "Optimize what works with Insights to\nknow and understand your audience,\n allowing you fly high.",
   ];
 
+  static const _backgroundColor = <Color>[
+    ONBOARDING1,
+    ONBOARDING2,
+    ONBOARDING3,
+  ];
+
   final CarouselController _carouselController = CarouselController();
 
   int _currentIndex = 0;
@@ -40,20 +46,22 @@ class _TestOnboardingState extends State<TestOnboarding> {
   Widget build(BuildContext context) {
     final double height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-
     return Scaffold(
+      backgroundColor: _backgroundColor[_currentIndex],
       body: SafeArea(
-          child: Stack(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height -
-                MediaQuery.of(context).padding.top,
-            child: Expanded(
-              flex: 8,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              child: SizedBox(
+                height: height,
                 child: Column(
                   children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: SkipButton(
+                        onTap: () {},
+                      ),
+                    ),
                     SizedBox(height: height * .1),
                     CarouselSlider.builder(
                       carouselController: _carouselController,
@@ -64,16 +72,27 @@ class _TestOnboardingState extends State<TestOnboarding> {
                         title: _carouselTitles[index],
                         subTitle: _carouselTexts[index],
                         viewPortHeight: height,
+                        slider: Container(
+                          margin: EdgeInsets.only(
+                            top: _currentIndex < _carouselImages.length - 1
+                                ? 20
+                                : 0,
+                          ),
+                          child: CarouselIndicator(
+                            count: 3,
+                            currentIndex: _currentIndex,
+                          ),
+                        ),
                       ),
                       options: CarouselOptions(
                         initialPage: 0,
                         autoPlay: false,
                         enableInfiniteScroll: false,
                         viewportFraction: 1,
-                        height: 0.85 * height <= 500 ? 0.75 * height : 500,
+                        height: 0.85 * height <= 550 ? 0.75 * height : 700,
                         autoPlayInterval: Duration(seconds: 4),
                         autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.fastOutSlowIn,
+                        autoPlayCurve: Curves.easeIn,
                         onPageChanged: (newIndex, reason) => setState(() {
                           _currentIndex = newIndex;
                         }),
@@ -83,21 +102,46 @@ class _TestOnboardingState extends State<TestOnboarding> {
                 ),
               ),
             ),
-          ),
-        ],
-      )),
+            Positioned(
+              bottom: height / 120,
+              right: height / 50,
+              left: height / 50,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                child: Column(
+                  children: [
+                    GestureDetector(
+                      onTap: () {},
+                      child: Image.asset(
+                        "assets/images/get_started_button.png",
+                        width: 80.w,
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Image.asset(
+                        "assets/images/login_button.png",
+                        width: 80.w,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
-  
 }
-
-
 
 class _CarouselImage extends StatelessWidget {
   final Key? key;
   final String image;
   final String title;
   final String subTitle;
+  final Widget slider;
   final double viewPortHeight;
 
   _CarouselImage({
@@ -106,6 +150,7 @@ class _CarouselImage extends StatelessWidget {
     required this.title,
     required this.subTitle,
     required this.viewPortHeight,
+    required this.slider,
   }) : super(key: key);
 
   @override
@@ -114,14 +159,13 @@ class _CarouselImage extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10),
-          child: 
-          
-          Image.asset(
+          child: Image.asset(
             "assets/images/" + image,
-            height: viewPortHeight * .38,
+            height: viewPortHeight * .40,
             fit: BoxFit.fill,
           ),
         ),
+        slider,
         Container(
           alignment: Alignment.center,
           margin: EdgeInsets.only(top: 20, bottom: 10),
@@ -129,10 +173,8 @@ class _CarouselImage extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-                fontSize: 25,
-                color: BLACK,
-                fontWeight: FontWeight.bold),
-            textAlign: TextAlign.center,
+                fontSize: 32, color: BLACK, fontFamily: "LoveYaLikeASister"),
+            textAlign: TextAlign.justify,
           ),
         ),
         Container(
@@ -143,9 +185,7 @@ class _CarouselImage extends StatelessWidget {
           child: Text(
             subTitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              height: 1.1,
-            ),
+            style: TextStyle(fontSize: 14, height: 1.1),
           ),
         ),
       ],
