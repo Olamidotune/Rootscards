@@ -2,14 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:rootscards/app_wrapper.dart';
+import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/sign_up.dart';
-import 'package:rootscards/presentation/screens/onboarding/onboarding.dart';
-import 'package:rootscards/presentation/screens/onboarding/onboarding_one.dart';
-import 'package:rootscards/presentation/screens/onboarding/onboarding_two.dart';
-import 'package:rootscards/presentation/screens/onboarding/test_onboarding.dart';
+
+import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:sizer/sizer.dart';
@@ -69,18 +68,14 @@ class MyApp extends StatelessWidget {
           // ),
           home: AppWrapper(),
           routes: {
-            SplashScreen.routeName: (context) => const SplashScreen(),
-            TestOnboarding.routeName: (context) => const TestOnboarding(),
-            OnBoardingScreen.routeName: (context) => const OnBoardingScreen(),
-            OnBoardingScreenOne.routeName: (context) =>
-                const OnBoardingScreenOne(),
-            OnBoardingScreenTwo.routeName: (context) =>
-                const OnBoardingScreenTwo(),
-            SignUpScreen.routeName: (context) => const SignUpScreen(),
+            SplashScreen.routeName: (context) => SplashScreen(),
+            TestOnboarding.routeName: (context) => TestOnboarding(),
+            SignUpScreen.routeName: (context) => SignUpScreen(),
             SignInScreen.routeName: (context) => SignInScreen(),
+            GetStartedScreen.routeName: (context) => GetStartedScreen(),
             ForgotPasswordScreen.routeName: (context) => ForgotPasswordScreen(),
-            SignInAuthScreen.routeName: (context) => const SignInAuthScreen(),
-            SpaceScreen.routeName:(context) => const SpaceScreen()
+            SignInAuthScreen.routeName: (context) => SignInAuthScreen(),
+            SpaceScreen.routeName: (context) => SpaceScreen()
           },
         );
       },

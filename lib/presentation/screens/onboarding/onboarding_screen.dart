@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
 import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
 import 'package:sizer/sizer.dart';
@@ -111,7 +112,9 @@ class _TestOnboardingState extends State<TestOnboarding> {
                 child: Column(
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.of(context).pushNamed(GetStartedScreen.routeName);
+                      },
                       child: Image.asset(
                         "assets/images/get_started_button.png",
                         width: 80.w,
