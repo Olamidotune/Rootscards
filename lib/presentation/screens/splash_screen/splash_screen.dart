@@ -1,9 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:rootscards/presentation/screens/onboarding/onboarding.dart';
-
-import 'package:sizer/sizer.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   static const String routeName = "splash_screen";
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const OnBoardingScreen()),
+          MaterialPageRoute(builder: (context) => const TestOnboarding()),
         );
       }
     });
@@ -32,46 +33,43 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height /
-                  2, // Half of the screen height
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/images/ss.png"),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
+        child: SafeArea(
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2.5,
+                ),
+                SvgPicture.asset("assets/svg/logo.svg",
+                color: BLACK,),
+                SizedBox(
+                  height: 35,
+                ),
+                Text(
+                  "RootsCards",
+                  style: context.textTheme.titleLarge?.copyWith(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontFamily: "LoveYaLikeASister"),
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height *.3,
+                ),
+                Text(
+                  "By Rootshive 1.01",
+                  style: TextStyle(
+                    color: GREY,
+                    fontWeight: FontWeight.normal,
+                    fontSize: 14,
                   ),
-                  const Positioned.fill(
-                    child: FractionalTranslation(
-                      translation: Offset(0.0, 0.0),
-                      child: Center(
-                        child: Text(
-                          "rootscards",
-                          style: TextStyle(color: Colors.white, fontSize: 30),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                )
+              ],
             ),
-            SizedBox(
-              height: 40.h,
-            ),
-            const Text(
-              "Be Seen, Be Heard. Show off \n All of you, in one Link.",
-              style: TextStyle(color: Colors.white),
-              textAlign: TextAlign.center,
-            )
-          ],
+          ),
         ),
       ),
     );
