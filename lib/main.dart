@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rootscards/app_wrapper.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
@@ -14,6 +15,10 @@ import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart
 import 'package:sizer/sizer.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   runApp(const MyApp());
 }
 

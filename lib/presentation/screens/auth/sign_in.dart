@@ -68,55 +68,60 @@ class _SignInScreenState extends State<SignInScreen>
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 15,vertical: 15),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
                       "Welcome Back",
-                      style: TextStyle(
-                          fontSize: 32,
-                          color: BLACK,
-                          fontFamily: "LoveYaLikeASister"),
+                      style: context.textTheme.headlineLarge!.copyWith(
+                          fontFamily: "LoveYaLikeASister", fontSize: 38),
                       textAlign: TextAlign.justify,
                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: TabBar(
-                    onTap: (value) {
-                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                        setState(() {
-                          _tabController.index = value;
-                        });
-                      });
-                    },
-                    enableFeedback: true,
-                    indicator: BoxDecoration(
+                  child: Container(
+                    decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(30),
-                      color: BLACK,
+                      color: Colors.grey.shade300
+
                     ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "Email",
-                          style: context.textTheme.bodyMedium?.copyWith(
-                              color: _tabController.index == 0
-                                  ? Colors.white
-                                  : BLACK),
-                        ),
+                    child: TabBar(
+                      onTap: (value) {
+                        WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                          setState(() {
+                            _tabController.index = value;
+                          });
+                        });
+                      },
+                 
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: BLACK,
                       ),
-                      Tab(
-                        child: Text(
-                          "Phone number",
-                          style: context.textTheme.bodyMedium?.copyWith(
-                              color: _tabController.index == 1
-                                  ? Colors.white
-                                  : BLACK),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      tabs: [
+                        Tab(
+                          child: Text(
+                            "Email",
+                            style: context.textTheme.bodyMedium?.copyWith(
+                                color: _tabController.index == 0
+                                    ? Colors.white
+                                    : BLACK),
+                          ),
                         ),
-                      ),
-                    ],
+                        Tab(
+                          child: Text(
+                            "Phone number",
+                            style: context.textTheme.bodyMedium?.copyWith(
+                                color: _tabController.index == 1
+                                    ? Colors.white
+                                    : BLACK),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
