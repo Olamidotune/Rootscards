@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
@@ -24,14 +25,14 @@ class _TestOnboardingState extends State<TestOnboarding> {
 
   static const _carouselTitles = <String>[
     "A creative handy tool.",
-    "A creator’s handy tool.",
+    "A creator's handy tool.",
     "Stand Out!",
   ];
 
   static const _carouselTexts = <String>[
     "Optimize what works with Insights to know and\n understand your audience, allowing you fly high.",
     "Optimize what works with Insights to know and\n understand your audience, allowing you fly high.",
-    "Optimize what works with Insights to\nknow and understand your audience,\n allowing you fly high.",
+    "Optimize what works with Insights to\n know and understand your audience,\n allowing you fly high.",
   ];
 
   static const _backgroundColor = <Color>[
@@ -64,7 +65,7 @@ class _TestOnboardingState extends State<TestOnboarding> {
                         onTap: () {},
                       ),
                     ),
-                    SizedBox(height: height * .1),
+                    SizedBox(height: height * .01),
                     CarouselSlider.builder(
                       carouselController: _carouselController,
                       itemCount: 3,
@@ -94,7 +95,7 @@ class _TestOnboardingState extends State<TestOnboarding> {
                         height: 0.85 * height <= 550 ? 0.75 * height : 700,
                         autoPlayInterval: Duration(seconds: 4),
                         autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.easeIn,
+                        autoPlayCurve: Curves.easeInOut,
                         onPageChanged: (newIndex, reason) => setState(() {
                           _currentIndex = newIndex;
                         }),
@@ -114,7 +115,8 @@ class _TestOnboardingState extends State<TestOnboarding> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushNamed(GetStartedScreen.routeName);
+                        Navigator.of(context)
+                            .pushNamed(GetStartedScreen.routeName);
                       },
                       child: Image.asset(
                         "assets/images/get_started_button.png",
@@ -124,10 +126,10 @@ class _TestOnboardingState extends State<TestOnboarding> {
                     SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
-                                Navigator.of(context).pushNamed(
-                                  SignInScreen.routeName,
-                                );
-                              },
+                        Navigator.of(context).pushNamed(
+                          SignInScreen.routeName,
+                        );
+                      },
                       child: Image.asset(
                         "assets/images/login_button.png",
                         width: 80.w,
@@ -165,13 +167,10 @@ class _CarouselImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Image.asset(
-            "assets/images/" + image,
-            height: viewPortHeight * .40,
-            fit: BoxFit.fill,
-          ),
+        Image.asset(
+          "assets/images/$image",
+          height: viewPortHeight * .48,
+          fit: BoxFit.contain,
         ),
         slider,
         Container(
@@ -180,8 +179,10 @@ class _CarouselImage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             title,
-            style: TextStyle(
-                fontSize: 32, color: BLACK, fontFamily: "LoveYaLikeASister"),
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontFamily: "LoveYaLikeASister",
+              fontSize: 38,
+            ),
             textAlign: TextAlign.justify,
           ),
         ),
@@ -189,12 +190,9 @@ class _CarouselImage extends StatelessWidget {
           alignment: Alignment.center,
           margin:
               EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 350 ? 20 : 3),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            subTitle,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, height: 1.1),
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 0),
+          child: Text(subTitle,
+              textAlign: TextAlign.center, style: context.textTheme.bodyLarge),
         ),
       ],
     );
