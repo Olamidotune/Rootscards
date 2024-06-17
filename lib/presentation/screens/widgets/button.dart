@@ -8,8 +8,8 @@ import 'package:rootscards/config/colors.dart';
 class Button extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? text;
-  final Color textColor;
-  final Color disabledTextColor;
+  final Color? textColor;
+  final Color? disabledTextColor;
   final Color? color;
   final IconData? icon;
   final Color? iconColor;
@@ -21,8 +21,8 @@ class Button extends StatelessWidget {
       this.color,
       this.icon,
       this.iconColor,
-      this.textColor = Colors.white,
-      this.disabledTextColor = Colors.white,
+      this.textColor ,
+      this.disabledTextColor,
       this.busy = false,
       this.pill = false});
 
@@ -30,20 +30,20 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 52.0,
+      height: 60.0,
       child: ElevatedButton(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>(
-              (Set<MaterialState> states) {
-            if (states.contains(MaterialState.pressed))
-              return GREY;
-            else if (states.contains(MaterialState.disabled)) return BLACK;
-            return BLACK;
+          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+              (Set<WidgetState> states) {
+            if (states.contains(WidgetState.pressed))
+              return BUTTONGREEN;
+            else if (states.contains(WidgetState.disabled)) return GREY;
+            return BUTTONGREY;
           }),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(pill ? 40 : 10.0),
+              Radius.circular(pill ? 30 : 10.0),
             ),
           )),
         ),
@@ -62,8 +62,9 @@ class Button extends StatelessWidget {
                     style: TextStyle(
                         color:
                             onPressed == null ? textColor : disabledTextColor,
-                        fontSize: 14.0,
-                        fontFamily: "HelveticaRounded"),
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold
+                        ),
                   )
                 : Icon(
                     icon,

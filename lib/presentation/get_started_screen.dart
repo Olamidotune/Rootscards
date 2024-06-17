@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
-import 'package:rootscards/presentation/screens/widgets/socail_media_button.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in.dart';
+import 'package:rootscards/presentation/screens/widgets/big_social_media_button.dart';
 
 class GetStartedScreen extends StatelessWidget {
   static const String routeName = 'get_started_screen';
@@ -30,8 +32,8 @@ class GetStartedScreen extends StatelessWidget {
         child: SizedBox(
           height: height,
           child: Padding(
-            padding:  EdgeInsets.only(
-             top:  height <= 550 ? 10  : 20,
+            padding: EdgeInsets.only(
+              top: height <= 550 ? 10 : 20,
               left: 20,
               right: 20,
             ),
@@ -125,8 +127,8 @@ class GetStartedScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                   SizedBox(
-                  height: 0.90 * height <= 700 ? .05 * height : height * .13 ,
+                  SizedBox(
+                    height: 0.90 * height <= 700 ? .05 * height : height * .13,
                   ),
                   RichText(
                     textAlign: TextAlign.center,
@@ -139,6 +141,12 @@ class GetStartedScreen extends StatelessWidget {
                             color: Colors.grey.shade700),
                         children: [
                           TextSpan(
+                            recognizer:  TapGestureRecognizer()
+                              ..onTap = () {
+                                Navigator.of(context).pushNamed(
+                                  SignInScreen.routeName,
+                                );
+                              },
                             text: "Login",
                             style: TextStyle(
                                 fontFamily: "lato",
