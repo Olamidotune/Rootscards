@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:rootscards/app_wrapper.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 import 'package:rootscards/presentation/screens/auth/sign_up.dart';
 

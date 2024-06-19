@@ -37,8 +37,8 @@ class Button extends StatelessWidget {
               (Set<WidgetState> states) {
             if (states.contains(WidgetState.pressed))
               return BUTTONGREEN;
-            else if (states.contains(WidgetState.disabled)) return GREY;
-            return BUTTONGREY;
+            else if (states.contains(WidgetState.disabled)) return GREY2;
+            return GREY2;
           }),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
