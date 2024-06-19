@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
 import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
 import 'package:sizer/sizer.dart';
@@ -167,32 +167,45 @@ class _CarouselImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          "assets/images/$image",
-          height: viewPortHeight * .48,
-          fit: BoxFit.contain,
-        ),
-        slider,
-        Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 20, bottom: 10),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            title,
-            style: context.textTheme.bodyLarge!.copyWith(
-              fontFamily: "LoveYaLikeASister",
-              fontSize: 38,
-            ),
-            textAlign: TextAlign.justify,
+        Expanded(
+          flex: 8,
+          child: Image.asset(
+            "assets/images/$image",
+            height: viewPortHeight * .48,
+            fit: BoxFit.contain,
           ),
         ),
-        Container(
-          alignment: Alignment.center,
-          margin:
-              EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 350 ? 20 : 3),
-          padding: EdgeInsets.symmetric(horizontal: 0),
-          child: Text(subTitle,
-              textAlign: TextAlign.center, style: context.textTheme.bodyLarge),
+        slider,
+        Expanded(
+          flex: 2,
+          child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.only(top: 20, bottom: viewPortHeight * .001),
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              title,
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontFamily: "LoveYaLikeASister",
+                fontSize: 25.sp,
+              ),
+              maxLines: 2,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 3,
+          child: Container(
+            alignment: Alignment.center,
+            // margin:
+            //     EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 550 ?  viewPortHeight * .03: 3),
+            padding: EdgeInsets.symmetric(horizontal: 0),
+            child: Text(
+              subTitle,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyLarge,
+            ),
+          ),
         ),
       ],
     );

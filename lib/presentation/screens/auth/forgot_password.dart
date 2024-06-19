@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;

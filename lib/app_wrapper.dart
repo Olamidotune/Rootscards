@@ -1,6 +1,6 @@
 
 import 'package:flutter/material.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

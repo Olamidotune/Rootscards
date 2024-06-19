@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 const THEME = Color(0xFFDB5001);
 const BLACK = Colors.black;
 const GREY = Colors.grey;
-const GREY2 = Color(0xFF8697AC);
+const GREY2 = Color.fromARGB(255, 198, 202, 206);
 const BUTTONGREY = Color.fromARGB(255, 205, 213, 213);
 const BUTTONGREEN = Color.fromARGB(255, 165, 255, 100);
 const RED = Colors.red;
