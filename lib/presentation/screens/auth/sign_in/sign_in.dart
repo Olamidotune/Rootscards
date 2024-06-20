@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/forgot_password.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
@@ -23,7 +24,7 @@ class _SignInScreenState extends State<SignInScreen>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final ScrollController _scrollControllerEmail= ScrollController();
+  final ScrollController _scrollControllerEmail = ScrollController();
   final ScrollController _scrollControllerPhone = ScrollController();
   final FocusNode _passwordFocusNode = FocusNode();
 
@@ -152,213 +153,178 @@ class _SignInScreenState extends State<SignInScreen>
                     child: SingleChildScrollView(
                       controller: _scrollControllerEmail,
                       physics: BouncingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          Form(
-                            key: _formKey,
-                            child: AutofillGroup(
-                              child: Column(
-                                children: [
-                                  TextFormField(
-                                    keyboardType: TextInputType.emailAddress,
-                                    controller: _emailController,
-                                    textInputAction: TextInputAction.next,
-                                    validator: (value) {
-                                      if (EmailValidator.validate(
-                                          value?.trim() ?? "")) {
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: AppSpacing.horizontalSpacingSmall),
+                        child: Column(
+                          children: [
+                            Form(
+                              key: _formKey,
+                              child: AutofillGroup(
+                                child: Column(
+                                  children: [
+                                    TextFormField(
+                                      keyboardType: TextInputType.emailAddress,
+                                      controller: _emailController,
+                                      textInputAction: TextInputAction.next,
+                                      validator: (value) {
+                                        if (EmailValidator.validate(
+                                            value?.trim() ?? "")) {
+                                          return null;
+                                        }
+                                        return "Please provide a valid email address";
+                                      },
+                                      style: const TextStyle(color: BLACK),
+                                      autofillHints: const [
+                                        AutofillHints.email
+                                      ],
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 20, horizontal: 10),
+                                        hintText: "Email or Username",
+                                        hintStyle: const TextStyle(
+                                            color: Colors.black26,
+                                            fontWeight: FontWeight.bold),
+                                        border: const OutlineInputBorder(
+                                          borderSide: BorderSide(color: GREY2),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30),
+                                          ),
+                                        ),
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderSide: BorderSide(color: BLACK),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                              30,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(height: height * .02),
+                                    TextFormField(
+                                      keyboardType: TextInputType.text,
+                                      controller: _passwordController,
+                                      focusNode: _passwordFocusNode,
+                                      textInputAction: TextInputAction.go,
+                                      obscureText: _obscurePassword,
+                                      // onFieldSubmitted: (_) => _signIn(
+                                      //     _emailController.text,
+                                      //     _passwordController.text,
+                                      //     context),
+                                      validator: (value) {
+                                        if (value == null || value.isEmpty) {
+                                          return "Please provide a password.";
+                                        }
                                         return null;
-                                      }
-                                      return "Please provide a valid email address";
-                                    },
-                                    style: const TextStyle(color: BLACK),
-                                    autofillHints: const [AutofillHints.email],
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 10),
-                                      hintText: "Email or Username",
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black26,
-                                          fontWeight: FontWeight.bold),
-                                      border: const OutlineInputBorder(
-                                        borderSide: BorderSide(color: GREY2),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(30),
+                                      },
+                                      style: const TextStyle(),
+                                      autofillHints: const [
+                                        AutofillHints.email
+                                      ],
+                                      decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 20, horizontal: 10),
+                                        suffixIcon: IconButton(
+                                            onPressed: () => setState(() =>
+                                                _obscurePassword =
+                                                    !_obscurePassword),
+                                            icon: _obscurePassword
+                                                ? const Icon(Icons.visibility)
+                                                : const Icon(
+                                                    Icons.visibility_off)),
+                                        hintText: "Password",
+                                        hintStyle: const TextStyle(
+                                            color: Colors.black26,
+                                            fontWeight: FontWeight.bold),
+                                        border: const OutlineInputBorder(
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(30),
+                                          ),
                                         ),
-                                      ),
-                                      focusedBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(color: BLACK),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                            30,
+                                        focusedBorder: const OutlineInputBorder(
+                                          borderSide: BorderSide(color: BLACK),
+                                          borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                              30,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  SizedBox(height: height * .02),
-                                  TextFormField(
-                                    keyboardType: TextInputType.text,
-                                    controller: _passwordController,
-                                    focusNode: _passwordFocusNode,
-                                    textInputAction: TextInputAction.go,
-                                    obscureText: _obscurePassword,
-                                    // onFieldSubmitted: (_) => _signIn(
-                                    //     _emailController.text,
-                                    //     _passwordController.text,
-                                    //     context),
-                                    validator: (value) {
-                                      if (value == null || value.isEmpty) {
-                                        return "Please provide a password.";
-                                      }
-                                      return null;
-                                    },
-                                    style: const TextStyle(),
-                                    autofillHints: const [AutofillHints.email],
-                                    decoration: InputDecoration(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          vertical: 20, horizontal: 10),
-                                      suffixIcon: IconButton(
-                                          onPressed: () => setState(() =>
-                                              _obscurePassword =
-                                                  !_obscurePassword),
-                                          icon: _obscurePassword
-                                              ? const Icon(Icons.visibility)
-                                              : const Icon(
-                                                  Icons.visibility_off)),
-                                      hintText: "Password",
-                                      hintStyle: const TextStyle(
-                                          color: Colors.black26,
-                                          fontWeight: FontWeight.bold),
-                                      border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(30),
-                                        ),
-                                      ),
-                                      focusedBorder: const OutlineInputBorder(
-                                        borderSide: BorderSide(color: BLACK),
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                            30,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(height: height * .02),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Remember me",
-                                        style: context.textTheme.bodyMedium
-                                            ?.copyWith(
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      GestureDetector(
-                                        onTap: () => Navigator.of(context)
-                                            .pushNamed(
-                                                ForgotPasswordScreen.routeName),
-                                        child: Text(
-                                          "Forgot password?",
+                                    SizedBox(height: height * .02),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Remember me",
                                           style: context.textTheme.bodyMedium
                                               ?.copyWith(
-                                            fontWeight: FontWeight.bold,
                                             color: Colors.black,
                                           ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: height * .04),
-                                  Button(
-                                    busy: _busy,
-                                    "Login",
-                                    textColor: BLACK,
-                                    disabledTextColor: BLACK,
-                                    pill: true,
-                                    onPressed: () {},
-                                  )
-                                ],
+                                        GestureDetector(
+                                          onTap: () => Navigator.of(context)
+                                              .pushNamed(ForgotPasswordScreen
+                                                  .routeName),
+                                          child: Text(
+                                            "Forgot password?",
+                                            style: context.textTheme.bodyMedium
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: height * .04),
+                                    Button(
+                                      busy: _busy,
+                                      "Login",
+                                      textColor: BLACK,
+                                      disabledTextColor: BLACK,
+                                      pill: true,
+                                      onPressed: () {},
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(height: height * .04),
-                          Text(
-                            "Or sign in with",
-                            style: context.textTheme.bodyMedium
-                                ?.copyWith(color: GREY),
-                          ),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: SmallSocialButton(
-                                  iconName: "facebook",
-                                  onPressed: () {},
-                                ),
-                              ),
-                              Expanded(
-                                child: SmallSocialButton(
-                                  iconName: "google",
-                                  onPressed: () {},
-                                ),
-                              ),
-                              Expanded(
-                                child: SmallSocialButton(
-                                  iconName: "apple",
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(height: height * .01),
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                              text: "By continuing, you agree to Pipel's ",
-                              style: TextStyle(
-                                  fontFamily: "lato",
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 13,
-                                  color: GREY),
+                            SizedBox(height: height * .04),
+                            Text(
+                              "Or sign in with",
+                              style: context.textTheme.bodyMedium
+                                  ?.copyWith(color: GREY),
+                            ),
+                            Row(
                               children: [
-                                TextSpan(
-                                  text: "Terms of Service\n",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: BLACK),
+                                Expanded(
+                                  child: SmallSocialButton(
+                                    iconName: "facebook",
+                                    onPressed: () {},
+                                  ),
                                 ),
-                                TextSpan(
-                                  text: " and ",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700),
+                                Expanded(
+                                  child: SmallSocialButton(
+                                    iconName: "google",
+                                    onPressed: () {},
+                                  ),
                                 ),
-                                TextSpan(
-                                  text: "Privacy Policy",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: BLACK),
-                                )
+                                Expanded(
+                                  child: SmallSocialButton(
+                                    iconName: "apple",
+                                    onPressed: () {},
+                                  ),
+                                ),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: 0.90 * height <= 550
-                                ? .02 * height
-                                : height * .15,
-                          ),
-                          RichText(
-                            textAlign: TextAlign.center,
-                            text: TextSpan(
-                                text: "Don't have an account? ",
+                            SizedBox(height: height * .01),
+                            RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                text: "By continuing, you agree to Pipel's ",
                                 style: TextStyle(
                                     fontFamily: "lato",
                                     fontWeight: FontWeight.normal,
@@ -366,18 +332,61 @@ class _SignInScreenState extends State<SignInScreen>
                                     color: GREY),
                                 children: [
                                   TextSpan(
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {},
-                                    text: " Create Account",
+                                    text: "Terms of Service\n",
                                     style: TextStyle(
                                         fontFamily: "lato",
                                         fontWeight: FontWeight.bold,
                                         fontSize: 13,
                                         color: BLACK),
                                   ),
-                                ]),
-                          ),
-                        ],
+                                  TextSpan(
+                                    text: " and ",
+                                    style: TextStyle(
+                                        fontFamily: "lato",
+                                        fontWeight: FontWeight.normal,
+                                        fontSize: 13,
+                                        color: Colors.grey.shade700),
+                                  ),
+                                  TextSpan(
+                                    text: "Privacy Policy",
+                                    style: TextStyle(
+                                        fontFamily: "lato",
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: BLACK),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 0.90 * height <= 550
+                                  ? .02 * height
+                                  : height * .15,
+                            ),
+                            RichText(
+                              textAlign: TextAlign.center,
+                              text: TextSpan(
+                                  text: "Don't have an account? ",
+                                  style: TextStyle(
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 13,
+                                      color: GREY),
+                                  children: [
+                                    TextSpan(
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {},
+                                      text: " Create Account",
+                                      style: TextStyle(
+                                          fontFamily: "lato",
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          color: BLACK),
+                                    ),
+                                  ]),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

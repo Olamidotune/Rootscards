@@ -14,7 +14,7 @@ import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sizer/sizer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignInAuthScreen extends StatefulWidget {
   static const String routeName = "sign_in_auth_screen";

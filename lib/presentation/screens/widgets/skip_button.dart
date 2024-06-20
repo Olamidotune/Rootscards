@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 class SkipButton extends StatelessWidget {
   final Function()? onTap;
   const SkipButton({super.key, this.onTap});

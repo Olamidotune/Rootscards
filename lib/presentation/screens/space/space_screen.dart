@@ -10,8 +10,7 @@ import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:sizer/sizer.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SpaceScreen extends StatefulWidget {
   static const String routeName = "space_screen";
