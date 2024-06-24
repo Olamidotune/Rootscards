@@ -359,9 +359,9 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                             ),
                             SizedBox(
-                              height: 0.90 * height <= 550
-                                  ? .02 * height
-                                  : height * .15,
+                              height: 0.90 * height <= 700
+                                  ? .03 * height
+                                  : height * .13,
                             ),
                             RichText(
                               textAlign: TextAlign.center,
@@ -549,10 +549,11 @@ class _SignInScreenState extends State<SignInScreen>
                                       ..onTap = () {},
                                     text: " Create Account",
                                     style: TextStyle(
-                                        fontFamily: "lato",
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                        color: BLACK),
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                      color: BLACK,
+                                    ),
                                   ),
                                 ]),
                           ),

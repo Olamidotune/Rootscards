@@ -9,7 +9,6 @@ import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
 import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
 
-
 class TestOnboarding extends StatefulWidget {
   static const String routeName = "test_onboarding_screen";
   const TestOnboarding({super.key});
@@ -59,51 +58,61 @@ class _TestOnboardingState extends State<TestOnboarding> {
             SingleChildScrollView(
               child: SizedBox(
                 height: height,
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: SkipButton(
-                        onTap: () {},
-                      ),
-                    ),
-                    SizedBox(height: height * .01),
-                    CarouselSlider.builder(
-                      carouselController: _carouselController,
-                      itemCount: 3,
-                      itemBuilder: (context, index, realIndex) =>
-                          _CarouselImage(
-                        image: _carouselImages[index],
-                        title: _carouselTitles[index],
-                        subTitle: _carouselTexts[index],
-                        viewPortHeight: height,
-                        slider: Container(
-                          margin: EdgeInsets.only(
-                            top: _currentIndex < _carouselImages.length - 1
-                                ? 20
-                                : 0,
-                          ),
-                          child: CarouselIndicator(
-                            count: 3,
-                            currentIndex: _currentIndex,
-                          ),
+                child: Padding(
+                  padding: EdgeInsets.all(10.0.w),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: SkipButton(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              GetStartedScreen.routeName,
+                       
+                            );
+                          },
+                          portView: height * .08.w,
                         ),
                       ),
-                      options: CarouselOptions(
-                        initialPage: 0,
-                        autoPlay: false,
-                        enableInfiniteScroll: false,
-                        viewportFraction: 1,
-                        height: 0.85 * height <= 550 ? 0.75 * height : 600,
-                        autoPlayInterval: Duration(seconds: 4),
-                        autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.easeInOut,
-                        onPageChanged: (newIndex, reason) => setState(() {
-                          _currentIndex = newIndex;
-                        }),
+                      SizedBox(height: height * .01),
+                      CarouselSlider.builder(
+                        carouselController: _carouselController,
+                        itemCount: 3,
+                        itemBuilder: (context, index, realIndex) =>
+                            _CarouselImage(
+                          image: _carouselImages[index],
+                          title: _carouselTitles[index],
+                          subTitle: _carouselTexts[index],
+                          viewPortHeight: height,
+                          slider: Container(
+                            margin: EdgeInsets.only(
+                              top: _currentIndex < _carouselImages.length - 1
+                                  ? 20
+                                  : 0,
+                            ),
+                            child: CarouselIndicator(
+                              count: 3,
+                              currentIndex: _currentIndex,
+                            ),
+                          ),
+                        ),
+                        options: CarouselOptions(
+                          initialPage: 0,
+                          autoPlay: false,
+                          enableInfiniteScroll: false,
+                          viewportFraction: 1,
+                          height: 0.85 * height <= 550 ? 0.75 * height : 600,
+                          autoPlayInterval: Duration(seconds: 4),
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.easeInOut,
+                          onPageChanged: (newIndex, reason) => setState(() {
+                            _currentIndex = newIndex;
+                          }),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -122,10 +131,9 @@ class _TestOnboardingState extends State<TestOnboarding> {
                       },
                       child: Image.asset(
                         "assets/images/get_started_button.png",
-                   
                       ),
                     ),
-             AppSpacing.verticalSpaceSmall,
+                    AppSpacing.verticalSpaceSmall,
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushNamed(
@@ -134,7 +142,6 @@ class _TestOnboardingState extends State<TestOnboarding> {
                       },
                       child: Image.asset(
                         "assets/images/login_button.png",
-    
                       ),
                     ),
                   ],
@@ -183,9 +190,9 @@ class _CarouselImage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Text(
             title,
-            style: context.textTheme.bodyLarge!.copyWith(
+            style: context.textTheme.displayMedium!.copyWith(
               fontFamily: "LoveYaLikeASister",
-              fontSize: 25.sp,
+              // fontSize: 25.sp,
             ),
             maxLines: 2,
             textAlign: TextAlign.center,
@@ -200,10 +207,12 @@ class _CarouselImage extends StatelessWidget {
           child: Text(
             subTitle,
             textAlign: TextAlign.center,
-            style: context.textTheme.bodyLarge,
+            style: context.textTheme.bodyLarge!.copyWith(
+               fontSize: 18.sp,
+            ),
           ),
         ),
-            AppSpacing.verticalSpaceMedium
+        AppSpacing.verticalSpaceMedium
       ],
     );
   }
