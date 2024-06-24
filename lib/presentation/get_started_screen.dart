@@ -1,26 +1,65 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/big_social_media_button.dart';
 
-class GetStartedScreen extends StatelessWidget {
+class GetStartedScreen extends StatefulWidget {
   static const String routeName = 'get_started_screen';
   const GetStartedScreen({super.key});
 
   @override
+  State<GetStartedScreen> createState() => _GetStartedScreenState();
+}
+
+class _GetStartedScreenState extends State<GetStartedScreen> {
+  @override
   Widget build(BuildContext context) {
+    const List<String> list = <String>[
+      'English(UK)',
+      'English(US)',
+    ];
     final double height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
+    String dropdownValue = list.first;
+
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
             icon: Icon(Icons.arrow_back)),
-        title: Text("PUT LANGUAGE HERE"),
+        title: Container(
+            height: 30,
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              border: Border.all(color: Colors.grey.shade400),
+            ),
+            child: DropdownButton<String>(
+              value: dropdownValue,
+              icon: const Icon(Icons.arrow_drop_down),
+              elevation: 16,
+              style: const TextStyle(color: BLACK),
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownValue = value!;
+                });
+              },
+              items: list.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(
+                    value,
+                    style: TextStyle(fontSize: 15.sp),
+                  ),
+                );
+              }).toList(),
+            )),
         actions: [
           IconButton(
             onPressed: () {},
@@ -141,7 +180,7 @@ class GetStartedScreen extends StatelessWidget {
                             color: Colors.grey.shade700),
                         children: [
                           TextSpan(
-                            recognizer:  TapGestureRecognizer()
+                            recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Navigator.of(context).pushNamed(
                                   SignInScreen.routeName,

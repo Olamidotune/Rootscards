@@ -1,12 +1,13 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
 import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
-import 'package:sizer/sizer.dart';
 
 class TestOnboarding extends StatefulWidget {
   static const String routeName = "test_onboarding_screen";
@@ -57,56 +58,66 @@ class _TestOnboardingState extends State<TestOnboarding> {
             SingleChildScrollView(
               child: SizedBox(
                 height: height,
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: SkipButton(
-                        onTap: () {},
-                      ),
-                    ),
-                    SizedBox(height: height * .01),
-                    CarouselSlider.builder(
-                      carouselController: _carouselController,
-                      itemCount: 3,
-                      itemBuilder: (context, index, realIndex) =>
-                          _CarouselImage(
-                        image: _carouselImages[index],
-                        title: _carouselTitles[index],
-                        subTitle: _carouselTexts[index],
-                        viewPortHeight: height,
-                        slider: Container(
-                          margin: EdgeInsets.only(
-                            top: _currentIndex < _carouselImages.length - 1
-                                ? 20
-                                : 0,
-                          ),
-                          child: CarouselIndicator(
-                            count: 3,
-                            currentIndex: _currentIndex,
-                          ),
+                child: Padding(
+                  padding: EdgeInsets.all(10.0.w),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: SkipButton(
+                          onTap: () {
+                            Navigator.of(context).pushNamed(
+                              GetStartedScreen.routeName,
+                       
+                            );
+                          },
+                          portView: height * .08.w,
                         ),
                       ),
-                      options: CarouselOptions(
-                        initialPage: 0,
-                        autoPlay: false,
-                        enableInfiniteScroll: false,
-                        viewportFraction: 1,
-                        height: 0.85 * height <= 550 ? 0.75 * height : 700,
-                        autoPlayInterval: Duration(seconds: 4),
-                        autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.easeInOut,
-                        onPageChanged: (newIndex, reason) => setState(() {
-                          _currentIndex = newIndex;
-                        }),
+                      SizedBox(height: height * .01),
+                      CarouselSlider.builder(
+                        carouselController: _carouselController,
+                        itemCount: 3,
+                        itemBuilder: (context, index, realIndex) =>
+                            _CarouselImage(
+                          image: _carouselImages[index],
+                          title: _carouselTitles[index],
+                          subTitle: _carouselTexts[index],
+                          viewPortHeight: height,
+                          slider: Container(
+                            margin: EdgeInsets.only(
+                              top: _currentIndex < _carouselImages.length - 1
+                                  ? 20
+                                  : 0,
+                            ),
+                            child: CarouselIndicator(
+                              count: 3,
+                              currentIndex: _currentIndex,
+                            ),
+                          ),
+                        ),
+                        options: CarouselOptions(
+                          initialPage: 0,
+                          autoPlay: false,
+                          enableInfiniteScroll: false,
+                          viewportFraction: 1,
+                          height: 0.85 * height <= 550 ? 0.75 * height : 600,
+                          autoPlayInterval: Duration(seconds: 4),
+                          autoPlayAnimationDuration:
+                              Duration(milliseconds: 800),
+                          autoPlayCurve: Curves.easeInOut,
+                          onPageChanged: (newIndex, reason) => setState(() {
+                            _currentIndex = newIndex;
+                          }),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
             Positioned(
-              bottom: height / 120,
+              bottom: height / 50,
               right: height / 50,
               left: height / 50,
               child: Padding(
@@ -120,10 +131,9 @@ class _TestOnboardingState extends State<TestOnboarding> {
                       },
                       child: Image.asset(
                         "assets/images/get_started_button.png",
-                        width: 80.w,
                       ),
                     ),
-                    SizedBox(height: 20),
+                    AppSpacing.verticalSpaceSmall,
                     GestureDetector(
                       onTap: () {
                         Navigator.of(context).pushNamed(
@@ -132,7 +142,6 @@ class _TestOnboardingState extends State<TestOnboarding> {
                       },
                       child: Image.asset(
                         "assets/images/login_button.png",
-                        width: 80.w,
                       ),
                     ),
                   ],
@@ -168,7 +177,6 @@ class _CarouselImage extends StatelessWidget {
     return Column(
       children: [
         Expanded(
-          flex: 8,
           child: Image.asset(
             "assets/images/$image",
             height: viewPortHeight * .48,
@@ -176,37 +184,35 @@ class _CarouselImage extends StatelessWidget {
           ),
         ),
         slider,
-        Expanded(
-          flex: 2,
-          child: Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 20, bottom: viewPortHeight * .001),
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Text(
-              title,
-              style: context.textTheme.bodyLarge!.copyWith(
-                fontFamily: "LoveYaLikeASister",
-                fontSize: 25.sp,
-              ),
-              maxLines: 2,
-              textAlign: TextAlign.center,
+        Container(
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(top: 20, bottom: viewPortHeight * .001),
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            title,
+            style: context.textTheme.displayMedium!.copyWith(
+              fontFamily: "LoveYaLikeASister",
+              // fontSize: 25.sp,
+            ),
+            maxLines: 2,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        AppSpacing.verticalSpaceSmall,
+        Container(
+          alignment: Alignment.center,
+          // margin:
+          //     EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 550 ?  viewPortHeight * .03: 3),
+          padding: EdgeInsets.symmetric(horizontal: 0),
+          child: Text(
+            subTitle,
+            textAlign: TextAlign.center,
+            style: context.textTheme.bodyLarge!.copyWith(
+               fontSize: 18.sp,
             ),
           ),
         ),
-        Expanded(
-          flex: 3,
-          child: Container(
-            alignment: Alignment.center,
-            // margin:
-            //     EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 550 ?  viewPortHeight * .03: 3),
-            padding: EdgeInsets.symmetric(horizontal: 0),
-            child: Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodyLarge,
-            ),
-          ),
-        ),
+        AppSpacing.verticalSpaceMedium
       ],
     );
   }
