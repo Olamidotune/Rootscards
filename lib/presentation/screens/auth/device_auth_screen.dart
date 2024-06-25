@@ -148,7 +148,7 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   ),
                 ),
                 SizedBox(
-                  height: 0.90 * height <= MIN_SUPPORTED_SCREEN_HEIGHT ? .03 * height : height * .46,
+                  height: height <= MIN_SUPPORTED_SCREEN_HEIGHT ? .43 * height : height * .46,
                 ),
                 Button(
                   busy: _busy,
