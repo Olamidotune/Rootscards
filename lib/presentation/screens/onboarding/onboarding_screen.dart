@@ -31,9 +31,9 @@ class _TestOnboardingState extends State<TestOnboarding> {
   ];
 
   static const _carouselTexts = <String>[
-    "Optimize what works with Insights to know and\n understand your audience, allowing you fly high.",
-    "Optimize what works with Insights to know and\n understand your audience, allowing you fly high.",
-    "Optimize what works with Insights to\n know and understand your audience,\n allowing you fly high.",
+    "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
+    "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
+    "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
   ];
 
   static const _backgroundColor = <Color>[
@@ -68,13 +68,12 @@ class _TestOnboardingState extends State<TestOnboarding> {
                           onTap: () {
                             Navigator.of(context).pushNamed(
                               GetStartedScreen.routeName,
-                       
                             );
                           },
                           portView: height * .08.w,
                         ),
                       ),
-                      SizedBox(height: height * .01),
+                      // SizedBox(height: height * .01),
                       CarouselSlider.builder(
                         carouselController: _carouselController,
                         itemCount: 3,
@@ -174,46 +173,34 @@ class _CarouselImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Image.asset(
+    return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
+      child: Column(
+        children: [
+          Image.asset(
             "assets/images/$image",
-            height: viewPortHeight * .48,
+            height: viewPortHeight * .48.h,
             fit: BoxFit.contain,
           ),
-        ),
-        slider,
-        Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 20, bottom: viewPortHeight * .001),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
+          slider,
+          Text(
             title,
-            style: context.textTheme.displayMedium!.copyWith(
+            style: context.textTheme.bodyLarge!.copyWith(
               fontFamily: "LoveYaLikeASister",
-              // fontSize: 25.sp,
+              fontSize: 32.sp,
             ),
-            maxLines: 2,
             textAlign: TextAlign.center,
           ),
-        ),
-        AppSpacing.verticalSpaceSmall,
-        Container(
-          alignment: Alignment.center,
-          // margin:
-          //     EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 550 ?  viewPortHeight * .03: 3),
-          padding: EdgeInsets.symmetric(horizontal: 0),
-          child: Text(
+          AppSpacing.verticalSpaceSmall,
+          Text(
             subTitle,
             textAlign: TextAlign.center,
-            style: context.textTheme.bodyLarge!.copyWith(
-               fontSize: 18.sp,
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontSize: 16.sp,
             ),
           ),
-        ),
-        AppSpacing.verticalSpaceMedium
-      ],
+        ],
+      ),
     );
   }
 }
