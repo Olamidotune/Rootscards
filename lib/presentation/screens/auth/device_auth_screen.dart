@@ -29,90 +29,131 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
   final TextEditingController _otpController = TextEditingController();
   bool _busy = false;
 
-  SharedPreferences? preferences;
+  // SharedPreferences? preferences;
 
-  String? email;
+  // String? email;
 
-  @override
-  void initState() {
-    super.initState();
-    _getEmail();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _getEmail();
+  // }
 
-  // Method to get email from SharedPreferences
-  Future<void> _getEmail() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      email = prefs.getString('email');
-    });
-  }
+  // // Method to get email from SharedPreferences
+  // Future<void> _getEmail() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     email = prefs.getString('email');
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final double height =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
+      appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
+            ),
+          ),
+          title: Text(
+            "OTP",
+            style: TextStyle(
+                fontSize: 20, color: BLACK, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.info_outline),
+            ),
+          ]),
       body: SingleChildScrollView(
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+          child: Container(
+            height: height,
+            padding: EdgeInsets.only(
+              top: height <= 550 ? 10 : 20,
+              left: 20,
+              right: 20,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   height: 10.h,
                 ),
                 Text(
-                  "Device Authorization",
-                  style: context.textTheme.titleMedium?.copyWith(
-                    color: Colors.black,
-                    fontSize: 25,
+                  "Enter Confrimation Code",
+                  style: context.textTheme.headlineLarge!.copyWith(
+                      fontFamily: "LoveYaLikeASister", fontSize: 28.sp),
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                ),
+                AppSpacing.verticalSpaceSmall,
+                Text("Enter the 4-digit OTP code. We've just send to",
+                    style: context.textTheme.bodyMedium!.copyWith(color: GREY)),
+                Text("Rootscards@Rootshive.com",
+                    style: context.textTheme.bodyMedium!
+                        .copyWith(fontWeight: FontWeight.bold)),
+                AppSpacing.verticalSpaceHuge,
+                Center(
+                  child: PinCodeTextField(
+                    isCupertino: true,
+                    keyboardType: TextInputType.number,
+                    hideCharacter: false,
+                    controller: _otpController,
+                    autofocus: false,
+                    pinBoxHeight: 50.h,
+                    pinBoxWidth: 70.w,
+                    maxLength: 4,
+                    onDone: (String value) {
+                      debugPrint('Entered OTP: $value');
+                      _authenticateDevice(value);
+                    },
+                    pinTextStyle: TextStyle(fontSize: 20),
+                    pinBoxDecoration: (borderColor, pinBoxColor,
+                        {double borderWidth = 0, double? radius}) {
+                      return BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(
+                          color: GREY2,
+                          width: borderWidth,
+                        ),
+                        color: Colors.transparent,
+                      );
+                    },
+                  ),
+                ),
+                AppSpacing.verticalSpaceMedium,
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      text: "Didn't receive OTP?",
+                      style:
+                          context.textTheme.bodyMedium!.copyWith(color: GREY),
+                      children: [
+                        TextSpan(
+                            text: " Resend",
+                            style: context.textTheme.bodyMedium!.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ))
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(
-                  height: 15,
+                  height: 0.90 * height <= MIN_SUPPORTED_SCREEN_HEIGHT ? .03 * height : height * .46,
                 ),
-                Text(
-                  "We noticed you are signing into your rootshive account from a device or location we do not recognize.\nTo confirm this is you sent an email with an authentication code to $email",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10.sp),
-                ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height <=
-                            MIN_SUPPORTED_SCREEN_HEIGHT
-                        ? MediaQuery.of(context).size.height * 0.05
-                        : 5.h),
-                Text(
-                  "Authorization Code *",
-                  style: TextStyle(fontSize: 10.sp),
-                ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height <=
-                            MIN_SUPPORTED_SCREEN_HEIGHT
-                        ? MediaQuery.of(context).size.height * 0.05
-                        : 3.h),
-                PinCodeTextField(
-                  isCupertino: true,
-                  keyboardType: TextInputType.number,
-                  hideCharacter: true,
-                  controller: _otpController,
-                  autofocus: false,
-                  pinBoxHeight: 50,
-                  pinBoxWidth: 50,
-                  maxLength: 4,
-                  onDone: (String value) {
-                    debugPrint('Entered OTP: $value');
-                    _authenticateDevice(value);
-                  },
-                  pinTextStyle: TextStyle(fontSize: 20),
-                  pinBoxDecoration:
-                      ProvidedPinBoxDecoration.defaultPinBoxDecoration,
-                ),
-                SizedBox(
-                    height: MediaQuery.of(context).size.height <=
-                            MIN_SUPPORTED_SCREEN_HEIGHT
-                        ? MediaQuery.of(context).size.height * 0.05
-                        : 4.h),
                 Button(
                   busy: _busy,
+                  pill: true,
+                  disabledTextColor: BLACK,
                   "Confirm",
                   onPressed: () {
                     _authenticateDevice(_otpController.text);
@@ -123,11 +164,6 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                           MIN_SUPPORTED_SCREEN_HEIGHT
                       ? MediaQuery.of(context).size.height * 0.05
                       : MediaQuery.of(context).size.height * 0.06,
-                ),
-                Text(
-                  "Can't find the authorization code? check the spam\nfolder or sign in again to get a fresh code.",
-                  style: TextStyle(fontSize: 13),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),
