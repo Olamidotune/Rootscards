@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
 
@@ -28,7 +29,7 @@ class SocialMediaButton extends StatelessWidget {
           title: Text(title ?? "", textAlign: TextAlign.center,),
           titleTextStyle: TextStyle(
             fontWeight: FontWeight.bold,
-            fontSize: 14,
+            fontSize: 14.sp,
             color: BLACK
           ),
           onTap: onPressed,

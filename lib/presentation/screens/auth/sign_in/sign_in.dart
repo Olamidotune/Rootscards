@@ -3,6 +3,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
@@ -82,7 +83,7 @@ class _SignInScreenState extends State<SignInScreen>
                     child: Text(
                       "Welcome Back",
                       style: context.textTheme.headlineLarge!.copyWith(
-                          fontFamily: "LoveYaLikeASister", fontSize: 38),
+                          fontFamily: "LoveYaLikeASister", fontSize: 32.sp),
                       textAlign: TextAlign.justify,
                     ),
                   ),
@@ -192,7 +193,7 @@ class _SignInScreenState extends State<SignInScreen>
                                           ),
                                         ),
                                         focusedBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(color: BLACK),
+                                          borderSide: BorderSide(color: BUTTONGREEN),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
                                               30,
@@ -243,7 +244,7 @@ class _SignInScreenState extends State<SignInScreen>
                                           ),
                                         ),
                                         focusedBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(color: BLACK),
+                                          borderSide: BorderSide(color: BUTTONGREEN),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
                                               30,
@@ -445,7 +446,7 @@ class _SignInScreenState extends State<SignInScreen>
                                 ),
                               ),
                               focusedBorder: const OutlineInputBorder(
-                                borderSide: BorderSide(color: BLACK),
+                                borderSide: BorderSide(color: BUTTONGREEN),
                                 borderRadius: BorderRadius.all(
                                   Radius.circular(
                                     30,

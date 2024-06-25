@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -15,16 +14,13 @@ class GetStartedScreen extends StatefulWidget {
 }
 
 class _GetStartedScreenState extends State<GetStartedScreen> {
+  List<String> list = <String>['English(UK)', 'English(US)'];
+  String dropdownValue = "English(UK)";
+
   @override
   Widget build(BuildContext context) {
-    const List<String> list = <String>[
-      'English(UK)',
-      'English(US)',
-    ];
     final double height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-    String dropdownValue = list.first;
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -34,32 +30,33 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             },
             icon: Icon(Icons.arrow_back)),
         title: Container(
-            height: 30,
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Colors.grey.shade400),
-            ),
-            child: DropdownButton<String>(
-              value: dropdownValue,
-              icon: const Icon(Icons.arrow_drop_down),
-              elevation: 16,
-              style: const TextStyle(color: BLACK),
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownValue = value!;
-                });
-              },
-              items: list.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(fontSize: 15.sp),
-                  ),
-                );
-              }).toList(),
-            )),
+          height: 30,
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: Colors.grey.shade400),
+          ),
+          child: DropdownButton<String>(
+            value: dropdownValue,
+            icon: const Icon(Icons.arrow_drop_down),
+            elevation: 16,
+            style: const TextStyle(color: Colors.black),
+            onChanged: (String? newValue) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            },
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: TextStyle(fontSize: 15),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -136,7 +133,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       style: TextStyle(
                           fontFamily: "lato",
                           fontWeight: FontWeight.normal,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                           color: Colors.grey.shade700),
                       children: [
                         TextSpan(
@@ -144,7 +141,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                           style: TextStyle(
                               fontFamily: "lato",
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               color: BLACK),
                         ),
                         TextSpan(
@@ -152,7 +149,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                           style: TextStyle(
                               fontFamily: "lato",
                               fontWeight: FontWeight.normal,
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               color: Colors.grey.shade700),
                         ),
                         TextSpan(
@@ -160,40 +157,43 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                           style: TextStyle(
                               fontFamily: "lato",
                               fontWeight: FontWeight.bold,
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               color: BLACK),
                         )
                       ],
                     ),
                   ),
                   SizedBox(
-                    height: 0.90 * height <= 700 ? .05 * height : height * .13,
+                    height: 0.90.h * height <= 700
+                        ? .05.h * height
+                        : height * .18.h,
                   ),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                        text: "Already have an account? ",
-                        style: TextStyle(
-                            fontFamily: "lato",
-                            fontWeight: FontWeight.normal,
-                            fontSize: 13,
-                            color: Colors.grey.shade700),
-                        children: [
-                          TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                Navigator.of(context).pushNamed(
-                                  SignInScreen.routeName,
-                                );
-                              },
-                            text: "Login",
-                            style: TextStyle(
-                                fontFamily: "lato",
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: BLACK),
-                          ),
-                        ]),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        SignInScreen.routeName,
+                      );
+                    },
+                    child: RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          text: "Already have an account? ",
+                          style: TextStyle(
+                              fontFamily: "lato",
+                              fontWeight: FontWeight.normal,
+                              fontSize: 13.sp,
+                              color: Colors.grey.shade700),
+                          children: [
+                            TextSpan(
+                              text: "Login",
+                              style: TextStyle(
+                                  fontFamily: "lato",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.sp,
+                                  color: BLACK),
+                            ),
+                          ]),
+                    ),
                   ),
                 ],
               ),

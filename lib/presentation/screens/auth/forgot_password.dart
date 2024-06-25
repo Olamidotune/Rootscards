@@ -2,15 +2,19 @@
 
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
+
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
-import 'package:rootscards/presentation/screens/widgets/button.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:rootscards/presentation/screens/widgets/button.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   static const String routeName = "forgot_password_screen";
@@ -28,125 +32,108 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double height =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Password",
-                  style: context.textTheme.titleLarge?.copyWith(
-                    color: Colors.black,
-                    fontSize: 45,
-                  ),
-                ),
-                SizedBox(
-                  height: 0.5.h,
-                ),
-                const Text(
-                  "Forgot  your password?  we've got you.\nYou can always recover your account.",
-                  style: TextStyle(),
-                  textAlign: TextAlign.left,
-                ),
-                SizedBox(
-                  height: 4.h,
-                ),
-                Form(
-                  key: _formKey,
-                  child: AutofillGroup(
-                    child: Column(
-                      children: [
-                        const Align(
-                          alignment: Alignment.topLeft,
-                          child: Text("Enter your registered email"),
-                        ),
-                        SizedBox(
-                          height: 0.5.h,
-                        ),
-                        TextFormField(
-                          onFieldSubmitted: (_) =>
-                              _resetPassword(_emailController.text),
-                          keyboardType: TextInputType.emailAddress,
-                          controller: _emailController,
-                          textInputAction: TextInputAction.next,
-                          validator: (value) {
-                            if (EmailValidator.validate(value?.trim() ?? "")) {
-                              return null;
-                            }
-                            return "Please provide a valid email address";
-                          },
-                          style: const TextStyle(),
-                          autofillHints: const [AutofillHints.email],
-                          decoration: InputDecoration(
-                            prefixIcon:
-                                Image.asset("assets/images/message-icon.png"),
-                            hintText: "enter your email",
-                            hintStyle: const TextStyle(color: Colors.black26),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(7),
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  7,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 1.5.h,
-                        ),
-                        Button(
-                          busy: _busy,
-                          "Reset Password",
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _resetPassword(_emailController.text);
-                            }
-                          },
-                        ),
-                        SizedBox(
-                          height: 1.5.h,
-                        ),
-                        const Text(
-                          "A creators handy tool..\nShow off all of you, in one link.",
-                          style: TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height <=
-                                  MIN_SUPPORTED_SCREEN_HEIGHT
-                              ? MediaQuery.of(context).size.height * 0.35
-                              : MediaQuery.of(context).size.height * 0.45,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context)
-                                .popAndPushNamed(SignInScreen.routeName);
-                          },
-                          child: const Text(
-                            "go home",
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+        appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back,
             ),
           ),
+          title: Text(
+            "Forgot Password",
+            style: TextStyle(
+                fontSize: 20, color: BLACK, fontWeight: FontWeight.bold),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.info_outline),
+            ),
+          ],
         ),
-      ),
-    );
+        body: SafeArea(
+          child: Container(
+            height: height,
+            padding: EdgeInsets.only(
+              top: height <= 550 ? 10 : 20,
+              left: 20,
+              right: 20,
+            ),
+            child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Reset Your Password",
+                      style: context.textTheme.headlineLarge!.copyWith(
+                          fontFamily: "LoveYaLikeASister", fontSize: 32.sp),
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                    ),
+                    AppSpacing.verticalSpaceSmall,
+                    Text(
+                      "Enter your email and reset your account password to access your personal account again.",
+                      style:
+                          context.textTheme.bodyMedium!.copyWith(color: GREY),
+                    ),
+                    AppSpacing.verticalSpaceMedium,
+                    TextFormField(
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailController,
+                      textInputAction: TextInputAction.next,
+                      validator: (value) {
+                        if (EmailValidator.validate(value?.trim() ?? "")) {
+                          return null;
+                        }
+                        return "Please provide a valid email address";
+                      },
+                      style: const TextStyle(color: BLACK),
+                      autofillHints: const [AutofillHints.email],
+                      decoration: InputDecoration(
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                        hintText: "Email or Username",
+                        hintStyle: const TextStyle(
+                            color: Colors.black26, fontWeight: FontWeight.bold),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: GREY2),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(30),
+                          ),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: BUTTONGREEN),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(
+                              30,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    AppSpacing.verticalSpaceMedium,
+                    Button(
+                      busy: _busy,
+                      "Send",
+                      textColor: BLACK,
+                      disabledTextColor: BLACK,
+                      pill: true,
+                      onPressed: () {
+                        Navigator.of(context)
+                            .popAndPushNamed(SignInAuthScreen.routeName);
+                      },
+                    )
+                  ],
+                )),
+          ),
+        ));
   }
 
   Future<void> _resetPassword(String email) async {
@@ -165,16 +152,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     try {
       // Make a POST request with basic authentication headers
-      final response = await http.post(
-        url,
-        headers: <String, String>{
-          'Authorization': basicAuth,
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode(<String, String>{
-          'email': email,
-        }),
-      ).timeout(const Duration(seconds: 30));
+      final response = await http
+          .post(
+            url,
+            headers: <String, String>{
+              'Authorization': basicAuth,
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(<String, String>{
+              'email': email,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
         Map<String, dynamic> responseData = json.decode(response.body);
@@ -222,7 +211,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           });
           debugPrint('Password reset successful');
           setState(() => _busy = false);
-        } 
+        }
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showMaterialBanner(
@@ -268,3 +257,121 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
   }
 }
+
+// SafeArea(
+//         child: SingleChildScrollView(
+//           physics: const BouncingScrollPhysics(),
+//           child: Padding(
+//             padding: const EdgeInsets.all(30.0),
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.start,
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text(
+//                   "Password",
+//                   style: context.textTheme.titleLarge?.copyWith(
+//                     color: Colors.black,
+//                     fontSize: 45,
+//                   ),
+//                 ),
+//                 SizedBox(
+//                   height: 0.5.h,
+//                 ),
+//                 const Text(
+//                   "Forgot  your password?  we've got you.\nYou can always recover your account.",
+//                   style: TextStyle(),
+//                   textAlign: TextAlign.left,
+//                 ),
+//                 SizedBox(
+//                   height: 4.h,
+//                 ),
+//                 Form(
+//                   key: _formKey,
+//                   child: AutofillGroup(
+//                     child: Column(
+//                       children: [
+//                         const Align(
+//                           alignment: Alignment.topLeft,
+//                           child: Text("Enter your registered email"),
+//                         ),
+//                         SizedBox(
+//                           height: 0.5.h,
+//                         ),
+//                         TextFormField(
+//                           onFieldSubmitted: (_) =>
+//                               _resetPassword(_emailController.text),
+//                           keyboardType: TextInputType.emailAddress,
+//                           controller: _emailController,
+//                           textInputAction: TextInputAction.next,
+//                           validator: (value) {
+//                             if (EmailValidator.validate(value?.trim() ?? "")) {
+//                               return null;
+//                             }
+//                             return "Please provide a valid email address";
+//                           },
+//                           style: const TextStyle(),
+//                           autofillHints: const [AutofillHints.email],
+//                           decoration: InputDecoration(
+//                             prefixIcon:
+//                                 Image.asset("assets/images/message-icon.png"),
+//                             hintText: "enter your email",
+//                             hintStyle: const TextStyle(color: Colors.black26),
+//                             border: const OutlineInputBorder(
+//                               borderRadius: BorderRadius.all(
+//                                 Radius.circular(7),
+//                               ),
+//                             ),
+//                             focusedBorder: const OutlineInputBorder(
+//                               borderRadius: BorderRadius.all(
+//                                 Radius.circular(
+//                                   7,
+//                                 ),
+//                               ),
+//                             ),
+//                           ),
+//                         ),
+//                         SizedBox(
+//                           height: 1.5.h,
+//                         ),
+//                         Button(
+//                           busy: _busy,
+//                           "Reset Password",
+//                           onPressed: () {
+//                             if (_formKey.currentState!.validate()) {
+//                               _resetPassword(_emailController.text);
+//                             }
+//                           },
+//                         ),
+//                         SizedBox(
+//                           height: 1.5.h,
+//                         ),
+//                         const Text(
+//                           "A creators handy tool..\nShow off all of you, in one link.",
+//                           style: TextStyle(fontSize: 12),
+//                           textAlign: TextAlign.center,
+//                         ),
+//                         SizedBox(
+//                           height: MediaQuery.of(context).size.height <=
+//                                   MIN_SUPPORTED_SCREEN_HEIGHT
+//                               ? MediaQuery.of(context).size.height * 0.35
+//                               : MediaQuery.of(context).size.height * 0.45,
+//                         ),
+//                         GestureDetector(
+//                           onTap: () {
+//                             Navigator.of(context)
+//                                 .popAndPushNamed(SignInScreen.routeName);
+//                           },
+//                           child: const Text(
+//                             "go home",
+//                             style: TextStyle(fontWeight: FontWeight.w600),
+//                           ),
+//                         )
+//                       ],
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
