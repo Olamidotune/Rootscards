@@ -5,8 +5,9 @@ import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
+import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
+import 'package:rootscards/presentation/screens/widgets/login_button.dart';
 import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
 
 class TestOnboarding extends StatefulWidget {
@@ -31,9 +32,9 @@ class _TestOnboardingState extends State<TestOnboarding> {
   ];
 
   static const _carouselTexts = <String>[
-    "Optimize what works with Insights to know and\n understand your audience, allowing you fly high.",
-    "Optimize what works with Insights to know and\n understand your audience, allowing you fly high.",
-    "Optimize what works with Insights to\n know and understand your audience,\n allowing you fly high.",
+    "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
+    "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
+    "Optimize what works with Insights to know and understand your audience, allowing you fly high.",
   ];
 
   static const _backgroundColor = <Color>[
@@ -53,102 +54,89 @@ class _TestOnboardingState extends State<TestOnboarding> {
     return Scaffold(
       backgroundColor: _backgroundColor[_currentIndex],
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              child: SizedBox(
-                height: height,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0.w),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.topRight,
-                        child: SkipButton(
-                          onTap: () {
-                            Navigator.of(context).pushNamed(
-                              GetStartedScreen.routeName,
-                       
-                            );
-                          },
-                          portView: height * .08.w,
-                        ),
-                      ),
-                      SizedBox(height: height * .01),
-                      CarouselSlider.builder(
-                        carouselController: _carouselController,
-                        itemCount: 3,
-                        itemBuilder: (context, index, realIndex) =>
-                            _CarouselImage(
-                          image: _carouselImages[index],
-                          title: _carouselTitles[index],
-                          subTitle: _carouselTexts[index],
-                          viewPortHeight: height,
-                          slider: Container(
-                            margin: EdgeInsets.only(
-                              top: _currentIndex < _carouselImages.length - 1
-                                  ? 20
-                                  : 0,
-                            ),
-                            child: CarouselIndicator(
-                              count: 3,
-                              currentIndex: _currentIndex,
-                            ),
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: height,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
+              child: Column(
+                children: [
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: SkipButton(
+                      onTap: () {
+                        Navigator.of(context).pushNamed(
+                          GetStartedScreen.routeName,
+                        );
+                      },
+                      portView: height * .08.w,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 9,
+                    child: CarouselSlider.builder(
+                      carouselController: _carouselController,
+                      itemCount: 3,
+                      itemBuilder: (context, index, realIndex) =>
+                          _CarouselImage(
+                        image: _carouselImages[index],
+                        title: _carouselTitles[index],
+                        subTitle: _carouselTexts[index],
+                        viewPortHeight: height,
+                        slider: Container(
+                          margin: EdgeInsets.only(
+                            top: _currentIndex < _carouselImages.length - 1
+                                ? 20.h
+                                : 0,
+                          ),
+                          child: CarouselIndicator(
+                            count: 3,
+                            currentIndex: _currentIndex,
                           ),
                         ),
-                        options: CarouselOptions(
-                          initialPage: 0,
-                          autoPlay: false,
-                          enableInfiniteScroll: false,
-                          viewportFraction: 1,
-                          height: 0.85 * height <= 550 ? 0.75 * height : 600,
-                          autoPlayInterval: Duration(seconds: 4),
-                          autoPlayAnimationDuration:
-                              Duration(milliseconds: 800),
-                          autoPlayCurve: Curves.easeInOut,
-                          onPageChanged: (newIndex, reason) => setState(() {
-                            _currentIndex = newIndex;
-                          }),
-                        ),
                       ),
-                    ],
+                      options: CarouselOptions(
+                        initialPage: 0,
+                        autoPlay: false,
+                        enableInfiniteScroll: false,
+                        viewportFraction: 1,
+                        height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
+                            ? .8.h * height
+                            : 1.h * height,
+                        autoPlayInterval: Duration(seconds: 4),
+                        autoPlayAnimationDuration: Duration(milliseconds: 800),
+                        autoPlayCurve: Curves.easeInOut,
+                        onPageChanged: (newIndex, reason) => setState(() {
+                          _currentIndex = newIndex;
+                        }),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: height / 50,
-              right: height / 50,
-              left: height / 50,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                child: Column(
-                  children: [
-                    GestureDetector(
+                  Expanded(
+                    flex: 1,
+                    child: GetStartedButton(
                       onTap: () {
                         Navigator.of(context)
                             .pushNamed(GetStartedScreen.routeName);
                       },
-                      child: Image.asset(
-                        "assets/images/get_started_button.png",
-                      ),
                     ),
-                    AppSpacing.verticalSpaceSmall,
-                    GestureDetector(
+                  ),
+                  AppSpacing.verticalSpaceSmall,
+                  Expanded(
+                    flex: 1,
+                    child: LoginButton(
                       onTap: () {
-                        Navigator.of(context).pushNamed(
-                          SignInScreen.routeName,
-                        );
+                        Navigator.of(context)
+                            .pushNamed(GetStartedScreen.routeName);
                       },
-                      child: Image.asset(
-                        "assets/images/login_button.png",
-                      ),
+                      textColor: BLACK,
                     ),
-                  ],
-                ),
+                  ),
+                  AppSpacing.verticalSpaceSmall
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -174,46 +162,38 @@ class _CarouselImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Image.asset(
-            "assets/images/$image",
-            height: viewPortHeight * .48,
-            fit: BoxFit.contain,
-          ),
-        ),
-        slider,
-        Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.only(top: 20, bottom: viewPortHeight * .001),
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Text(
-            title,
-            style: context.textTheme.displayMedium!.copyWith(
-              fontFamily: "LoveYaLikeASister",
-              // fontSize: 25.sp,
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Container(
+        child: Column(
+          children: [
+            Image.asset(
+              "assets/images/$image",
+              height: viewPortHeight * .45.h,
+              fit: BoxFit.contain,
             ),
-            maxLines: 2,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        AppSpacing.verticalSpaceSmall,
-        Container(
-          alignment: Alignment.center,
-          // margin:
-          //     EdgeInsets.only(bottom: 0.45 * viewPortHeight <= 550 ?  viewPortHeight * .03: 3),
-          padding: EdgeInsets.symmetric(horizontal: 0),
-          child: Text(
-            subTitle,
-            textAlign: TextAlign.center,
-            style: context.textTheme.bodyLarge!.copyWith(
-               fontSize: 18.sp,
+                  AppSpacing.verticalSpaceSmall,
+            slider,
+             AppSpacing.verticalSpaceSmall,
+            Text(
+              title,
+              style: context.textTheme.bodyLarge!.copyWith(
+                fontFamily: "LoveYaLikeASister",
+                fontSize: 32.sp,
+              ),
+              textAlign: TextAlign.center,
             ),
-          ),
+            AppSpacing.verticalSpaceTiny,
+            Text(
+              subTitle,
+              textAlign: TextAlign.center,
+              style: context.textTheme.bodyMedium!.copyWith(
+                fontSize: 16.sp,
+              ),
+            ),
+          ],
         ),
-        AppSpacing.verticalSpaceMedium
-      ],
+      ),
     );
   }
 }
