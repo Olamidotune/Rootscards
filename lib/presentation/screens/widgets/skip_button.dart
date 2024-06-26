@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SkipButton extends StatelessWidget {
   final double portView;
@@ -8,7 +9,7 @@ class SkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+      padding:  EdgeInsets.symmetric(horizontal: 30.w,vertical: 10.h),
       child: GestureDetector(
         onTap: onTap,
         child: Image.asset(
