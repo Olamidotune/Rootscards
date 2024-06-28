@@ -14,7 +14,6 @@ import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:http/http.dart' as http;
 
-
 class ForgotPasswordScreen extends StatefulWidget {
   static const String routeName = "forgot_password_screen";
   const ForgotPasswordScreen({super.key});
@@ -43,16 +42,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             icon: Icon(
               Icons.arrow_back,
             ),
+                    iconSize: 18.h,
           ),
           title: Text(
             "Forgot Password",
-            style: TextStyle(
-                fontSize: 20, color: BLACK, fontWeight: FontWeight.bold),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: BLACK,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
+                      iconSize: 18.h,
             ),
           ],
         ),
@@ -93,11 +96,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         }
                         return "Please provide a valid email address";
                       },
-                      style: const TextStyle(color: BLACK),
+                      style: context.textTheme.bodySmall!.copyWith(
+                        color: BLACK,
+                      ),
                       autofillHints: const [AutofillHints.email],
                       decoration: InputDecoration(
                         contentPadding:
-                            EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                            EdgeInsets.symmetric(vertical: 20.h, horizontal: 10.w),
                         hintText: "Email or Username",
                         hintStyle: const TextStyle(
                             color: Colors.black26, fontWeight: FontWeight.bold),

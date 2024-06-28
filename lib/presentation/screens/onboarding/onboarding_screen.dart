@@ -70,7 +70,6 @@ class _TestOnboardingState extends State<TestOnboarding> {
                           GetStartedScreen.routeName,
                         );
                       },
-                      portView: height * .08.w,
                     ),
                   ),
                   Expanded(
@@ -127,8 +126,7 @@ class _TestOnboardingState extends State<TestOnboarding> {
                     flex: 1,
                     child: LoginButton(
                       onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(SignInScreen.routeName);
+                        Navigator.of(context).pushNamed(SignInScreen.routeName);
                       },
                       textColor: BLACK,
                     ),
@@ -173,9 +171,9 @@ class _CarouselImage extends StatelessWidget {
               height: viewPortHeight * .45.h,
               fit: BoxFit.contain,
             ),
-                  AppSpacing.verticalSpaceSmall,
+            AppSpacing.verticalSpaceSmall,
             slider,
-             AppSpacing.verticalSpaceSmall,
+            AppSpacing.verticalSpaceSmall,
             Text(
               title,
               style: context.textTheme.bodyLarge!.copyWith(

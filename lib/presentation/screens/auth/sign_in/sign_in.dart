@@ -59,16 +59,16 @@ class _SignInScreenState extends State<SignInScreen>
             icon: Icon(
               Icons.arrow_back,
             ),
+            iconSize: 18.h,
           ),
-          title: Text(
-            "Login",
-            style: TextStyle(
-                fontSize: 20, color: BLACK, fontWeight: FontWeight.bold),
-          ),
+          title: Text("Login",
+              style: context.textTheme.bodyMedium!
+                  .copyWith(fontWeight: FontWeight.bold)),
           actions: [
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
+              iconSize: 18.h,
             ),
           ],
           bottom: PreferredSize(
@@ -175,17 +175,21 @@ class _SignInScreenState extends State<SignInScreen>
                                         }
                                         return "Please provide a valid email address";
                                       },
-                                      style: const TextStyle(color: BLACK),
+                                      style:
+                                          context.textTheme.bodySmall!.copyWith(
+                                        color: BLACK,
+                                      ),
                                       autofillHints: const [
                                         AutofillHints.email
                                       ],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: 20, horizontal: 10),
+                                            vertical: 20.h, horizontal: 10.w),
                                         hintText: "Email or Username",
-                                        hintStyle: const TextStyle(
-                                            color: Colors.black26,
-                                            fontWeight: FontWeight.bold),
+                                        hintStyle: context.textTheme.bodySmall!
+                                            .copyWith(
+                                                color: Colors.black26,
+                                                fontWeight: FontWeight.bold),
                                         border: const OutlineInputBorder(
                                           borderSide: BorderSide(color: GREY2),
                                           borderRadius: BorderRadius.all(
@@ -220,13 +224,16 @@ class _SignInScreenState extends State<SignInScreen>
                                         }
                                         return null;
                                       },
-                                      style: const TextStyle(),
+                                      style:
+                                          context.textTheme.bodySmall!.copyWith(
+                                        color: BLACK,
+                                      ),
                                       autofillHints: const [
                                         AutofillHints.email
                                       ],
                                       decoration: InputDecoration(
                                         contentPadding: EdgeInsets.symmetric(
-                                            vertical: 20, horizontal: 10),
+                                            vertical: 20.h, horizontal: 10.w),
                                         suffixIcon: IconButton(
                                             onPressed: () => setState(() =>
                                                 _obscurePassword =
@@ -236,9 +243,10 @@ class _SignInScreenState extends State<SignInScreen>
                                                 : const Icon(
                                                     Icons.visibility_off)),
                                         hintText: "Password",
-                                        hintStyle: const TextStyle(
-                                            color: Colors.black26,
-                                            fontWeight: FontWeight.bold),
+                                        hintStyle: context.textTheme.bodySmall!
+                                            .copyWith(
+                                                color: Colors.black26,
+                                                fontWeight: FontWeight.bold),
                                         border: const OutlineInputBorder(
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(30),
@@ -328,35 +336,38 @@ class _SignInScreenState extends State<SignInScreen>
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                 text: "By continuing, you agree to Pipel's ",
-                                style: TextStyle(
-                                    fontFamily: "lato",
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 13,
-                                    color: GREY),
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: GREY,
+                                  fontFamily: "lato",
+                                  fontWeight: FontWeight.normal,
+                                ),
                                 children: [
                                   TextSpan(
                                     text: "Terms of Service\n",
-                                    style: TextStyle(
-                                        fontFamily: "lato",
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                        color: BLACK),
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: BLACK,
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: " and ",
-                                    style: TextStyle(
-                                        fontFamily: "lato",
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 13,
-                                        color: Colors.grey.shade700),
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: GREY,
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.normal,
+                                    ),
                                   ),
                                   TextSpan(
                                     text: "Privacy Policy",
-                                    style: TextStyle(
-                                        fontFamily: "lato",
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
-                                        color: BLACK),
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: BLACK,
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   )
                                 ],
                               ),
@@ -370,21 +381,22 @@ class _SignInScreenState extends State<SignInScreen>
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                   text: "Don't have an account? ",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 13,
-                                      color: GREY),
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: GREY,
+                                    fontFamily: "lato",
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                   children: [
                                     TextSpan(
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {},
                                       text: " Create Account",
-                                      style: TextStyle(
-                                          fontFamily: "lato",
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: BLACK),
+                                      style: context.textTheme.bodyMedium
+                                          ?.copyWith(
+                                        color: BLACK,
+                                        fontFamily: "lato",
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ]),
                             ),
@@ -416,8 +428,9 @@ class _SignInScreenState extends State<SignInScreen>
                                 ),
                               ),
                             ],
-                            style: const TextStyle(color: BLACK),
-                            autofillHints: const [AutofillHints.email],
+                            style: context.textTheme.bodySmall!.copyWith(
+                              color: BLACK,
+                            ),
                             decoration: InputDecoration(
                               // prefix: Row(
                               //   children: [
@@ -436,7 +449,7 @@ class _SignInScreenState extends State<SignInScreen>
                               //   ],
                               // ),
                               contentPadding: EdgeInsets.symmetric(
-                                  vertical: 20, horizontal: 10),
+                                  vertical: 20.h, horizontal: 10.w),
                               hintText: "Phone number",
                               hintStyle: const TextStyle(
                                   color: Colors.black26,
@@ -457,7 +470,7 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                             ),
                           ),
-                          SizedBox(height: height * .06),
+                          AppSpacing.verticalSpaceLarge,
                           Button(
                             busy: _busy,
                             "Send Verification Code",
@@ -499,35 +512,35 @@ class _SignInScreenState extends State<SignInScreen>
                             textAlign: TextAlign.center,
                             text: TextSpan(
                               text: "By continuing, you agree to Pipel's ",
-                              style: TextStyle(
-                                  fontFamily: "lato",
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 13,
-                                  color: GREY),
+                              style: context.textTheme.bodyMedium?.copyWith(
+                                color: GREY,
+                                fontFamily: "lato",
+                                fontWeight: FontWeight.normal,
+                              ),
                               children: [
                                 TextSpan(
                                   text: "Terms of Service\n",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: BLACK),
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: BLACK,
+                                    fontFamily: "lato",
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                                 TextSpan(
                                   text: " and ",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.normal,
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700),
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: GREY,
+                                    fontFamily: "lato",
+                                    fontWeight: FontWeight.normal,
+                                  ),
                                 ),
                                 TextSpan(
                                   text: "Privacy Policy",
-                                  style: TextStyle(
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: BLACK),
+                                  style: context.textTheme.bodyMedium?.copyWith(
+                                    color: BLACK,
+                                    fontFamily: "lato",
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 )
                               ],
                             ),
@@ -541,21 +554,21 @@ class _SignInScreenState extends State<SignInScreen>
                             textAlign: TextAlign.center,
                             text: TextSpan(
                                 text: "Don't have an account? ",
-                                style: TextStyle(
-                                    fontFamily: "lato",
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 13,
-                                    color: GREY),
+                                style: context.textTheme.bodyMedium?.copyWith(
+                                  color: GREY,
+                                  fontFamily: "lato",
+                                  fontWeight: FontWeight.normal,
+                                ),
                                 children: [
                                   TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {},
                                     text: " Create Account",
-                                    style: TextStyle(
+                                    style:
+                                        context.textTheme.bodyMedium?.copyWith(
+                                      color: BLACK,
                                       fontFamily: "lato",
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: BLACK,
                                     ),
                                   ),
                                 ]),

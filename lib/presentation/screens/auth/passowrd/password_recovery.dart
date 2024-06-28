@@ -38,16 +38,20 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
             icon: Icon(
               Icons.arrow_back,
             ),
+                    iconSize: 18.h,
           ),
           title: Text(
             "Forgot Password",
-            style: TextStyle(
-                fontSize: 20, color: BLACK, fontWeight: FontWeight.bold),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: BLACK,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
+                      iconSize: 18.h,
             ),
           ],
         ),
@@ -96,11 +100,13 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                           }
                           return null;
                         },
-                        style: const TextStyle(),
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: BLACK,
+                        ),
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 20.h, horizontal: 10.w),
                           suffixIcon: IconButton(
                               onPressed: () => setState(
                                   () => _obscurePassword1 = !_obscurePassword1),
@@ -109,7 +115,8 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                                   : const Icon(Icons.visibility_off)),
                           hintText: "Password",
                           hintStyle: const TextStyle(
-                              color: Colors.black26, fontWeight: FontWeight.bold),
+                              color: Colors.black26,
+                              fontWeight: FontWeight.bold),
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(30),
@@ -145,11 +152,13 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                           }
                           return null;
                         },
-                        style: const TextStyle(),
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: BLACK,
+                        ),
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
-                          contentPadding:
-                              EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 20.h, horizontal: 10.w),
                           suffixIcon: IconButton(
                               onPressed: () => setState(
                                   () => _obscurePassword2 = !_obscurePassword2),
@@ -158,7 +167,8 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                                   : const Icon(Icons.visibility_off)),
                           hintText: "Confirm Password",
                           hintStyle: const TextStyle(
-                              color: Colors.black26, fontWeight: FontWeight.bold),
+                              color: Colors.black26,
+                              fontWeight: FontWeight.bold),
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(30),

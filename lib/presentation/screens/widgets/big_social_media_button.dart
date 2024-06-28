@@ -18,20 +18,19 @@ class SocialMediaButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        padding: EdgeInsets.all(15.h),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(
-            color: Colors.grey.shade400
-          ),
+          border: Border.all(color: Colors.grey.shade400),
         ),
         child: ListTile(
           leading: SvgPicture.asset("assets/svg/$leading.svg"),
-          title: Text(title ?? "", textAlign: TextAlign.center,),
-          titleTextStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14.sp,
-            color: BLACK
+          title: Text(
+            title ?? "",
+            textAlign: TextAlign.center,
           ),
+          titleTextStyle: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 14.sp, color: BLACK),
           onTap: onPressed,
         ));
   }

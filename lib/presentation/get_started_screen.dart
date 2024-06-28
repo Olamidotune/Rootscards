@@ -30,9 +30,10 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
             onPressed: () {
               Navigator.pop(context);
             },
-            icon: Icon(Icons.arrow_back)),
+            icon: Icon(Icons.arrow_back),
+                    iconSize: 18.h,),
         title: Container(
-          height: 30,
+          height: 30.h,
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -63,6 +64,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.info_outline),
+            iconSize: 18.h,
           ),
         ],
       ),

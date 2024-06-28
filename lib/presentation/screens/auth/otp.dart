@@ -62,16 +62,20 @@ class _OtpScreenState extends State<OtpScreen> {
             icon: Icon(
               Icons.arrow_back,
             ),
+            iconSize: 18.h,
           ),
           title: Text(
             "OTP",
-            style: TextStyle(
-                fontSize: 20, color: BLACK, fontWeight: FontWeight.bold),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: BLACK,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
+              iconSize: 18.h,
             ),
           ]),
       body: SingleChildScrollView(
