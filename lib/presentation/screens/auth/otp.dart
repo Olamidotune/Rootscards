@@ -11,21 +11,22 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/presentation/screens/auth/passowrd/password_recovery.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SignInAuthScreen extends StatefulWidget {
+class OtpScreen extends StatefulWidget {
   static const String routeName = "sign_in_auth_screen";
 
-  const SignInAuthScreen({super.key});
+  const OtpScreen({super.key});
 
   @override
-  State<SignInAuthScreen> createState() => _SignInAuthScreenState();
+  State<OtpScreen> createState() => _OtpScreenState();
 }
 
-class _SignInAuthScreenState extends State<SignInAuthScreen> {
+class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController _otpController = TextEditingController();
   bool _busy = false;
 
@@ -97,7 +98,9 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                 ),
                 AppSpacing.verticalSpaceSmall,
                 Text("Enter the 4-digit OTP code. We've just send to",
-                    style: context.textTheme.bodyMedium!.copyWith(color: GREY)),
+                    style: context.textTheme.bodyMedium!.copyWith(
+                      color: GREY,
+                    )),
                 Text("Rootscards@Rootshive.com",
                     style: context.textTheme.bodyMedium!
                         .copyWith(fontWeight: FontWeight.bold)),
@@ -135,20 +138,23 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   child: RichText(
                     text: TextSpan(
                       text: "Didn't receive OTP?",
-                      style:
-                          context.textTheme.bodyMedium!.copyWith(color: GREY),
+                      style: context.textTheme.bodyMedium!.copyWith(
+                        color: GREY,
+                      ),
                       children: [
                         TextSpan(
                             text: " Resend",
                             style: context.textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.bold,
-                            ))
+                            )),
                       ],
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: height <= MIN_SUPPORTED_SCREEN_HEIGHT ? .43 * height : height * .46,
+                  height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
+                      ? .43 * height
+                      : height * .46,
                 ),
                 Button(
                   busy: _busy,
@@ -156,14 +162,9 @@ class _SignInAuthScreenState extends State<SignInAuthScreen> {
                   disabledTextColor: BLACK,
                   "Confirm",
                   onPressed: () {
-                    _authenticateDevice(_otpController.text);
+                    Navigator.of(context).pushNamed(PasswordRecovery.routeName);
+                    // _authenticateDevice(_otpController.text);
                   },
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height <=
-                          MIN_SUPPORTED_SCREEN_HEIGHT
-                      ? MediaQuery.of(context).size.height * 0.05
-                      : MediaQuery.of(context).size.height * 0.06,
                 ),
               ],
             ),

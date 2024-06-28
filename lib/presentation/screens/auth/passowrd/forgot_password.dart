@@ -2,19 +2,18 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/presentation/screens/auth/device_auth_screen.dart';
 
+import 'package:rootscards/presentation/screens/auth/otp.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
-
-import 'package:http/http.dart' as http;
 import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:http/http.dart' as http;
+
 
 class ForgotPasswordScreen extends StatefulWidget {
   static const String routeName = "forgot_password_screen";
@@ -127,7 +126,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       pill: true,
                       onPressed: () {
                         Navigator.of(context)
-                            .popAndPushNamed(SignInAuthScreen.routeName);
+                            .popAndPushNamed(OtpScreen.routeName);
                       },
                     )
                   ],

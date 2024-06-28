@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/presentation/screens/auth/forgot_password/forgot_password.dart';
+import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
 
@@ -193,7 +193,8 @@ class _SignInScreenState extends State<SignInScreen>
                                           ),
                                         ),
                                         focusedBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(color: BUTTONGREEN),
+                                          borderSide:
+                                              BorderSide(color: BUTTONGREEN),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
                                               30,
@@ -202,7 +203,7 @@ class _SignInScreenState extends State<SignInScreen>
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: height * .02),
+                                    AppSpacing.verticalSpaceSmall,
                                     TextFormField(
                                       keyboardType: TextInputType.text,
                                       controller: _passwordController,
@@ -244,7 +245,8 @@ class _SignInScreenState extends State<SignInScreen>
                                           ),
                                         ),
                                         focusedBorder: const OutlineInputBorder(
-                                          borderSide: BorderSide(color: BUTTONGREEN),
+                                          borderSide:
+                                              BorderSide(color: BUTTONGREEN),
                                           borderRadius: BorderRadius.all(
                                             Radius.circular(
                                               30,
@@ -253,7 +255,7 @@ class _SignInScreenState extends State<SignInScreen>
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: height * .02),
+                                    AppSpacing.verticalSpaceSmall,
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
