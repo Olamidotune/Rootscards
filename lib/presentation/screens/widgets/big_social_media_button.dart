@@ -18,9 +18,9 @@ class SocialMediaButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(15.h),
+        padding: EdgeInsets.all(10.h),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(80),
           border: Border.all(color: Colors.grey.shade400),
         ),
         child: ListTile(

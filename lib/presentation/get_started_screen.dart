@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/big_social_media_button.dart';
 
@@ -92,7 +93,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                     Text(
                       "Create a profile, follow other people's accounts,\n create your space and more.",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.grey.shade700),
+                      style: context.textTheme.bodyMedium!.copyWith(color: Colors.grey.shade700)
+                      // style: TextStyle(color: Colors.grey.shade700),
                     ),
                     SizedBox(
                       height: height / 20,
@@ -173,7 +175,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                     SizedBox(
                       height: 0.90.h * height <= 700
                           ? .05.h * height
-                          : height * .16.h,
+                          : height * .08.h,
                     ),
                     GestureDetector(
                       onTap: () {

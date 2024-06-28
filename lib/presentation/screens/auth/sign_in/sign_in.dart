@@ -374,8 +374,8 @@ class _SignInScreenState extends State<SignInScreen>
                             ),
                             SizedBox(
                               height: 0.90 * height <= 700
-                                  ? .03 * height
-                                  : height * .13,
+                                  ? .03.h * height
+                                  : height * .15.h,
                             ),
                             RichText(
                               textAlign: TextAlign.center,
@@ -547,8 +547,8 @@ class _SignInScreenState extends State<SignInScreen>
                           ),
                           SizedBox(
                             height: 0.90 * height <= 700
-                                ? .14 * height
-                                : height * .23,
+                                ? .14.h * height
+                                : height * .25.h,
                           ),
                           RichText(
                             textAlign: TextAlign.center,
