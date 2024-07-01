@@ -121,7 +121,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     maxLength: 4,
                     onDone: (String value) {
                       debugPrint('Entered OTP: $value');
-                      _authenticateDevice(value);
+                      // _authenticateDevice(value);
                     },
                     pinTextStyle: TextStyle(fontSize: 20),
                     pinBoxDecoration: (borderColor, pinBoxColor,

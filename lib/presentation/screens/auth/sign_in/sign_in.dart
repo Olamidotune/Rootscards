@@ -72,7 +72,7 @@ class _SignInScreenState extends State<SignInScreen>
             ),
           ],
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(90.0), // Adjust the height as needed
+            preferredSize: Size.fromHeight(90.h), // Adjust the height as needed
             child: Column(
               children: [
                 Padding(
@@ -331,43 +331,38 @@ class _SignInScreenState extends State<SignInScreen>
                                 ),
                               ],
                             ),
-                            SizedBox(height: height * .01),
+                            AppSpacing.verticalSpaceSmall,
                             RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                 text: "By continuing, you agree to Pipel's ",
-                                style: context.textTheme.bodyMedium?.copyWith(
-                                  color: GREY,
-                                  fontFamily: "lato",
-                                  fontWeight: FontWeight.normal,
-                                ),
+                                style: TextStyle(
+                                    fontFamily: "lato",
+                                    fontSize: 13.sp,
+                                    color: GREY),
                                 children: [
                                   TextSpan(
                                     text: "Terms of Service\n",
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      color: BLACK,
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "lato",
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.sp,
+                                        color: BLACK),
                                   ),
                                   TextSpan(
                                     text: " and ",
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      color: GREY,
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.normal,
-                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "lato",
+                                        fontSize: 13.sp,
+                                        color: GREY),
                                   ),
                                   TextSpan(
                                     text: "Privacy Policy",
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      color: BLACK,
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "lato",
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.sp,
+                                        color: BLACK),
                                   )
                                 ],
                               ),
@@ -375,28 +370,26 @@ class _SignInScreenState extends State<SignInScreen>
                             SizedBox(
                               height: 0.90 * height <= 700
                                   ? .03.h * height
-                                  : height * .15.h,
+                                  : height * .19.h,
                             ),
                             RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
                                   text: "Don't have an account? ",
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: GREY,
-                                    fontFamily: "lato",
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "lato",
+                                      fontSize: 13.sp,
+                                      color: GREY),
                                   children: [
                                     TextSpan(
                                       recognizer: TapGestureRecognizer()
                                         ..onTap = () {},
                                       text: " Create Account",
-                                      style: context.textTheme.bodyMedium
-                                          ?.copyWith(
-                                        color: BLACK,
-                                        fontFamily: "lato",
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: TextStyle(
+                                          fontFamily: "lato",
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13.sp,
+                                          color: BLACK),
                                     ),
                                   ]),
                             ),
@@ -507,40 +500,38 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                             ],
                           ),
-                          SizedBox(height: height * .01),
+                          AppSpacing.verticalSpaceSmall,
                           RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
                               text: "By continuing, you agree to Pipel's ",
-                              style: context.textTheme.bodyMedium?.copyWith(
-                                color: GREY,
-                                fontFamily: "lato",
-                                fontWeight: FontWeight.normal,
-                              ),
+                              style: TextStyle(
+                                  fontFamily: "lato",
+                                  fontSize: 13.sp,
+                                  color: GREY),
                               children: [
                                 TextSpan(
                                   text: "Terms of Service\n",
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: BLACK,
-                                    fontFamily: "lato",
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13.sp,
+                                      color: BLACK),
                                 ),
                                 TextSpan(
                                   text: " and ",
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: GREY,
-                                    fontFamily: "lato",
-                                    fontWeight: FontWeight.normal,
-                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "lato",
+                                      fontSize: 13.sp,
+                                      color: GREY),
                                 ),
                                 TextSpan(
                                   text: "Privacy Policy",
-                                  style: context.textTheme.bodyMedium?.copyWith(
-                                    color: BLACK,
-                                    fontFamily: "lato",
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                                  style: TextStyle(
+                                      fontFamily: "lato",
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13.sp,
+                                      color: BLACK),
                                 )
                               ],
                             ),
@@ -548,28 +539,26 @@ class _SignInScreenState extends State<SignInScreen>
                           SizedBox(
                             height: 0.90 * height <= 700
                                 ? .14.h * height
-                                : height * .25.h,
+                                : height * .28.h,
                           ),
                           RichText(
                             textAlign: TextAlign.center,
                             text: TextSpan(
                                 text: "Don't have an account? ",
-                                style: context.textTheme.bodyMedium?.copyWith(
-                                  color: GREY,
-                                  fontFamily: "lato",
-                                  fontWeight: FontWeight.normal,
-                                ),
+                                style: TextStyle(
+                                    fontFamily: "lato",
+                                    fontSize: 13.sp,
+                                    color: GREY),
                                 children: [
                                   TextSpan(
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {},
                                     text: " Create Account",
-                                    style:
-                                        context.textTheme.bodyMedium?.copyWith(
-                                      color: BLACK,
-                                      fontFamily: "lato",
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: TextStyle(
+                                        fontFamily: "lato",
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13.sp,
+                                        color: BLACK),
                                   ),
                                 ]),
                           ),
