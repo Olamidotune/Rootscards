@@ -9,6 +9,8 @@ class HelperFunction {
   static String xpub2Key = "XPUB2";
   static String userLoggedInKey = 'LOGGEDINKEY';
   static String spaceNameKey = 'SPACENAMEKEY';
+  static String authIDKey ='AUTHIDKEY';
+  
 
   static Future<bool> saveUserLoggedInStatus(bool isUserLoggedIn) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
@@ -38,6 +40,11 @@ class HelperFunction {
   static Future<bool> savePhoneNumberSF(String phoneNumber) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.setString(phoneNumberKey, phoneNumber);
+  }
+
+  static Future<bool> saveAuthIDSF(String authID) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(authIDKey, authID);
   }
 
   static Future<bool?> userLoggedInStatus() async {

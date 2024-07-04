@@ -11,10 +11,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthServices authServices;
 
   AuthBloc(this.authServices) : super(AuthInitial()) {
-    on<LoginEvent>(_authenticated);
+    on<LoginEvent>(_loginEvent);
   }
 
-  FutureOr<void> _authenticated(
+  FutureOr<void> _loginEvent(
       LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
