@@ -2,8 +2,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/app_wrapper.dart';
+import 'package:rootscards/blocs/bloc/auth_bloc.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/password_recovery.dart';
@@ -13,6 +15,7 @@ import 'package:rootscards/presentation/screens/auth/sign_up.dart';
 import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart';
+import 'package:rootscards/services/auth_services.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,12 +30,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthServices authServices = AuthServices();
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
+      builder: (context, child) => MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => AuthBloc(
+              authServices,
+            ),
+          )
+        ],
+        child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -86,8 +97,8 @@ class MyApp extends StatelessWidget {
             SpaceScreen.routeName: (context) => SpaceScreen(),
             PasswordRecovery.routeName: (context) => PasswordRecovery(),
           },
-        );
-      },
+        ),
+      ),
     );
   }
 }
