@@ -18,15 +18,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       LoginEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
     try {
-      final success = await authServices.login(event.email, event.password);
-      if (success) {
+      final result = await authServices.login(event.email, event.password);
+      if (result['success']) {
         emit(
           AuthSuccessState(
-            'xpub1',
-            'xpub2',
-            'email',
+            result['email'],
+            result['xpub1'],
+            result['xpub2'],
           ),
-        ); 
+        );
       } else {
         emit(AuthFailure('Login failed'));
       }

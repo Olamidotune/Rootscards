@@ -9,10 +9,10 @@ import 'package:rootscards/blocs/bloc/auth_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/presentation/screens/auth/otp.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
-import 'package:rootscards/presentation/screens/widgets/snackbar.dart';
 
 class SignInScreen extends StatefulWidget {
   static const String routeName = "sign_in_screen";
@@ -98,6 +98,7 @@ class _SignInScreenState extends State<SignInScreen>
                         borderRadius: BorderRadius.circular(30),
                         color: Colors.grey.shade300),
                     child: TabBar(
+                      dividerColor: Colors.transparent,
                       onTap: (value) {
                         WidgetsBinding.instance
                             .addPostFrameCallback((timeStamp) {
@@ -150,7 +151,10 @@ class _SignInScreenState extends State<SignInScreen>
                 SnackBar(content: Text(state.message)),
               );
             } else if (state is AuthSuccessState) {
-              showSnackBar(context, Colors.green, "Hello", "HEY", Icons.check);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Welcome ${state.email}")),
+              );
+              Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
             }
           },
           child: SafeArea(
@@ -162,6 +166,7 @@ class _SignInScreenState extends State<SignInScreen>
                 right: 20,
               ),
               child: TabBarView(
+                physics: NeverScrollableScrollPhysics(),
                 children: [
                   Container(
                     child: RawScrollbar(
@@ -236,10 +241,16 @@ class _SignInScreenState extends State<SignInScreen>
                                         focusNode: _passwordFocusNode,
                                         textInputAction: TextInputAction.go,
                                         obscureText: _obscurePassword,
-                                        // onFieldSubmitted: (_) => _signIn(
-                                        //     _emailController.text,
-                                        //     _passwordController.text,
-                                        //     context),
+                                        onFieldSubmitted: (_) => {
+                                          if (_formKey.currentState!.validate())
+                                            {
+                                              setState(() => _busy = !_busy),
+                                              context.read<AuthBloc>().add(
+                                                  LoginEvent(
+                                                      _emailController.text,
+                                                      _passwordController.text))
+                                            }
+                                        },
                                         validator: (value) {
                                           if (value == null || value.isEmpty) {
                                             return "Please provide a password.";
@@ -337,7 +348,7 @@ class _SignInScreenState extends State<SignInScreen>
                                                             _passwordController
                                                                 .text));
                                                   }
-                                                })
+                                                }),
                                     ],
                                   ),
                                 ),

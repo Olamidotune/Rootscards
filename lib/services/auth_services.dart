@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/app.dart';
 import 'package:rootscards/helper/helper_function.dart';
 
 class AuthServices {
-  Future<bool> login(String email, String password) async {
+  Future<Map<String, dynamic>> login(String email, String password) async {
     Map<String, String> requestBody = {
       'email': email,
       'password': password,
@@ -22,11 +23,21 @@ class AuthServices {
       if (status == "201") {
         String xpub1 = responseData['data']['xpub1'];
         String xpub2 = responseData['data']['xpub2'];
+        await HelperFunction.saveUserEmailSF(email);
         await HelperFunction.saveXpub1SF(xpub1);
         await HelperFunction.saveXpub2SF(xpub2);
-        await HelperFunction.saveUserEmailSF(email);
         HelperFunction.userLoggedInKey;
-        return true;
+        debugPrint(email);
+        debugPrint(password);
+        debugPrint(xpub1);
+        debugPrint(xpub2);
+
+        return {
+          'success': true,
+          'email': email,
+          "xpub1": xpub1,
+          "xpub2": xpub2
+        };
       } else {
         throw Exception(responseData['data']['message']);
       }

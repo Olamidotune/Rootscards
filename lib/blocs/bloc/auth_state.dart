@@ -12,21 +12,21 @@ final class AuthInitial extends AuthState {}
 class AuthLoading extends AuthState {}
 
 class AuthSuccessState extends AuthState {
+  final String email;
   final String xpub1;
   final String xpub2;
-  final String email;
 
   AuthSuccessState(
+    this.email,
     this.xpub1,
     this.xpub2,
-    this.email,
   );
 
   @override
   List<Object> get props => [
+        email,
         xpub1,
         xpub2,
-        email,
       ];
 }
 
