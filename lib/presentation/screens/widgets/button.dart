@@ -38,12 +38,12 @@ class Button extends StatelessWidget {
             if (states.contains(WidgetState.pressed))
               return BUTTONGREEN;
             else if (states.contains(WidgetState.disabled)) return GREY2;
-            return GREY2;
+            return BUTTONGREEN;
           }),
           shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(pill ? 30 : 10.0),
+              Radius.circular(pill ? 60.w : 10.0),
             ),
           )),
         ),

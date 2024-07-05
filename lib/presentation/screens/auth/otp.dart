@@ -9,194 +9,6 @@ import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-// class OtpScreen extends StatefulWidget {
-//   static const String routeName = "sign_in_auth_screen";
-
-//   const OtpScreen({super.key});
-
-//   @override
-//   State<OtpScreen> createState() => _OtpScreenState();
-// }
-
-// class _OtpScreenState extends State<OtpScreen> {
-//   final TextEditingController _otpController = TextEditingController();
-//   bool _busy = false;
-//   String? email;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _getEmail();
-//   }
-
-//   _getEmail() async {
-//     await HelperFunction.getUserEmailfromSF().then((value) {
-//       setState(() {
-//         email = value;
-//       });
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final double height =
-//         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
-//     return Scaffold(
-//       appBar: AppBar(
-//           centerTitle: true,
-//           leading: IconButton(
-//             onPressed: () {
-//               Navigator.pop(context);
-//             },
-//             icon: Icon(
-//               Icons.arrow_back,
-//             ),
-//             iconSize: 18.h,
-//           ),
-//           title: Text(
-//             "OTP",
-//             style: context.textTheme.bodyMedium?.copyWith(
-//               color: BLACK,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           actions: [
-//             IconButton(
-//               onPressed: () {},
-//               icon: Icon(Icons.info_outline),
-//               iconSize: 18.h,
-//             ),
-//           ]),
-//       body: BlocListener<OtpAuthBloc, OtpAuthState>(
-//         listener: (context, state) {
-//           if (state is OtpLoadingState) {
-//             setState(() => _busy = true);
-//           } else {
-//             setState(() => _busy = false);
-//           }
-//           if (state is OtpFaliedState) {
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(content: Text(state.message)),
-//             );
-//           } else if (state is OtpSuccessState) {
-//             ScaffoldMessenger.of(context).showSnackBar(
-//               SnackBar(content: Text("Your device have been authenticated")),
-//             );
-//             Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
-//           }
-//         },
-//         child: SingleChildScrollView(
-//           child: SafeArea(
-//             child: Container(
-//               height: height,
-//               padding: EdgeInsets.only(
-//                 top: height <= 550 ? 10 : 20,
-//                 left: 20,
-//                 right: 20,
-//               ),
-//               child: Column(
-//                 crossAxisAlignment: CrossAxisAlignment.start,
-//                 children: [
-//                   SizedBox(
-//                     height: 10.h,
-//                   ),
-//                   Text(
-//                     "Enter Confrimation Code",
-//                     style: context.textTheme.headlineLarge!.copyWith(
-//                         fontFamily: "LoveYaLikeASister", fontSize: 28.sp),
-//                     textAlign: TextAlign.center,
-//                     maxLines: 1,
-//                   ),
-//                   AppSpacing.verticalSpaceSmall,
-//                   Text("Enter the 4-digit OTP code. We've just send to",
-//                       style: context.textTheme.bodyMedium!.copyWith(
-//                         color: GREY,
-//                       )),
-//                   Text(email ?? "N/A",
-//                       style: context.textTheme.bodyMedium!
-//                           .copyWith(fontWeight: FontWeight.bold)),
-//                   AppSpacing.verticalSpaceHuge,
-//                   Center(
-//                     child: PinCodeTextField(
-//                       isCupertino: true,
-//                       keyboardType: TextInputType.number,
-//                       hideCharacter: false,
-//                       controller: _otpController,
-//                       autofocus: false,
-//                       pinBoxHeight: 50.h,
-//                       pinBoxWidth: 70.w,
-//                       maxLength: 4,
-//                       onDone: (String value) {
-//                         // setState(() => _busy = !_busy);
-//                         // context
-//                         //     .read<OtpAuthBloc>()
-//                         //     .add(AuthorizeDeviceEvent(_otpController.text));
-//                         // Navigator.of(context)
-//                         //     .popAndPushNamed(SignInScreen.routeName);
-
-//                         debugPrint('Entered OTP: $value');
-//                       },
-//                       pinTextStyle: TextStyle(fontSize: 20),
-//                       pinBoxDecoration: (borderColor, pinBoxColor,
-//                           {double borderWidth = 0, double? radius}) {
-//                         return BoxDecoration(
-//                           borderRadius: BorderRadius.circular(30),
-//                           border: Border.all(
-//                             color: GREY2,
-//                             width: borderWidth,
-//                           ),
-//                           color: Colors.transparent,
-//                         );
-//                       },
-//                     ),
-//                   ),
-//                   AppSpacing.verticalSpaceMedium,
-//                   Center(
-//                     child: RichText(
-//                       text: TextSpan(
-//                         text: "Didn't receive OTP?",
-//                         style: context.textTheme.bodyMedium!.copyWith(
-//                           color: GREY,
-//                         ),
-//                         children: [
-//                           TextSpan(
-//                               text: " Resend",
-//                               style: context.textTheme.bodyMedium!.copyWith(
-//                                 fontWeight: FontWeight.bold,
-//                               )),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   SizedBox(
-//                     height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
-//                         ? .43 * height
-//                         : height * .46,
-//                   ),
-//                   Button(
-//                       busy: _busy,
-//                       pill: true,
-//                       disabledTextColor: BLACK,
-//                       "Confirm",
-//                       onPressed: _busy
-//                           ? null
-//                           : () {
-//                               setState(() => _busy = !_busy);
-//                               context.read<OtpAuthBloc>().add(
-//                                   AuthorizeDeviceEvent(_otpController.text));
-//                               Navigator.of(context)
-//                                   .popAndPushNamed(SignInScreen.routeName);
-//                             }),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-
 class OtpScreen extends StatefulWidget {
   static const String routeName = "sign_in_auth_screen";
 
@@ -241,9 +53,9 @@ class _OtpScreenState extends State<OtpScreen> {
           title: Text(
             "OTP",
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
-            ),
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           actions: [
             IconButton(
@@ -275,7 +87,7 @@ class _OtpScreenState extends State<OtpScreen> {
             child: Container(
               height: height,
               padding: EdgeInsets.only(
-                top: height <= 550 ? 10 : 20,
+                top: height <= 550 ? 10.h : 20.h,
                 left: 20,
                 right: 20,
               ),
@@ -293,10 +105,12 @@ class _OtpScreenState extends State<OtpScreen> {
                   AppSpacing.verticalSpaceSmall,
                   Text("Enter the 4-digit OTP code we've just sent to",
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        color: Colors.grey,
-                      )),
-                  Text(email ?? "N/A",
-                      style: Theme.of(context).textTheme.bodyMedium!
+                            color: Colors.grey,
+                          )),
+                  Text(email ?? " ",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
                           .copyWith(fontWeight: FontWeight.bold)),
                   AppSpacing.verticalSpaceHuge,
                   Center(
@@ -310,6 +124,11 @@ class _OtpScreenState extends State<OtpScreen> {
                       pinBoxWidth: 70.w,
                       maxLength: 4,
                       onDone: (String value) {
+                        if (!_busy) {
+                          context
+                              .read<OtpAuthBloc>()
+                              .add(AuthorizeDeviceEvent(_otpController.text));
+                        }
                         debugPrint('Entered OTP: $value');
                       },
                       pinTextStyle: TextStyle(fontSize: 20),
@@ -332,19 +151,26 @@ class _OtpScreenState extends State<OtpScreen> {
                       text: TextSpan(
                         text: "Didn't receive OTP?",
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                          color: Colors.grey,
-                        ),
+                              color: Colors.grey,
+                            ),
                         children: [
                           TextSpan(
                               text: " Resend",
-                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                fontWeight: FontWeight.bold,
-                              )),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium!
+                                  .copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  )),
                         ],
                       ),
                     ),
                   ),
-                  Spacer(),
+                  SizedBox(
+                    height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
+                        ? .36.h * height
+                        : height * .42.h,
+                  ),
                   Button(
                       busy: _busy,
                       pill: true,

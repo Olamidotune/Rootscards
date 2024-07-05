@@ -34,6 +34,7 @@ class AuthServices {
         debugPrint(password);
         debugPrint(xpub1);
         debugPrint(xpub2);
+        debugPrint(response.body);
 
         return {
           'success': true,
@@ -42,7 +43,7 @@ class AuthServices {
           "xpub2": xpub2
         };
       } else {
-        throw Exception(responseData['data']['message']);
+        throw (responseData['data']['message']);
       }
     } else {
       throw Exception('Failed to login');
@@ -114,9 +115,11 @@ class AuthServices {
       if (status == "200") {
         String authid = responseData['data']['authid'];
         await HelperFunction.saveAuthIDSF(authid);
+        debugPrint(authid);
+        debugPrint(response.body);
         return responseData;
       } else {
-        throw Exception('Failed to authorize device');
+        throw ("Oops ${responseData['data']['message']}");
       }
     } else {
       throw Exception('Failed to authorize device');
