@@ -78,8 +78,6 @@ class _SpaceScreenState extends State<SpaceScreen> {
                           style: const TextStyle(),
                           autofillHints: const [AutofillHints.email],
                           decoration: InputDecoration(
-                            prefixIcon:
-                                Image.asset("assets/images/message-icon.png"),
                             hintText: "enter your space name",
                             hintStyle: const TextStyle(color: Colors.black26),
                             border: const OutlineInputBorder(
@@ -116,8 +114,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
                             height: MediaQuery.of(context).size.height <=
                                     MIN_SUPPORTED_SCREEN_HEIGHT
                                 ? MediaQuery.of(context).size.height * 0.03
-                                : MediaQuery.of(context).size.height / 95
-                            ),
+                                : MediaQuery.of(context).size.height / 95),
                         const Text(
                           "rootcards.com",
                           style: TextStyle(fontWeight: FontWeight.w600),

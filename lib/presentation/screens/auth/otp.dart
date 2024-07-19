@@ -5,7 +5,7 @@ import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rootscards/blocs/otp/bloc/otp_bloc.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
+import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -79,7 +79,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Your device has been authenticated")),
             );
-            Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
+            Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
           }
         },
         child: SingleChildScrollView(

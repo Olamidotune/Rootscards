@@ -14,10 +14,12 @@ class AuthServices {
       'password': password,
     };
 
+    String deviceId = await HelperFunction.getDeviceIDfromSF() ?? "N/A";
+
     final response = await http.post(
       Uri.parse("$baseUrl/"),
       body: json.encode(requestBody),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'deviceid': deviceId, 'Content-Type': 'application/json'},
     ).timeout(Duration(seconds: 30));
 
     if (response.statusCode == 200) {
@@ -32,8 +34,6 @@ class AuthServices {
         HelperFunction.userLoggedInKey;
         debugPrint(email);
         debugPrint(password);
-        debugPrint(xpub1);
-        debugPrint(xpub2);
         debugPrint(response.body);
 
         return {
@@ -50,50 +50,24 @@ class AuthServices {
     }
   }
 
-  //otp
+  //OTP
   Future<Map<String, dynamic>> authOtp(String otp) async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String? xpub1 = await HelperFunction.getXpub1fromSF();
     String? xpub2 = await HelperFunction.getXpub2fromSF();
-    String deviceId = "";
-    String entry = "";
-    String deviceName = "";
-    String deviceType = "";
-    String deviceModel = "";
 
     if (xpub1 == null || xpub2 == null) {
       throw Exception("xpub1 and xpub2 are not found");
     }
 
-    try {
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.manufacturer;
-        entry = "android";
-        deviceName = androidInfo.device;
-        deviceType = androidInfo.model;
-        deviceModel = androidInfo.product;
-      } else if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceId = iosInfo.identifierForVendor!;
-        entry = "ios";
-        deviceName = iosInfo.name;
-        deviceType = iosInfo.model;
-        deviceModel = iosInfo.systemName;
-      }
-    } catch (e) {
-      throw Exception('Failed to get device information: $e');
-    }
-
     Map<String, dynamic> requestBody = {
-      "deviceId": deviceId,
-      "entry": entry,
-      "deviceName": deviceName,
-      "deviceType": deviceType,
-      "deviceModel": deviceModel,
+      "deviceId": await HelperFunction.getDeviceIDfromSF(),
+      "entry": await HelperFunction.getDeviceEntryFromSF(),
+      "deviceName": await HelperFunction.getDeviceNameFromSF(),
+      "deviceType": await HelperFunction.getDeviceTypeFromSF(),
+      "deviceModel": await HelperFunction.getDeviceModelFromSF(),
       "code": otp,
     };
-
+    debugPrint(requestBody.toString());
     String encodedBody = json.encode(requestBody);
 
     http.Response response = await http
@@ -107,7 +81,6 @@ class AuthServices {
           body: encodedBody,
         )
         .timeout(Duration(seconds: 30));
-
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = json.decode(response.body);
       String status = responseData['status'];
@@ -115,14 +88,61 @@ class AuthServices {
       if (status == "200") {
         String authid = responseData['data']['authid'];
         await HelperFunction.saveAuthIDSF(authid);
-        debugPrint(authid);
-        debugPrint(response.body);
-        return responseData;
+        String userName = responseData['details']['username'];
+        String brand = responseData['details']['brand'];
+        return {
+          'success': true,
+          "authId": authid,
+          "userName": userName,
+          "brand": brand,
+        };
       } else {
-        throw ("Oops ${responseData['data']['message']}");
+        throw Exception("Oops ${responseData['data']['message']}");
       }
     } else {
-      throw Exception('Failed to authorize device');
+      throw Exception("Something went wrong");
     }
+  }
+
+  ///getDeviceID
+
+  Future<void> getDeviceID() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    String deviceId = "";
+    String entry = "";
+    String deviceName = "";
+    String deviceType = "";
+    String deviceModel = "";
+
+    try {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.id;
+        entry = androidInfo.brand;
+        deviceName = androidInfo.device;
+        deviceType = androidInfo.model;
+        deviceModel = androidInfo.product;
+      } else if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor!;
+        entry = iosInfo.model;
+        deviceName = iosInfo.name;
+        deviceType = iosInfo.model;
+        deviceModel = iosInfo.systemName;
+      }
+    } catch (e) {
+      throw Exception('Failed to get device information: $e');
+    }
+    debugPrint(deviceId);
+    debugPrint(entry);
+    debugPrint(deviceName);
+    debugPrint(deviceType);
+    debugPrint(deviceModel);
+
+    await HelperFunction.saveDeviceIDSF(deviceId);
+    await HelperFunction.saveDeviceEntry(entry);
+    await HelperFunction.saveDeviceNameSF(deviceName);
+    await HelperFunction.saveDeviceTypeSF(deviceType);
+    await HelperFunction.saveDeviceModel(deviceModel);
   }
 }
