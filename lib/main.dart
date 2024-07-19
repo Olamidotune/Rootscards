@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/app_wrapper.dart';
-import 'package:rootscards/blocs/bloc/auth_bloc.dart';
+import 'package:rootscards/blocs/auth/bloc/auth_bloc.dart';
+import 'package:rootscards/blocs/otp/bloc/otp_bloc.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/password_recovery.dart';
@@ -41,7 +42,12 @@ class MyApp extends StatelessWidget {
             create: (context) => AuthBloc(
               authServices,
             ),
-          )
+          ),
+          BlocProvider(
+            create: (context) => OtpAuthBloc(
+              authServices,
+            ),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

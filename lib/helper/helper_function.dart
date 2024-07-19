@@ -9,7 +9,14 @@ class HelperFunction {
   static String xpub2Key = "XPUB2";
   static String userLoggedInKey = 'LOGGEDINKEY';
   static String spaceNameKey = 'SPACENAMEKEY';
+  static String authIDKey = 'AUTHIDKEY';
+  static String deviceIDKey = 'DEVICEIDKEY';
+  static String deviceEntryKey = 'DEVICEENTRYKEY';
+  static String deviceNameKey = "DEVICENAMEKEY";
+  static String deviceTypeKey = ' DEVICETYPEKEY';
+  static String deviceModelKey = 'DEVICEMODELKEY';
 
+  ///save prefs
   static Future<bool> saveUserLoggedInStatus(bool isUserLoggedIn) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setBool(userLoggedInKey, isUserLoggedIn);
@@ -40,6 +47,37 @@ class HelperFunction {
     return sf.setString(phoneNumberKey, phoneNumber);
   }
 
+  static Future<bool> saveAuthIDSF(String authID) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(authIDKey, authID);
+  }
+
+  static Future<bool> saveDeviceIDSF(String deviceId) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(deviceIDKey, deviceId);
+  }
+
+  static Future<bool> saveDeviceEntry(String entry) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(deviceEntryKey, entry);
+  }
+
+  static Future<bool> saveDeviceNameSF(String deviceName) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(deviceNameKey, deviceName);
+  }
+
+  static Future<bool> saveDeviceTypeSF(String deviceType) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(deviceTypeKey, deviceType);
+  }
+
+  static Future<bool> saveDeviceModel(String deviceModel) async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.setString(deviceModelKey, deviceModel);
+  }
+
+  /// get saved prefs
   static Future<bool?> userLoggedInStatus() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getBool(userLoggedInKey);
@@ -73,5 +111,30 @@ class HelperFunction {
   static Future<String?> getSpaceNamefromSF() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(spaceNameKey);
+  }
+
+  static Future<String?> getDeviceIDfromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(deviceIDKey);
+  }
+
+  static Future<String?> getDeviceEntryFromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(deviceEntryKey);
+  }
+
+  static Future<String?> getDeviceNameFromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(deviceNameKey);
+  }
+
+  static Future<String?> getDeviceTypeFromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(deviceTypeKey);
+  }
+
+  static Future<String?> getDeviceModelFromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(deviceModelKey);
   }
 }
