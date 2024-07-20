@@ -163,35 +163,33 @@ class _CarouselImage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
-      child: Container(
-        child: Column(
-          children: [
-            Image.asset(
-              "assets/images/$image",
-              height: viewPortHeight * .45.h,
-              fit: BoxFit.contain,
+      child: Column(
+        children: [
+          Image.asset(
+            "assets/images/$image",
+            height: viewPortHeight * .45.h,
+            fit: BoxFit.contain,
+          ),
+          AppSpacing.verticalSpaceSmall,
+          slider,
+          AppSpacing.verticalSpaceSmall,
+          Text(
+            title,
+            style: context.textTheme.bodyLarge!.copyWith(
+              fontFamily: "LoveYaLikeASister",
+              fontSize: 32.sp,
             ),
-            AppSpacing.verticalSpaceSmall,
-            slider,
-            AppSpacing.verticalSpaceSmall,
-            Text(
-              title,
-              style: context.textTheme.bodyLarge!.copyWith(
-                fontFamily: "LoveYaLikeASister",
-                fontSize: 32.sp,
-              ),
-              textAlign: TextAlign.center,
+            textAlign: TextAlign.center,
+          ),
+          AppSpacing.verticalSpaceTiny,
+          Text(
+            subTitle,
+            textAlign: TextAlign.center,
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontSize: 16.sp,
             ),
-            AppSpacing.verticalSpaceTiny,
-            Text(
-              subTitle,
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodyMedium!.copyWith(
-                fontSize: 16.sp,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

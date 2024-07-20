@@ -16,7 +16,8 @@ import 'package:rootscards/presentation/screens/auth/sign_up.dart';
 import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart';
-import 'package:rootscards/services/auth_services.dart';
+import 'package:rootscards/repos/repos.dart';
+
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,25 +32,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AuthServices authServices = AuthServices();
+
+        final AuthRepository authRepository = AuthRepository();
+
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) => MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => AuthBloc(
-              authServices,
-            ),
-          ),
-          BlocProvider(
-            create: (context) => OtpAuthBloc(
-              authServices,
-            ),
-          ),
-        ],
-        child: MaterialApp(
+        designSize: const Size(375, 812),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) => MultiRepositoryProvider(
+                providers: [
+                  RepositoryProvider(
+                    create: (context) => AuthRepository(),
+                  )
+                ],
+                child: MultiBlocProvider(providers: [
+                  BlocProvider(
+                    create: (context) => AuthBloc(
+                      authRepository: context.read<AuthRepository>(),
+                    ),
+                  ),
+                    BlocProvider(
+                    create: (context) => OtpAuthBloc(
+                  authRepository
+                    ),
+                  )
+                ], child: MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -103,8 +110,6 @@ class MyApp extends StatelessWidget {
             SpaceScreen.routeName: (context) => SpaceScreen(),
             PasswordRecovery.routeName: (context) => PasswordRecovery(),
           },
-        ),
-      ),
-    );
+        ),)));
   }
 }

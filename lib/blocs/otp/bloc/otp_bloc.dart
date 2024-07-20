@@ -1,24 +1,33 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:rootscards/services/auth_services.dart';
+import 'package:rootscards/repos/repos.dart';
 
 part 'otp_event.dart';
 part 'otp_state.dart';
 
 class OtpAuthBloc extends Bloc<OtpAuthEvent, OtpAuthState> {
-  final AuthServices authServices;
+  final AuthRepository authRepository;
 
-  OtpAuthBloc(this.authServices) : super(OtpInitial()) {
-    on<AuthorizeDeviceEvent>(_otpAuthEvent);
+  OtpAuthBloc(this.authRepository) : super(OtpInitial()) {
+    on<DeviceAuthenticationRequested>(_onDeviceAuthenticationRequested);
   }
 
-  FutureOr<void> _otpAuthEvent(
-      AuthorizeDeviceEvent event, Emitter<OtpAuthState> emit) async {
+  Future<void> _onDeviceAuthenticationRequested(
+    DeviceAuthenticationRequested event,
+    Emitter<OtpAuthState> emit,
+  ) async {
     emit(OtpLoadingState());
     try {
-      final response = await authServices.authOtp(event.otp);
-      emit(OtpSuccessState(response['data']['authid']));
+      final result = await authRepository.authenticateDevice(event.otp);
+      final authId = await authRepository.getAuthId();
+      if (authId != null) {
+        emit(DeviceAuthenticationSuccess(authId));
+      } else {
+        emit(OtpFailedState('Failed to retrieve authId'));
+      }
     } catch (e) {
       emit(OtpFailedState(e.toString()));
     }
