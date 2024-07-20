@@ -11,12 +11,13 @@ final class OtpInitial extends OtpAuthState {}
 
 final class OtpLoadingState extends OtpAuthState {}
 
-final class OtpSuccessState extends OtpAuthState {
-  final String authid;
-  OtpSuccessState(this.authid);
+class DeviceAuthenticationSuccess extends OtpAuthState {
+  final String authId;
 
-    @override
-  List<Object> get props => [authid];
+  const DeviceAuthenticationSuccess(this.authId);
+
+  @override
+  List<Object> get props => [authId];
 }
 
 final class OtpFailedState extends OtpAuthState {

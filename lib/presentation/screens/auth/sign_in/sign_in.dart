@@ -6,9 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_bloc.dart';
+import 'package:rootscards/blocs/auth/bloc/auth_event.dart';
+import 'package:rootscards/blocs/auth/bloc/auth_state.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/presentation/screens/auth/otp.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
+import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
 
@@ -79,13 +82,21 @@ class _SignInScreenState extends State<SignInScreen>
           }
           if (state is AuthFailure) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
+              SnackBar(content: Text(state.error)),
             );
-          } else if (state is AuthSuccessState) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Welcome ${state.email}")),
+          } else if (state is AuthSuccess) {
+            if (state.needsDeviceAuth){
+              ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Welcome")),
             );
             Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
+            }
+            else{
+                ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Welcome Back")),
+            );
+            Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+            }
           }
         },
         child: SafeArea(
@@ -261,7 +272,7 @@ class _SignInScreenState extends State<SignInScreen>
                                                   setState(
                                                       () => _busy = !_busy),
                                                   context.read<AuthBloc>().add(
-                                                      LoginEvent(
+                                                      LoginRequested(
                                                           _emailController.text,
                                                           _passwordController
                                                               .text))
@@ -373,7 +384,7 @@ class _SignInScreenState extends State<SignInScreen>
                                                             _busy = !_busy);
                                                         context
                                                             .read<AuthBloc>()
-                                                            .add(LoginEvent(
+                                                            .add(LoginRequested(
                                                                 _emailController
                                                                     .text,
                                                                 _passwordController
@@ -486,163 +497,161 @@ class _SignInScreenState extends State<SignInScreen>
                           ),
                         ),
                       ),
-                      Container(
-                        child: RawScrollbar(
+                      RawScrollbar(
+                        controller: _scrollControllerPhone,
+                        thumbVisibility: true,
+                        radius: Radius.circular(10),
+                        thumbColor: Colors.grey,
+                        child: SingleChildScrollView(
                           controller: _scrollControllerPhone,
-                          thumbVisibility: true,
-                          radius: Radius.circular(10),
-                          thumbColor: Colors.grey,
-                          child: SingleChildScrollView(
-                            controller: _scrollControllerPhone,
-                            physics: BouncingScrollPhysics(),
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  keyboardType: TextInputType.phone,
-                                  controller: _phoneNumberController,
-                                  textInputAction: TextInputAction.next,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.allow(
-                                      RegExp(
-                                        "[a-zA-z0-9]",
-                                      ),
+                          physics: BouncingScrollPhysics(),
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                keyboardType: TextInputType.phone,
+                                controller: _phoneNumberController,
+                                textInputAction: TextInputAction.next,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.allow(
+                                    RegExp(
+                                      "[a-zA-z0-9]",
                                     ),
-                                  ],
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall!
-                                      .copyWith(
-                                        color: Colors.black,
-                                      ),
-                                  decoration: InputDecoration(
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 25.h, horizontal: 25.w),
-                                    hintText: "Phone number",
-                                    hintStyle: const TextStyle(
-                                        color: Colors.black26,
-                                        fontWeight: FontWeight.bold),
-                                    border: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.grey.shade200),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(60.w),
-                                      ),
+                                  ),
+                                ],
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall!
+                                    .copyWith(
+                                      color: Colors.black,
                                     ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.green),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                          60.w,
-                                        ),
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 25.h, horizontal: 25.w),
+                                  hintText: "Phone number",
+                                  hintStyle: const TextStyle(
+                                      color: Colors.black26,
+                                      fontWeight: FontWeight.bold),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        color: Colors.grey.shade200),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(60.w),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: Colors.green),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                        60.w,
                                       ),
                                     ),
                                   ),
                                 ),
-                                AppSpacing.verticalSpaceLarge,
-                                Button(
-                                  busy: _busy,
-                                  "Send Verification Code",
-                                  textColor: Colors.black,
-                                  disabledTextColor: Colors.black,
-                                  pill: true,
-                                  onPressed: () {},
-                                ),
-                                SizedBox(height: height * .04),
-                                Text(
-                                  "Or sign in with",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(color: Colors.grey),
-                                ),
-                                Row(
+                              ),
+                              AppSpacing.verticalSpaceLarge,
+                              Button(
+                                busy: _busy,
+                                "Send Verification Code",
+                                textColor: Colors.black,
+                                disabledTextColor: Colors.black,
+                                pill: true,
+                                onPressed: () {},
+                              ),
+                              SizedBox(height: height * .04),
+                              Text(
+                                "Or sign in with",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: Colors.grey),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: SmallSocialButton(
+                                      iconName: "facebook",
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SmallSocialButton(
+                                      iconName: "google",
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: SmallSocialButton(
+                                      iconName: "apple",
+                                      onPressed: () {},
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              AppSpacing.verticalSpaceMedium,
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                  text:
+                                      "By continuing, you agree to Pipel's ",
+                                  style: TextStyle(
+                                      fontFamily: "lato",
+                                      fontSize: 13.sp,
+                                      color: Colors.grey),
                                   children: [
-                                    Expanded(
-                                      child: SmallSocialButton(
-                                        iconName: "facebook",
-                                        onPressed: () {},
-                                      ),
+                                    TextSpan(
+                                      text: "Terms of Service\n",
+                                      style: TextStyle(
+                                          fontFamily: "lato",
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13.sp,
+                                          color: Colors.black),
                                     ),
-                                    Expanded(
-                                      child: SmallSocialButton(
-                                        iconName: "google",
-                                        onPressed: () {},
-                                      ),
+                                    TextSpan(
+                                      text: " and ",
+                                      style: TextStyle(
+                                          fontFamily: "lato",
+                                          fontSize: 13.sp,
+                                          color: Colors.grey),
                                     ),
-                                    Expanded(
-                                      child: SmallSocialButton(
-                                        iconName: "apple",
-                                        onPressed: () {},
-                                      ),
-                                    ),
+                                    TextSpan(
+                                      text: "Privacy Policy",
+                                      style: TextStyle(
+                                          fontFamily: "lato",
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13.sp,
+                                          color: Colors.black),
+                                    )
                                   ],
                                 ),
-                                AppSpacing.verticalSpaceMedium,
-                                RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                    text:
-                                        "By continuing, you agree to Pipel's ",
+                              ),
+                              SizedBox(
+                                height: 0.90 * height <= 700
+                                    ? .14.h * height
+                                    : height * .28.h,
+                              ),
+                              RichText(
+                                textAlign: TextAlign.center,
+                                text: TextSpan(
+                                    text: "Don't have an account? ",
                                     style: TextStyle(
                                         fontFamily: "lato",
                                         fontSize: 13.sp,
                                         color: Colors.grey),
                                     children: [
                                       TextSpan(
-                                        text: "Terms of Service\n",
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () {},
+                                        text: " Create Account",
                                         style: TextStyle(
                                             fontFamily: "lato",
                                             fontWeight: FontWeight.bold,
                                             fontSize: 13.sp,
                                             color: Colors.black),
                                       ),
-                                      TextSpan(
-                                        text: " and ",
-                                        style: TextStyle(
-                                            fontFamily: "lato",
-                                            fontSize: 13.sp,
-                                            color: Colors.grey),
-                                      ),
-                                      TextSpan(
-                                        text: "Privacy Policy",
-                                        style: TextStyle(
-                                            fontFamily: "lato",
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 13.sp,
-                                            color: Colors.black),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 0.90 * height <= 700
-                                      ? .14.h * height
-                                      : height * .28.h,
-                                ),
-                                RichText(
-                                  textAlign: TextAlign.center,
-                                  text: TextSpan(
-                                      text: "Don't have an account? ",
-                                      style: TextStyle(
-                                          fontFamily: "lato",
-                                          fontSize: 13.sp,
-                                          color: Colors.grey),
-                                      children: [
-                                        TextSpan(
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {},
-                                          text: " Create Account",
-                                          style: TextStyle(
-                                              fontFamily: "lato",
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 13.sp,
-                                              color: Colors.black),
-                                        ),
-                                      ]),
-                                ),
-                              ],
-                            ),
+                                    ]),
+                              ),
+                            ],
                           ),
                         ),
                       ),

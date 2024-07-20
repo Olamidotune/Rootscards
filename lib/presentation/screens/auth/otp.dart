@@ -75,7 +75,7 @@ class _OtpScreenState extends State<OtpScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
-          } else if (state is OtpSuccessState) {
+          } else if (state is DeviceAuthenticationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Your device has been authenticated")),
             );
@@ -125,9 +125,9 @@ class _OtpScreenState extends State<OtpScreen> {
                       maxLength: 4,
                       onDone: (String value) {
                         if (!_busy) {
-                          context
-                              .read<OtpAuthBloc>()
-                              .add(AuthorizeDeviceEvent(_otpController.text));
+                          context.read<OtpAuthBloc>().add(
+                              DeviceAuthenticationRequested(
+                                  _otpController.text));
                         }
                         debugPrint('Entered OTP: $value');
                       },
@@ -180,7 +180,8 @@ class _OtpScreenState extends State<OtpScreen> {
                           ? null
                           : () {
                               context.read<OtpAuthBloc>().add(
-                                  AuthorizeDeviceEvent(_otpController.text));
+                                  DeviceAuthenticationRequested(
+                                      _otpController.text));
                             }),
                 ],
               ),

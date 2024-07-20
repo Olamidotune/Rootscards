@@ -7,11 +7,13 @@ sealed class OtpAuthEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class AuthorizeDeviceEvent extends OtpAuthEvent {
+class DeviceAuthenticationRequested extends OtpAuthEvent {
   final String otp;
 
-  AuthorizeDeviceEvent(this.otp);
+  const DeviceAuthenticationRequested(this.otp);
 
   @override
   List<Object> get props => [otp];
 }
+
+

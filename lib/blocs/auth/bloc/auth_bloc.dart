@@ -1,37 +1,35 @@
-import 'dart:async';
+// import 'dart:async';
 
-import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:rootscards/services/auth_services.dart';
+// import 'package:bloc/bloc.dart';
+// import 'package:equatable/equatable.dart';
+// import 'package:rootscards/services/auth_services.dart';
 
-part 'auth_event.dart';
-part 'auth_state.dart';
-
+// part 'auth_event.dart';
+// part 'auth_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rootscards/blocs/auth/bloc/auth_event.dart';
+import 'package:rootscards/blocs/auth/bloc/auth_state.dart';
+import 'package:rootscards/repos/repos.dart';
+ 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final AuthServices authServices;
+  final AuthRepository authRepository;
 
-  AuthBloc(this.authServices) : super(AuthInitial()) {
-    on<LoginEvent>(_loginEvent);
+  AuthBloc({required this.authRepository}) : super(AuthInitial()) {
+    on<LoginRequested>(_onLoginSubmitted);
   }
 
-  FutureOr<void> _loginEvent(
-      LoginEvent event, Emitter<AuthState> emit) async {
+   Future<void> _onLoginSubmitted(
+    LoginRequested event,
+    Emitter<AuthState> emit,
+  ) async {
     emit(AuthLoading());
     try {
-      final result = await authServices.login(event.email, event.password);
-      if (result['success']) {
-        emit(
-          AuthSuccessState(
-            result['email'],
-            result['xpub1'],
-            result['xpub2'],
-          ),
-        );
-      } else {
-        emit(AuthFailure('Login failed'));
-      }
+      final result = await authRepository.login(event.email, event.password);
+      final needsDeviceAuth = result['status'] == '201';
+      emit(AuthSuccess(needsDeviceAuth));
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }
   }
-}
+  }
+
