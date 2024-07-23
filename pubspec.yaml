@@ -51,6 +51,8 @@ dependencies:
   device_info_plus: ^9.1.2
   shared_preferences: ^2.2.2
   flutter_screenutil: ^5.9.3
+  intl_phone_number_input: ^0.7.4
+  intl_phone_field: ^3.2.0
   
 
 
@@ -81,6 +83,7 @@ flutter:
   assets:
     - assets/images/
     - assets/svg/
+    - assets/flags/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:rootscards/presentation/widgets/button.dart';
 
 class PasswordRecovery extends StatefulWidget {
   static const String routeName = "password_recovery_screen";

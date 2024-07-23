@@ -11,7 +11,7 @@ import 'package:rootscards/extensions/build_context.dart';
 
 import 'package:rootscards/presentation/screens/auth/otp.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
-import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:rootscards/presentation/widgets/button.dart';
 import 'package:http/http.dart' as http;
 
 class ForgotPasswordScreen extends StatefulWidget {

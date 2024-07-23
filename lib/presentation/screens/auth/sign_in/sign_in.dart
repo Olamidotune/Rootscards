@@ -8,12 +8,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_bloc.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_event.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_state.dart';
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
+import 'package:rootscards/model/country_model.dart';
 import 'package:rootscards/presentation/screens/auth/otp.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in/country_picker.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
-import 'package:rootscards/presentation/screens/widgets/button.dart';
-import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
+import 'package:rootscards/presentation/widgets/button.dart';
+import 'package:rootscards/presentation/widgets/small_social_button.dart';
 
 class SignInScreen extends StatefulWidget {
   static const String routeName = "sign_in_screen";
@@ -29,18 +32,27 @@ class _SignInScreenState extends State<SignInScreen>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollControllerEmail = ScrollController();
   final ScrollController _scrollControllerPhone = ScrollController();
   final FocusNode _passwordFocusNode = FocusNode();
+  String _selectedCountryCode = '+234';
+  String _selectedCountryFlag = 'assets/flags/ng.png';
+
+  Map<String, dynamic>? selectedCountry;
+  List<Map<String, dynamic>> searchCountries = [];
 
   bool _busy = false;
   bool _obscurePassword = true;
+  bool _selectedModalCountry = false;
 
   late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    searchCountries = List.from(countriesEnglish);
   }
 
   @override
@@ -85,17 +97,16 @@ class _SignInScreenState extends State<SignInScreen>
               SnackBar(content: Text(state.error)),
             );
           } else if (state is AuthSuccess) {
-            if (state.needsDeviceAuth){
+            if (state.needsDeviceAuth) {
               ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Welcome")),
-            );
-            Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
-            }
-            else{
-                ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Welcome Back")),
-            );
-            Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+                SnackBar(content: Text("Welcome")),
+              );
+              Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Welcome Back")),
+              );
+              Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
             }
           }
         },
@@ -114,14 +125,21 @@ class _SignInScreenState extends State<SignInScreen>
                       EdgeInsets.symmetric(horizontal: 5.w, vertical: .3.h),
                   child: Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      "Welcome Back",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineLarge!
-                          .copyWith(
-                              fontFamily: "LoveYaLikeASister", fontSize: 32.sp),
-                      textAlign: TextAlign.justify,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.of(context)
+                            .popAndPushNamed(CountryPicker.routeName);
+                      },
+                      child: Text(
+                        "Welcome Back",
+                        style: Theme.of(context)
+                            .textTheme
+                            .headlineLarge!
+                            .copyWith(
+                                fontFamily: "LoveYaLikeASister",
+                                fontSize: 32.sp),
+                        textAlign: TextAlign.justify,
+                      ),
                     ),
                   ),
                 ),
@@ -532,19 +550,50 @@ class _SignInScreenState extends State<SignInScreen>
                                       color: Colors.black26,
                                       fontWeight: FontWeight.bold),
                                   border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Colors.grey.shade200),
+                                    borderSide:
+                                        BorderSide(color: Colors.grey.shade200),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(60.w),
                                     ),
                                   ),
                                   focusedBorder: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.green),
+                                    borderSide: BorderSide(color: BUTTONGREEN),
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(
                                         60.w,
                                       ),
+                                    ),
+                                  ),
+                                  prefixIcon: Container(
+                                    margin: EdgeInsets.only(left: 15.0),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Image.asset(
+                                          _selectedCountryFlag,
+                                          width: 24.0,
+                                          height: 24.0,
+                                        ),
+                                        AppSpacing.horizontalSpaceTiny,
+                                        GestureDetector(
+                                          onTap: _showCountryPicker,
+                                          child: Text(
+                                            _selectedCountryCode,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodySmall!
+                                                .copyWith(
+                                                  color: Colors.black,
+                                                ),
+                                          ),
+                                        ),
+                                        Icon(Icons.keyboard_arrow_down_rounded),
+                                        VerticalDivider(
+                                          width: 3.w,
+                                          thickness: 29,
+                                          color: Colors.red, // Divider color
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -592,8 +641,7 @@ class _SignInScreenState extends State<SignInScreen>
                               RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
-                                  text:
-                                      "By continuing, you agree to Pipel's ",
+                                  text: "By continuing, you agree to Pipel's ",
                                   style: TextStyle(
                                       fontFamily: "lato",
                                       fontSize: 13.sp,
@@ -665,6 +713,134 @@ class _SignInScreenState extends State<SignInScreen>
       ),
     );
   }
+
+  void _showCountryPicker() {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      elevation: 2,
+      showDragHandle: true,
+      context: context,
+      builder: (context) {
+        return FractionallySizedBox(
+          heightFactor: 0.65.h,
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Select Your Country",
+                  style: Theme.of(context)
+                      .textTheme
+                      .headlineLarge!
+                      .copyWith(fontSize: 24.sp, fontWeight: FontWeight.bold),
+                ),
+                AppSpacing.verticalSpaceMedium,
+                TextFormField(
+                  keyboardType: TextInputType.text,
+                  controller: _searchController,
+                  textInputAction: TextInputAction.go,
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search, size: 30.w,),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 25.h, horizontal: 25.w),
+                    hintText: "Search country or region",
+                    hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                          color: GREY,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.sp,
+                        ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60.w),
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: BUTTONGREEN),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(60.w),
+                      ),
+                    ),
+                  ),
+                ),
+                AppSpacing.verticalSpaceMedium,
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: countriesEnglish.length,
+                    itemBuilder: (context, index) {
+                      final country = countriesEnglish[index];
+                      bool isSelected =
+                          _selectedCountryCode == country['dial_code'];
+
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _selectedModalCountry = !_selectedModalCountry;
+                            _selectedCountryCode = country['dial_code'];
+                            _selectedCountryFlag =
+                                "assets/flags/${country['code'].toLowerCase()}.png";
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.all(5),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30.w),
+                            ),
+                            border: Border.all(
+                              color: BUTTONGREY,
+                            ),
+                          ),
+                          child: ListTile(
+                            leading: Image.asset(
+                              "assets/flags/${country['code'].toLowerCase()}.png",
+                              width: 32,
+                              height: 32,
+                            ),
+                            title: RichText(
+                              text: TextSpan(
+                                  text: "${country['name']} ",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  children: [
+                                    TextSpan(
+                                      text: country['dial_code'],
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(color: GREY),
+                                    )
+                                  ]),
+                            ),
+                            trailing: Icon(
+                              isSelected ? Icons.check : Icons.circle_outlined,
+                            ),
+                            selected: isSelected,
+                            selectedColor:
+                                isSelected ? Colors.green : Colors.red,
+                            selectedTileColor:
+                                isSelected ? Colors.blue : Colors.yellow,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                AppSpacing.verticalSpaceMedium,
+                Button(
+                  "Confirm",
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  pill: true,
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
 
 // import 'dart:async';
@@ -720,7 +896,8 @@ class _SignInScreenState extends State<SignInScreen>
 //                   children: [
 //                     Text(
 //                       "Sign In",
-//                       style: context.textTheme.titleLarge?.copyWith(
+//                     
+//  style: context.textTheme.titleLarge?.copyWith(
 //                         color: Colors.black,
 //                         fontSize: 45,
 //                       ),

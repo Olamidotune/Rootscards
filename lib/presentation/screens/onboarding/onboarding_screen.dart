@@ -6,10 +6,10 @@ import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/get_started_screen.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
-import 'package:rootscards/presentation/screens/widgets/carousel_inidicator.dart';
-import 'package:rootscards/presentation/screens/widgets/get_started_button.dart';
-import 'package:rootscards/presentation/screens/widgets/login_button.dart';
-import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
+import 'package:rootscards/presentation/widgets/carousel_inidicator.dart';
+import 'package:rootscards/presentation/widgets/get_started_button.dart';
+import 'package:rootscards/presentation/widgets/login_button.dart';
+import 'package:rootscards/presentation/widgets/skip_button.dart';
 
 class TestOnboarding extends StatefulWidget {
   static const String routeName = "test_onboarding_screen";

@@ -6,7 +6,7 @@ import 'package:rootscards/blocs/otp/bloc/otp_bloc.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
-import 'package:rootscards/presentation/screens/widgets/button.dart';
+import 'package:rootscards/presentation/widgets/button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OtpScreen extends StatefulWidget {
