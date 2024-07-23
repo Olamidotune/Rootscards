@@ -39,20 +39,15 @@ class _SignInScreenState extends State<SignInScreen>
   String _selectedCountryCode = '+234';
   String _selectedCountryFlag = 'assets/flags/ng.png';
 
-  Map<String, dynamic>? selectedCountry;
-  List<Map<String, dynamic>> searchCountries = [];
-
   bool _busy = false;
   bool _obscurePassword = true;
-  bool _selectedModalCountry = false;
-
   late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    searchCountries = List.from(countriesEnglish);
+    setState(() {});
   }
 
   @override
@@ -714,6 +709,16 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
+  // void _runFilter(String enterKeyword) {
+  //   List<Map<String, dynamic>>? results = [];
+  //   if (enterKeyword.isEmpty) {
+  //     results = selectedCountry;
+  //   } else {
+  //     results = selectedCountry.where(() =>
+  //       cou['name'].toLowerCase().contains(enterKeyword.toLowerCase()));
+  //   }
+  // }
+
   void _showCountryPicker() {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -741,7 +746,10 @@ class _SignInScreenState extends State<SignInScreen>
                   controller: _searchController,
                   textInputAction: TextInputAction.go,
                   decoration: InputDecoration(
-                    prefixIcon: Icon(Icons.search, size: 30.w,),
+                    prefixIcon: Icon(
+                      Icons.search,
+                      size: 30.w,
+                    ),
                     contentPadding:
                         EdgeInsets.symmetric(vertical: 25.h, horizontal: 25.w),
                     hintText: "Search country or region",
@@ -769,13 +777,10 @@ class _SignInScreenState extends State<SignInScreen>
                     itemCount: countriesEnglish.length,
                     itemBuilder: (context, index) {
                       final country = countriesEnglish[index];
-                      bool isSelected =
-                          _selectedCountryCode == country['dial_code'];
 
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            _selectedModalCountry = !_selectedModalCountry;
                             _selectedCountryCode = country['dial_code'];
                             _selectedCountryFlag =
                                 "assets/flags/${country['code'].toLowerCase()}.png";
@@ -813,13 +818,8 @@ class _SignInScreenState extends State<SignInScreen>
                                   ]),
                             ),
                             trailing: Icon(
-                              isSelected ? Icons.check : Icons.circle_outlined,
+                              Icons.circle_outlined,
                             ),
-                            selected: isSelected,
-                            selectedColor:
-                                isSelected ? Colors.green : Colors.red,
-                            selectedTileColor:
-                                isSelected ? Colors.blue : Colors.yellow,
                           ),
                         ),
                       );
