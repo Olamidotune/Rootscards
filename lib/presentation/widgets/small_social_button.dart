@@ -21,8 +21,11 @@ class SmallSocialButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 20.h),
         // margin: EdgeInsets.all(30.h),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(60.w),
-            border: Border.all(color: Colors.grey.shade300)),
+          borderRadius: BorderRadius.circular(60.w),
+          border: Border.all(
+            color: Colors.grey.shade300,
+          ),
+        ),
         child: SvgPicture.asset(
           "assets/svg/$iconName.svg",
           width: 20.w,
