@@ -11,6 +11,30 @@ class CountryPicker extends StatefulWidget {
 
 class _CountryPickerState extends State<CountryPicker> {
   Map<String, dynamic>? selectedCountry;
+  List<Map<String, dynamic>> searchCountry = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    searchCountry = countryModel;
+  }
+
+  void _runFilter(String enterKeyword) {
+    List<Map<String, dynamic>> results = [];
+    if (enterKeyword.isEmpty) {
+      results = countryModel;
+    } else {
+      results = countryModel
+          .where((searchedCountries) => searchedCountries['name']
+              .toLowerCase()
+              .contains(enterKeyword.toLowerCase()))
+          .toList();
+    }
+    setState(() {
+      searchCountry = results;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,11 +44,14 @@ class _CountryPickerState extends State<CountryPicker> {
       ),
       body: Column(
         children: [
+          TextField(
+            onChanged: (value) => _runFilter(value),
+          ),
           Expanded(
             child: ListView.builder(
-              itemCount: countriesEnglish.length,
+              itemCount: searchCountry.length,
               itemBuilder: (context, index) {
-                final country = countriesEnglish[index];
+                final country = searchCountry[index];
                 return ListTile(
                   leading: Image.asset(
                     'assets/flags/${country['code'].toLowerCase()}.png',
@@ -62,5 +89,3 @@ class _CountryPickerState extends State<CountryPicker> {
     );
   }
 }
-
-

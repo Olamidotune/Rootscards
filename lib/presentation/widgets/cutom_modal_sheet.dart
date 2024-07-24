@@ -23,9 +23,9 @@ class _CountryModalSheetState extends State<CountryModalSheet> {
     return Column(
       children: [
         ListView.builder(
-          itemCount: countriesEnglish.length,
+          itemCount: countryModel.length,
           itemBuilder: (context, index) {
-            final country = countriesEnglish[index];
+            final country = countryModel[index];
             return ListTile(
               leading: Image.asset(
                 "assets/flags/${country['code'].toLowerCase()}.png",

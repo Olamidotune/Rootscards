@@ -1,4 +1,4 @@
-final countriesEnglish = <Map<String, dynamic>>[
+final countryModel = <Map<String, dynamic>>[
   {
     'name': 'Afghanistan',
     'dial_code': '+93',

@@ -51,7 +51,7 @@ class Button extends StatelessWidget {
         child: busy
             ? Container(
                 width: 20.0.w,
-                height: 20.0.h,
+                height: 20.h,
                 child: const CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                 ),

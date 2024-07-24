@@ -11,7 +11,10 @@ class SkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 10.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: 30.w,
+        vertical: 10.h,
+      ),
       child: GestureDetector(
         onTap: onTap,
         child: Image.asset(

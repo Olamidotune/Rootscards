@@ -28,11 +28,12 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back),
-                    iconSize: 18.h,),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back),
+          iconSize: 18.h,
+        ),
         title: Container(
           height: 30.h,
           padding: EdgeInsets.symmetric(horizontal: 10),
@@ -64,7 +65,9 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.info_outline),
+            icon: Icon(
+              Icons.info_outline,
+            ),
             iconSize: 18.h,
           ),
         ],
@@ -91,11 +94,12 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       height: height / 20,
                     ),
                     Text(
-                      "Create a profile, follow other people's accounts,\n create your space and more.",
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodyMedium!.copyWith(color: Colors.grey.shade700)
-                      // style: TextStyle(color: Colors.grey.shade700),
-                    ),
+                        "Create a profile, follow other people's accounts,\n create your space and more.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!
+                            .copyWith(color: Colors.grey.shade700)
+                        // style: TextStyle(color: Colors.grey.shade700),
+                        ),
                     SizedBox(
                       height: height / 20,
                     ),

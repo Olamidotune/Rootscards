@@ -27,16 +27,17 @@ class GetStartedButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: BLACK,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: BLACK),
+          border: Border.all(
+            color: BLACK,
+          ),
         ),
         child: Center(
           child: Text(
             "Get Started",
             style: TextStyle(
-              color: Colors.white,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.bold
-            ),
+                color: Colors.white,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.bold),
           ),
         ),
       ),

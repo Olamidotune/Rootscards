@@ -12,6 +12,7 @@ class CarouselIndicator extends StatelessWidget {
   final Color inactiveIndicatorColor;
 
   CarouselIndicator({
+    super.key,
     required this.count,
     required this.currentIndex,
     this.activeIndicatorLength = 20,

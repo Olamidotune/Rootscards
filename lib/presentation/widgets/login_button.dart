@@ -25,7 +25,9 @@ class LoginButton extends StatelessWidget {
         height: 50.h,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: BLACK),
+          border: Border.all(
+            color: BLACK,
+          ),
         ),
         child: Center(
           child: Text(

@@ -10,6 +10,7 @@ import 'package:rootscards/blocs/auth/bloc/auth_event.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_state.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
+import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/model/country_model.dart';
 import 'package:rootscards/presentation/screens/auth/otp.dart';
 import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
@@ -43,11 +44,14 @@ class _SignInScreenState extends State<SignInScreen>
   bool _obscurePassword = true;
   late TabController _tabController;
 
+  List<Map<String, dynamic>> searchCountry = [];
+  Map<String, dynamic>? _isSelectedCountry;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    setState(() {});
+    searchCountry = countryModel;
   }
 
   @override
@@ -709,134 +713,167 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  // void _runFilter(String enterKeyword) {
-  //   List<Map<String, dynamic>>? results = [];
-  //   if (enterKeyword.isEmpty) {
-  //     results = selectedCountry;
-  //   } else {
-  //     results = selectedCountry.where(() =>
-  //       cou['name'].toLowerCase().contains(enterKeyword.toLowerCase()));
-  //   }
-  // }
+  void _runCountrySearch(String countryValue) {
+    List<Map<String, dynamic>> searchedResults = [];
+    print('Searching for: $countryValue');
+    if (countryValue.isEmpty) {
+      searchedResults = countryModel;
+    } else {
+      searchedResults = countryModel
+          .where((searchedCountries) => searchedCountries['name']
+              .toLowerCase()
+              .contains(countryValue.toLowerCase()))
+          .toList();
+    }
+    print('Search results: ${searchCountry.length}');
+    setState(() {
+      searchCountry = searchedResults;
+    });
+  }
 
-  void _showCountryPicker() {
-    showModalBottomSheet(
+  void _showCountryPicker() async {
+    await showModalBottomSheet<void>(
+      backgroundColor: Colors.white,
+      useSafeArea: true,
       isScrollControlled: true,
       elevation: 2,
       showDragHandle: true,
       context: context,
-      builder: (context) {
-        return FractionallySizedBox(
-          heightFactor: 0.65.h,
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Select Your Country",
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineLarge!
-                      .copyWith(fontSize: 24.sp, fontWeight: FontWeight.bold),
-                ),
-                AppSpacing.verticalSpaceMedium,
-                TextFormField(
-                  keyboardType: TextInputType.text,
-                  controller: _searchController,
-                  textInputAction: TextInputAction.go,
-                  decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.search,
-                      size: 30.w,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return FractionallySizedBox(
+              heightFactor: 0.65.h,
+              child: Padding(
+                padding: EdgeInsets.all(20.0.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Select Your Country",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineLarge!
+                          .copyWith(
+                              fontSize: 24.sp, fontWeight: FontWeight.bold),
                     ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 25.h, horizontal: 25.w),
-                    hintText: "Search country or region",
-                    hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                          color: GREY,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14.sp,
+                    AppSpacing.verticalSpaceMedium,
+                    TextField(
+                      onChanged: (value) => _runCountrySearch(value),
+                      keyboardType: TextInputType.text,
+                      controller: _searchController,
+                      textInputAction: TextInputAction.go,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.symmetric(
+                            vertical: 20.h, horizontal: 20.w),
+                        filled: true,
+                        fillColor: GREY2,
+                        prefixIcon: Image.asset(
+                          "assets/images/search_icon.png",
                         ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(60.w),
+                        
+                        hintText: "Search country or region",
+                        hintStyle:
+                            Theme.of(context).textTheme.bodySmall!.copyWith(
+                                  color: GREY,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(60.w),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: BUTTONGREEN),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(60.w),
+                          ),
+                        ),
                       ),
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: BUTTONGREEN),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(60.w),
-                      ),
-                    ),
-                  ),
-                ),
-                AppSpacing.verticalSpaceMedium,
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: countriesEnglish.length,
-                    itemBuilder: (context, index) {
-                      final country = countriesEnglish[index];
+                    AppSpacing.verticalSpaceSmall,
+                    Expanded(
+                      child: Material(
+                        color: Colors.transparent,
+                        child: ListView.builder(
+                          itemCount: searchCountry.length,
+                          itemBuilder: (context, index) {
+                            final country = searchCountry[index];
+                            final isSelected = _isSelectedCountry == country;
+                            print('Building item for ${country['name']}');
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _selectedCountryCode = country['dial_code'];
+                                  _selectedCountryFlag =
+                                      "assets/flags/${country['code'].toLowerCase()}.png";
+                                  _isSelectedCountry = country;
+                                });
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  vertical: 7.h,
+                                ),
+                                child: ListTile(
+                                  leading: Image.asset(
+                                    "assets/flags/${country['code'].toLowerCase()}.png",
+                                    width: 32,
+                                    height: 32,
+                                  ),
+                                  title: RichText(
+                                    text: TextSpan(
+                                        text: "${country['name']} ",
+                                        style: context.textTheme.bodyMedium!
+                                            .copyWith(
+                                          color: BLACK,
+                                          fontWeight: FontWeight.w800,
+                                        ),
+                                        children: [
+                                          TextSpan(
+                                            text: "- ${country['dial_code']}",
+                                            style: context.textTheme.bodyMedium!
+                                                .copyWith(color: GREY),
+                                          )
+                                        ]),
+                                  ),
+                                  trailing: Image.asset(isSelected
+                                      ? "assets/images/green_check.png"
+                                      : "assets/images/uncheck.png"),
+                                  selected: isSelected,
+                                  selectedTileColor:
+                                      isSelected ? Colors.green.shade50 : null,
+                                  shape: StadiumBorder(
+                                    // borderRadius:
+                                    //     BorderRadius.all(Radius.circular(30.w)),
 
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _selectedCountryCode = country['dial_code'];
-                            _selectedCountryFlag =
-                                "assets/flags/${country['code'].toLowerCase()}.png";
-                          });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.all(8),
-                          padding: EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(30.w),
-                            ),
-                            border: Border.all(
-                              color: BUTTONGREY,
-                            ),
-                          ),
-                          child: ListTile(
-                            leading: Image.asset(
-                              "assets/flags/${country['code'].toLowerCase()}.png",
-                              width: 32,
-                              height: 32,
-                            ),
-                            title: RichText(
-                              text: TextSpan(
-                                  text: "${country['name']} ",
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                  children: [
-                                    TextSpan(
-                                      text: country['dial_code'],
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(color: GREY),
-                                    )
-                                  ]),
-                            ),
-                            trailing: Icon(
-                              Icons.circle_outlined,
-                            ),
-                          ),
+                                    side: BorderSide(
+                                      color:
+                                          isSelected ? BUTTONGREEN : BUTTONGREY,
+                                    ),
+                                  ),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 6.h, horizontal: 20.w),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    ),
+                    AppSpacing.verticalSpaceMedium,
+                    Button(
+                      "Confirm",
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      pill: true,
+                    )
+                  ],
                 ),
-                AppSpacing.verticalSpaceMedium,
-                Button(
-                  "Confirm",
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  pill: true,
-                )
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );
