@@ -1,16 +1,8 @@
-// import 'dart:async';
-
-// import 'package:bloc/bloc.dart';
-// import 'package:equatable/equatable.dart';
-// import 'package:rootscards/services/auth_services.dart';
-
-// part 'auth_event.dart';
-// part 'auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_event.dart';
 import 'package:rootscards/blocs/auth/bloc/auth_state.dart';
 import 'package:rootscards/repos/repos.dart';
- 
+
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
 
@@ -18,7 +10,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<LoginRequested>(_onLoginSubmitted);
   }
 
-   Future<void> _onLoginSubmitted(
+  Future<void> _onLoginSubmitted(
     LoginRequested event,
     Emitter<AuthState> emit,
   ) async {
@@ -31,5 +23,4 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthFailure(e.toString()));
     }
   }
-  }
-
+}
