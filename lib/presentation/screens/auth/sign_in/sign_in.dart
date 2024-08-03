@@ -713,7 +713,7 @@ class _SignInScreenState extends State<SignInScreen>
     );
   }
 
-  void _runCountrySearch(String countryValue) {
+  void _runCountrySearch(String countryValue, StateSetter setModalState) {
     List<Map<String, dynamic>> searchedResults = [];
     print('Searching for: $countryValue');
     if (countryValue.isEmpty) {
@@ -725,8 +725,8 @@ class _SignInScreenState extends State<SignInScreen>
               .contains(countryValue.toLowerCase()))
           .toList();
     }
-    print('Search results: ${searchCountry.length}');
-    setState(() {
+    print('Search results: ${searchedResults.length}');
+    setModalState(() {
       searchCountry = searchedResults;
     });
   }
@@ -741,7 +741,7 @@ class _SignInScreenState extends State<SignInScreen>
       context: context,
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setState) {
+          builder: (BuildContext context, StateSetter setModalState) {
             return FractionallySizedBox(
               heightFactor: 0.65.h,
               child: Padding(
@@ -759,7 +759,8 @@ class _SignInScreenState extends State<SignInScreen>
                     ),
                     AppSpacing.verticalSpaceMedium,
                     TextField(
-                      onChanged: (value) => _runCountrySearch(value),
+                      onChanged: (value) =>
+                          _runCountrySearch(value, setModalState),
                       keyboardType: TextInputType.text,
                       controller: _searchController,
                       textInputAction: TextInputAction.go,
@@ -771,7 +772,6 @@ class _SignInScreenState extends State<SignInScreen>
                         prefixIcon: Image.asset(
                           "assets/images/search_icon.png",
                         ),
-                        
                         hintText: "Search country or region",
                         hintStyle:
                             Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -796,69 +796,79 @@ class _SignInScreenState extends State<SignInScreen>
                     Expanded(
                       child: Material(
                         color: Colors.transparent,
-                        child: ListView.builder(
-                          itemCount: searchCountry.length,
-                          itemBuilder: (context, index) {
-                            final country = searchCountry[index];
-                            final isSelected = _isSelectedCountry == country;
-                            print('Building item for ${country['name']}');
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedCountryCode = country['dial_code'];
-                                  _selectedCountryFlag =
-                                      "assets/flags/${country['code'].toLowerCase()}.png";
-                                  _isSelectedCountry = country;
-                                });
-                              },
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  vertical: 7.h,
-                                ),
-                                child: ListTile(
-                                  leading: Image.asset(
-                                    "assets/flags/${country['code'].toLowerCase()}.png",
-                                    width: 32,
-                                    height: 32,
-                                  ),
-                                  title: RichText(
-                                    text: TextSpan(
-                                        text: "${country['name']} ",
-                                        style: context.textTheme.bodyMedium!
-                                            .copyWith(
-                                          color: BLACK,
-                                          fontWeight: FontWeight.w800,
+                        child: searchCountry.isEmpty
+                            ? Text("No found country")
+                            : ListView.builder(
+                                itemCount: searchCountry.length,
+                                itemBuilder: (context, index) {
+                                  if (index >= searchCountry.length) {
+                                    return null; // Return null for out-of-range indices
+                                  }
+                                  final country = searchCountry[index];
+                                  final isSelected =
+                                      _isSelectedCountry == country;
+                                  print('Building item for ${country['name']}');
+                                  return GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedCountryCode =
+                                            country['dial_code'];
+                                        _selectedCountryFlag =
+                                            "assets/flags/${country['code'].toLowerCase()}.png";
+                                        _isSelectedCountry = country;
+                                     
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 7.h,
+                                      ),
+                                      child: ListTile(
+                                        leading: Image.asset(
+                                          "assets/flags/${country['code'].toLowerCase()}.png",
+                                          width: 32,
+                                          height: 32,
                                         ),
-                                        children: [
-                                          TextSpan(
-                                            text: "- ${country['dial_code']}",
-                                            style: context.textTheme.bodyMedium!
-                                                .copyWith(color: GREY),
-                                          )
-                                        ]),
-                                  ),
-                                  trailing: Image.asset(isSelected
-                                      ? "assets/images/green_check.png"
-                                      : "assets/images/uncheck.png"),
-                                  selected: isSelected,
-                                  selectedTileColor:
-                                      isSelected ? Colors.green.shade50 : null,
-                                  shape: StadiumBorder(
-                                    // borderRadius:
-                                    //     BorderRadius.all(Radius.circular(30.w)),
-
-                                    side: BorderSide(
-                                      color:
-                                          isSelected ? BUTTONGREEN : BUTTONGREY,
+                                        title: RichText(
+                                          text: TextSpan(
+                                              text: "${country['name']} ",
+                                              style: context
+                                                  .textTheme.bodyMedium!
+                                                  .copyWith(
+                                                color: BLACK,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text:
+                                                      "- ${country['dial_code']}",
+                                                  style: context
+                                                      .textTheme.bodyMedium!
+                                                      .copyWith(color: GREY),
+                                                )
+                                              ]),
+                                        ),
+                                        trailing: Image.asset(isSelected
+                                            ? "assets/images/green_check.png"
+                                            : "assets/images/uncheck.png"),
+                                        selected: isSelected,
+                                        selectedTileColor: isSelected
+                                            ? Colors.green.shade50
+                                            : null,
+                                        shape: StadiumBorder(
+                                          side: BorderSide(
+                                            color: isSelected
+                                                ? BUTTONGREEN
+                                                : BUTTONGREY,
+                                          ),
+                                        ),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            vertical: 6.h, horizontal: 20.w),
+                                      ),
                                     ),
-                                  ),
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: 6.h, horizontal: 20.w),
-                                ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                     ),
                     AppSpacing.verticalSpaceMedium,
