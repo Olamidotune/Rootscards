@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:rootscards/blocs/otp/bloc/otp_bloc.dart';
+import 'package:rootscards/blocs/otp/otp_bloc.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
