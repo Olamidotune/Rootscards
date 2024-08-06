@@ -21,7 +21,7 @@ class ForgotPasswordBloc
     try {
       final success = await authRepository.resetPassword(event.email);
       if (success) {
-        emit(ForgotPasswordSuccessState(message: "Email Sent"));
+        emit(ForgotPasswordSuccessState(message: "We sent a link to your Email."));
       } else {
         emit(ForgotPasswordErrorState(
             errorMessage:

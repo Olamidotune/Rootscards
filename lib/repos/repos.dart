@@ -36,18 +36,17 @@ class AuthRepository {
           debugPrint("$responseData");
         } else {
           // Authenticated, process user data
-
           await _processUserData(responseData['details']);
           debugPrint(email);
           debugPrint(password);
-          debugPrint("$responseData");
+          debugPrint(responseData);
         }
         return responseData;
       } else {
         throw ('Login failed: ${responseData['data']['message'] ?? 'Something went wrong'}');
       }
     } catch (e) {
-      throw 'Something went wrong';
+      throw 'Incorrect credentials';
     }
   }
 
