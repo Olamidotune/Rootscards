@@ -4,12 +4,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-
-import 'package:rootscards/presentation/screens/auth/otp.dart';
+import 'package:rootscards/presentation/screens/auth/passowrd/password_recovery.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             icon: Icon(
               Icons.arrow_back,
             ),
-                    iconSize: 18.h,
+            iconSize: 18.h,
           ),
           title: Text(
             "Forgot Password",
@@ -55,87 +56,128 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
-                      iconSize: 18.h,
+              iconSize: 18.h,
             ),
           ],
         ),
-        body: SafeArea(
-          child: Container(
-            height: height,
-            padding: EdgeInsets.only(
-              top: height <= 550 ? 10 : 20,
-              left: 20,
-              right: 20,
-            ),
-            child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Reset Your Password",
-                      style: context.textTheme.headlineLarge!.copyWith(
-                          fontFamily: "LoveYaLikeASister", fontSize: 32.sp),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                    ),
-                    AppSpacing.verticalSpaceSmall,
-                    Text(
-                      "Enter your email and reset your account password to access your personal account again.",
-                      style:
-                          context.textTheme.bodyMedium!.copyWith(color: GREY),
-                    ),
-                    AppSpacing.verticalSpaceMedium,
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailController,
-                      textInputAction: TextInputAction.next,
-                      validator: (value) {
-                        if (EmailValidator.validate(value?.trim() ?? "")) {
-                          return null;
-                        }
-                        return "Please provide a valid email address";
-                      },
-                      style: context.textTheme.bodySmall!.copyWith(
-                        color: BLACK,
+        body: BlocListener<ForgotPasswordBloc, ForgotPasswordState>(
+          listener: (context, state) {
+            if (state is ForgotPasswordLoadingState) {
+              setState(() => _busy = true);
+            } else {
+              setState(() => _busy = false);
+            }
+            if (state is ForgotPasswordErrorState) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+            }
+            if (state is ForgotPasswordFailedState) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(state.message)));
+            }
+            if (state is ForgotPasswordSuccessState) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(state.message)),
+              );
+              Navigator.of(context).popAndPushNamed(PasswordRecovery.routeName);
+            }
+          },
+          child: SafeArea(
+            child: Container(
+              height: height,
+              padding: EdgeInsets.only(
+                top: height <= 550 ? 10 : 20,
+                left: 20,
+                right: 20,
+              ),
+              child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Reset Your Password",
+                        style: context.textTheme.headlineLarge!.copyWith(
+                            fontFamily: "LoveYaLikeASister", fontSize: 32.sp),
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
                       ),
-                      autofillHints: const [AutofillHints.email],
-                      decoration: InputDecoration(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 20.h, horizontal: 10.w),
-                        hintText: "Email or Username",
-                        hintStyle: const TextStyle(
-                            color: Colors.black26, fontWeight: FontWeight.bold),
-                        border: const OutlineInputBorder(
-                          borderSide: BorderSide(color: GREY2),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(30),
-                          ),
+                      AppSpacing.verticalSpaceSmall,
+                      Text(
+                        "Enter your email and reset your account password to access your personal account again.",
+                        style:
+                            context.textTheme.bodyMedium!.copyWith(color: GREY),
+                      ),
+                      AppSpacing.verticalSpaceMedium,
+                      TextFormField(
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (EmailValidator.validate(value?.trim() ?? "")) {
+                            return null;
+                          }
+                          return "Please provide a valid email address";
+                        },
+                        onFieldSubmitted: (_) => {
+                          if (_formKey.currentState!.validate())
+                            {
+                              setState(() => _busy = !_busy),
+                              context
+                                  .read<ForgotPasswordBloc>()
+                                  .add(ForgotPasswordEmailEvent(
+                                    email: _emailController.text,
+                                  ))
+                            }
+                        },
+                        style: context.textTheme.bodySmall!.copyWith(
+                          color: BLACK,
                         ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: BUTTONGREEN),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(
-                              30,
+                        autofillHints: const [AutofillHints.email],
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 20.h, horizontal: 10.w),
+                          hintText: "Email or Username",
+                          hintStyle: const TextStyle(
+                              color: Colors.black26,
+                              fontWeight: FontWeight.bold),
+                          border: const OutlineInputBorder(
+                            borderSide: BorderSide(color: GREY2),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                          ),
+                          focusedBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: BUTTONGREEN),
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(
+                                30,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    AppSpacing.verticalSpaceMedium,
-                    Button(
-                      busy: _busy,
-                      "Send",
-                      textColor: BLACK,
-                      disabledTextColor: BLACK,
-                      pill: true,
-                      onPressed: () {
-                        Navigator.of(context)
-                            .popAndPushNamed(OtpScreen.routeName);
-                      },
-                    )
-                  ],
-                )),
+                      AppSpacing.verticalSpaceMedium,
+                      Button(
+                          busy: _busy,
+                          "Send",
+                          textColor: BLACK,
+                          disabledTextColor: BLACK,
+                          pill: true,
+                          onPressed: _busy
+                              ? null
+                              : () {
+                                  if (_formKey.currentState!.validate()) {
+                                    setState(() => _busy = !_busy);
+                                    context.read<ForgotPasswordBloc>().add(
+                                        ForgotPasswordEmailEvent(
+                                            email:
+                                                _emailController.text.trim()));
+                                  }
+                                })
+                    ],
+                  )),
+            ),
           ),
         ));
   }

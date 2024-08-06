@@ -36,18 +36,17 @@ class AuthRepository {
           debugPrint("$responseData");
         } else {
           // Authenticated, process user data
-
           await _processUserData(responseData['details']);
           debugPrint(email);
           debugPrint(password);
-          debugPrint("$responseData");
+          debugPrint(responseData);
         }
         return responseData;
       } else {
         throw ('Login failed: ${responseData['data']['message'] ?? 'Something went wrong'}');
       }
     } catch (e) {
-      throw 'Something went wrong';
+      throw 'Incorrect credentials';
     }
   }
 
@@ -66,7 +65,7 @@ class AuthRepository {
     // This could involve saving to SharedPreferences or another storage method
   }
 
-////AUTHENTICATE DEVICE/////
+  ////AUTHENTICATE DEVICE/////
   Future<Map<String, dynamic>> authenticateDevice(String otp) async {
     final url = Uri.parse("$baseUrl/user/authorizeDevice");
     final xpubs = await getStoredXpubs();
@@ -103,6 +102,81 @@ class AuthRepository {
       }
     } catch (e) {
       throw Exception('Network error: $e');
+    }
+  }
+
+  ////RESET PASSWORD////
+  // Future<void> resetPassword(String email) async {
+  //   final url = Uri.parse('$baseUrl/user/forgotPassword');
+  //   final String basicAuth =
+  //       'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
+
+  //   try {
+  //     final response = await http
+  //         .post(
+  //           url,
+  //           headers: <String, String>{
+  //             'Authorization': basicAuth,
+  //             'Content-Type': 'application/json',
+  //           },
+  //           body: jsonEncode(<String, String>{
+  //             'email': email,
+  //           }),
+  //         )
+  //         .timeout(const Duration(seconds: 30));
+
+  //     if (response.statusCode == 200) {
+  //       Map<String, dynamic> responseData = json.decode(response.body);
+  //       String status = responseData['status'];
+  //       if (status == "200") {
+  //         responseData['data']['message'];
+  //       } else {
+  //         "Wrong Email";
+  //       }
+  //     }
+  //   } catch (e) {
+  //     "Something went wrong";
+  //   }
+  // }
+
+  Future<bool> resetPassword(String email) async {
+    final url = Uri.parse('$baseUrl/user/forgotPassword');
+    final String basicAuth =
+        'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
+
+    try {
+      final response = await http
+          .post(
+            url,
+            headers: <String, String>{
+              'Authorization': basicAuth,
+              'Content-Type': 'application/json',
+            },
+            body: jsonEncode(<String, String>{
+              'email': email,
+            }),
+          )
+          .timeout(const Duration(seconds: 30));
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> responseData = json.decode(response.body);
+        String status = responseData['status'];
+
+        if (status == "200") {
+          print(responseData);
+          return true; // Success
+        } else {
+          print(responseData);
+          // Log the message or handle accordingly
+          return false; // Email is incorrect or some other error
+        }
+      } else {
+        // Handle non-200 responses
+        return false;
+      }
+    } catch (e) {
+      // Log the error or handle accordingly
+      return false;
     }
   }
 
