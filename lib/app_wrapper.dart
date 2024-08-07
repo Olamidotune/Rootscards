@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
+import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 class AppWrapper extends StatefulWidget {
   static const String routeName = "Wrapper";
@@ -22,8 +22,7 @@ class AppWrapperState extends State<AppWrapper> {
   }
 
   Future<void> checkSignInStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? email = prefs.getString('email');
+    String? email = await HelperFunction.getUserEmailfromSF();
     setState(() {
       _isSignedIn = email != null; // Check if email exists in SharedPreferences
     });

@@ -77,7 +77,7 @@ class HelperFunction {
     return sf.setString(deviceModelKey, deviceModel);
   }
 
-  /// get saved prefs
+  /// get saved prefs////
   static Future<bool?> userLoggedInStatus() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getBool(userLoggedInKey);

@@ -23,7 +23,7 @@ class GetStartedButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 50.h,
+          height: .08.sh,
         decoration: BoxDecoration(
           color: BLACK,
           borderRadius: BorderRadius.circular(30),

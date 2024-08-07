@@ -37,13 +37,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         appBar: AppBar(
           centerTitle: true,
           leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             icon: Icon(
               Icons.arrow_back,
             ),
-            iconSize: 18.h,
           ),
           title: Text(
             "Forgot Password",
@@ -56,7 +53,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
-              iconSize: 18.h,
             ),
           ],
         ),
@@ -86,7 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: Container(
               height: height,
               padding: EdgeInsets.only(
-                top: height <= 550 ? 10 : 20,
+                top: .01.sh,
                 left: 20,
                 right: 20,
               ),
@@ -136,22 +132,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
-                              vertical: 20.h, horizontal: 10.w),
+                              vertical: .035.sh, horizontal: 25.w),
                           hintText: "Email or Username",
                           hintStyle: const TextStyle(
                               color: Colors.black26,
                               fontWeight: FontWeight.bold),
-                          border: const OutlineInputBorder(
+                          border: OutlineInputBorder(
                             borderSide: BorderSide(color: GREY2),
                             borderRadius: BorderRadius.all(
-                              Radius.circular(30),
+                              Radius.circular(60.w),
                             ),
                           ),
-                          focusedBorder: const OutlineInputBorder(
+                          focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(color: BUTTONGREEN),
                             borderRadius: BorderRadius.all(
                               Radius.circular(
-                                30,
+                                30.w,
                               ),
                             ),
                           ),

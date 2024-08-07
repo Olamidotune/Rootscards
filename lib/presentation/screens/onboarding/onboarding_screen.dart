@@ -11,15 +11,15 @@ import 'package:rootscards/presentation/screens/widgets/get_started_button.dart'
 import 'package:rootscards/presentation/screens/widgets/login_button.dart';
 import 'package:rootscards/presentation/screens/widgets/skip_button.dart';
 
-class TestOnboarding extends StatefulWidget {
-  static const String routeName = "test_onboarding_screen";
-  const TestOnboarding({super.key});
+class OnboardingScreen extends StatefulWidget {
+  static const String routeName = "onboarding_screen";
+  const OnboardingScreen({super.key});
 
   @override
-  State<TestOnboarding> createState() => _TestOnboardingState();
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _TestOnboardingState extends State<TestOnboarding> {
+class _OnboardingScreenState extends State<OnboardingScreen> {
   static const _carouselImages = <String>[
     "onboarding_1.png",
     "onboarding_2.png",
@@ -55,85 +55,75 @@ class _TestOnboardingState extends State<TestOnboarding> {
     return Scaffold(
       backgroundColor: _backgroundColor[_currentIndex],
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: height,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0.w),
-              child: Column(
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: SkipButton(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(
-                          GetStartedScreen.routeName,
-                        );
-                      },
+        child: SizedBox(
+          height: height,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.topRight,
+                  child: SkipButton(
+                    onTap: () => Navigator.of(context).pushNamed(
+                      GetStartedScreen.routeName,
                     ),
                   ),
-                  Expanded(
-                    flex: 9,
-                    child: CarouselSlider.builder(
-                      carouselController: _carouselController,
-                      itemCount: 3,
-                      itemBuilder: (context, index, realIndex) =>
-                          _CarouselImage(
-                        image: _carouselImages[index],
-                        title: _carouselTitles[index],
-                        subTitle: _carouselTexts[index],
-                        viewPortHeight: height,
-                        slider: Container(
-                          margin: EdgeInsets.only(
-                            top: _currentIndex < _carouselImages.length - 1
-                                ? 20.h
-                                : 0,
-                          ),
-                          child: CarouselIndicator(
-                            count: 3,
-                            currentIndex: _currentIndex,
-                          ),
+                ),
+                AppSpacing.verticalSpaceSmall,
+                Expanded(
+                  flex: 10,
+                  child: CarouselSlider.builder(
+                    carouselController: _carouselController,
+                    itemCount: 3,
+                    itemBuilder: (context, index, realIndex) => _CarouselImage(
+                      image: _carouselImages[index],
+                      title: _carouselTitles[index],
+                      subTitle: _carouselTexts[index],
+                      viewPortHeight: height,
+                      slider: Container(
+                        margin: EdgeInsets.only(
+                          top: _currentIndex < _carouselImages.length - 1
+                              ? .06.sh
+                              : 0,
+                        ),
+                        child: CarouselIndicator(
+                          count: 3,
+                          currentIndex: _currentIndex,
                         ),
                       ),
-                      options: CarouselOptions(
-                        initialPage: 0,
-                        autoPlay: false,
-                        enableInfiniteScroll: false,
-                        viewportFraction: 1,
-                        height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
-                            ? .8.h * height
-                            : 1.h * height,
-                        autoPlayInterval: Duration(seconds: 4),
-                        autoPlayAnimationDuration: Duration(milliseconds: 800),
-                        autoPlayCurve: Curves.easeInOut,
-                        onPageChanged: (newIndex, reason) => setState(() {
-                          _currentIndex = newIndex;
-                        }),
+                      portView: .43.sh,
+                    ),
+                    options: CarouselOptions(
+                      initialPage: 0,
+                      autoPlay: false,
+                      enableInfiniteScroll: false,
+                      viewportFraction: 1,
+                      height: .85.sh,
+                      autoPlayCurve: Curves.easeInOut,
+                      onPageChanged: (newIndex, reason) => setState(
+                        () => _currentIndex = newIndex,
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: GetStartedButton(
-                      onTap: () {
-                        Navigator.of(context)
-                            .pushNamed(GetStartedScreen.routeName);
-                      },
-                    ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: GetStartedButton(
+                    onTap: () => Navigator.of(context)
+                        .pushNamed(GetStartedScreen.routeName),
                   ),
-                  AppSpacing.verticalSpaceSmall,
-                  Expanded(
-                    flex: 1,
-                    child: LoginButton(
-                      onTap: () {
-                        Navigator.of(context).pushNamed(SignInScreen.routeName);
-                      },
-                      textColor: BLACK,
-                    ),
+                ),
+                AppSpacing.verticalSpaceSmall,
+                Expanded(
+                  flex: 1,
+                  child: LoginButton(
+                    onTap: () =>
+                        Navigator.of(context).pushNamed(SignInScreen.routeName),
+                    textColor: BLACK,
                   ),
-                  AppSpacing.verticalSpaceSmall
-                ],
-              ),
+                ),
+                AppSpacing.verticalSpaceMedium
+              ],
             ),
           ),
         ),
@@ -145,6 +135,7 @@ class _TestOnboardingState extends State<TestOnboarding> {
 class _CarouselImage extends StatelessWidget {
   final Key? key;
   final String image;
+  final double portView;
   final String title;
   final String subTitle;
   final Widget slider;
@@ -157,6 +148,7 @@ class _CarouselImage extends StatelessWidget {
     required this.subTitle,
     required this.viewPortHeight,
     required this.slider,
+    required this.portView,
   }) : super(key: key);
 
   @override
@@ -167,24 +159,23 @@ class _CarouselImage extends StatelessWidget {
         children: [
           Image.asset(
             "assets/images/$image",
-            height: viewPortHeight * .45.h,
-            fit: BoxFit.contain,
+            height: portView,
+            width: double.infinity,
+            fit: BoxFit.fitWidth,
           ),
-          AppSpacing.verticalSpaceSmall,
           slider,
-          AppSpacing.verticalSpaceSmall,
           Text(
             title,
             style: context.textTheme.bodyLarge!.copyWith(
               fontFamily: "LoveYaLikeASister",
-              fontSize: 32.sp,
+              fontSize: 30.sp,
             ),
             textAlign: TextAlign.center,
           ),
           AppSpacing.verticalSpaceTiny,
           Text(
             subTitle,
-            textAlign: TextAlign.center,
+            // textAlign: TextAlign.center,
             style: context.textTheme.bodyMedium!.copyWith(
               fontSize: 16.sp,
             ),

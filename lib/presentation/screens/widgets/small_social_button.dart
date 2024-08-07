@@ -17,16 +17,15 @@ class SmallSocialButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: 60.h,
-        padding: EdgeInsets.symmetric(vertical: 20.h),
-        // margin: EdgeInsets.all(30.h),
+        height: .07.sh,
+        padding: EdgeInsets.symmetric(vertical: .02.sh),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(60.w),
             border: Border.all(color: Colors.grey.shade300)),
         child: SvgPicture.asset(
           "assets/svg/$iconName.svg",
-          width: 20.w,
-          height: 59.h,
+          width: .20.sw,
+          height: .59.sh,
         ),
       ),
     );

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
@@ -42,13 +43,10 @@ class _OtpScreenState extends State<OtpScreen> {
       appBar: AppBar(
           centerTitle: true,
           leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
+            onPressed: () => Navigator.pop(context),
             icon: Icon(
               Icons.arrow_back,
             ),
-            iconSize: 18.h,
           ),
           title: Text(
             "OTP",
@@ -61,7 +59,6 @@ class _OtpScreenState extends State<OtpScreen> {
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
-              iconSize: 18.h,
             ),
           ]),
       body: BlocListener<OtpAuthBloc, OtpAuthState>(
@@ -83,18 +80,19 @@ class _OtpScreenState extends State<OtpScreen> {
           }
         },
         child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: SafeArea(
             child: Container(
               height: height,
               padding: EdgeInsets.only(
-                top: height <= 550 ? 10.h : 20.h,
+                top: .01.sh,
                 left: 20,
                 right: 20,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10.h),
+                  AppSpacing.verticalSpaceMedium,
                   Text(
                     "Enter Confirmation Code",
                     style: Theme.of(context).textTheme.headlineLarge!.copyWith(
@@ -115,6 +113,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   AppSpacing.verticalSpaceHuge,
                   Center(
                     child: PinCodeTextField(
+                      highlightPinBoxColor: BLACK,
                       isCupertino: true,
                       keyboardType: TextInputType.number,
                       hideCharacter: false,
@@ -167,9 +166,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
-                        ? .36.h * height
-                        : height * .42.h,
+                    height: .4.sh,
                   ),
                   Button(
                       busy: _busy,

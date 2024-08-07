@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:rootscards/services/auth_services.dart';
@@ -30,7 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const TestOnboarding()),
+          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
         );
       }
     });
@@ -49,16 +50,14 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 SizedBox(
-                  height: MediaQuery.of(context).size.height / 2.5,
+                  height: .35.sh,
                 ),
                 SvgPicture.asset(
                   "assets/svg/logo.svg",
-                  height: 60.h,
+                  height: .1.sh,
                   color: BLACK,
                 ),
-                SizedBox(
-                  height: 35,
-                ),
+                AppSpacing.verticalSpaceSmall,
                 Text(
                   "RootsCards",
                   style: context.textTheme.titleLarge?.copyWith(
@@ -67,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       fontFamily: "LoveYaLikeASister"),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * .3,
+                  height: .35.sh,
                 ),
                 Text(
                   "By Rootshive 1.01",

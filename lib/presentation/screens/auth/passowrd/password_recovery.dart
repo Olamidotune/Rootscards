@@ -38,7 +38,6 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
             icon: Icon(
               Icons.arrow_back,
             ),
-                    iconSize: 18.h,
           ),
           title: Text(
             "Forgot Password",
@@ -51,7 +50,6 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
             IconButton(
               onPressed: () {},
               icon: Icon(Icons.info_outline),
-                      iconSize: 18.h,
             ),
           ],
         ),
@@ -61,7 +59,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
             child: Container(
               height: height,
               padding: EdgeInsets.only(
-                top: height <= 550 ? 10 : 20,
+                top: .01.sh,
                 left: 20,
                 right: 20,
               ),
@@ -94,6 +92,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                         //     _emailController.text,
                         //     _passwordController.text,
                         //     context),
+
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Please provide a password.";
@@ -106,7 +105,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
-                              vertical: 20.h, horizontal: 10.w),
+                              vertical: .035.sh, horizontal: 25.w),
                           suffixIcon: IconButton(
                               onPressed: () => setState(
                                   () => _obscurePassword1 = !_obscurePassword1),
@@ -119,14 +118,14 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                               fontWeight: FontWeight.bold),
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(30),
+                              Radius.circular(60),
                             ),
                           ),
                           focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: BUTTONGREEN),
                             borderRadius: BorderRadius.all(
                               Radius.circular(
-                                30,
+                                60,
                               ),
                             ),
                           ),
@@ -158,7 +157,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                         autofillHints: const [AutofillHints.email],
                         decoration: InputDecoration(
                           contentPadding: EdgeInsets.symmetric(
-                              vertical: 20.h, horizontal: 10.w),
+                              vertical: .035.sh, horizontal: 25.w),
                           suffixIcon: IconButton(
                               onPressed: () => setState(
                                   () => _obscurePassword2 = !_obscurePassword2),
@@ -171,23 +170,21 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                               fontWeight: FontWeight.bold),
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
-                              Radius.circular(30),
+                              Radius.circular(60),
                             ),
                           ),
                           focusedBorder: const OutlineInputBorder(
                             borderSide: BorderSide(color: BUTTONGREEN),
                             borderRadius: BorderRadius.all(
                               Radius.circular(
-                                30,
+                                60,
                               ),
                             ),
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: height <= MIN_SUPPORTED_SCREEN_HEIGHT
-                            ? .45 * height
-                            : height * .48,
+                      height: .4.sh,
                       ),
                       Button(
                         busy: _busy,
