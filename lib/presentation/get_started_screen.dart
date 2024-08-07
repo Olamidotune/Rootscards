@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/widgets/big_social_media_button.dart';
@@ -28,13 +29,11 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
       appBar: AppBar(
         centerTitle: true,
         leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(Icons.arrow_back),
-                    iconSize: 18.h,),
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(Icons.arrow_back),
+        ),
         title: Container(
-          height: 30.h,
+          height: .04.sh,
           padding: EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -55,7 +54,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                 value: value,
                 child: Text(
                   value,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(fontSize: 15.sp),
                 ),
               );
             }).toList(),
@@ -65,7 +64,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
           IconButton(
             onPressed: () {},
             icon: Icon(Icons.info_outline),
-            iconSize: 18.h,
           ),
         ],
       ),
@@ -74,7 +72,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
           height: height,
           child: Padding(
             padding: EdgeInsets.only(
-              top: height <= 550 ? 10 : 20,
+              top: height <= 550 ? .004.sh : .02.sh,
               left: 20,
               right: 20,
             ),
@@ -87,54 +85,41 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     SvgPicture.asset("assets/svg/logo.svg"),
-                    SizedBox(
-                      height: height / 20,
-                    ),
+                    AppSpacing.verticalSpaceMedium,
                     Text(
-                      "Create a profile, follow other people's accounts,\n create your space and more.",
-                      textAlign: TextAlign.center,
-                      style: context.textTheme.bodyMedium!.copyWith(color: Colors.grey.shade700)
-                      // style: TextStyle(color: Colors.grey.shade700),
-                    ),
-                    SizedBox(
-                      height: height / 20,
-                    ),
+                        "Create a profile, follow other people's accounts,\n create your space and more.",
+                        textAlign: TextAlign.center,
+                        style: context.textTheme.bodyMedium!
+                            .copyWith(color: Colors.grey.shade700)
+                        // style: TextStyle(color: Colors.grey.shade700),
+                        ),
+                    AppSpacing.verticalSpaceMedium,
                     SocialMediaButton(
                       title: "Use Email or Phone Number",
                       leading: "sms",
                       onPressed: () {},
                     ),
-                    SizedBox(
-                      height: height / 50,
-                    ),
+                    AppSpacing.verticalSpaceSmall,
                     Text("or"),
-                    SizedBox(
-                      height: height / 50,
-                    ),
+                    AppSpacing.verticalSpaceSmall,
                     SocialMediaButton(
                       title: "Continue with Facebook",
                       leading: "facebook",
                       onPressed: () {},
                     ),
-                    SizedBox(
-                      height: height / 40,
-                    ),
+                    AppSpacing.verticalSpaceSmall,
                     SocialMediaButton(
                       title: "Continue with Google",
                       leading: "google",
                       onPressed: () {},
                     ),
-                    SizedBox(
-                      height: height / 40,
-                    ),
+                    AppSpacing.verticalSpaceSmall,
                     SocialMediaButton(
                       title: "Continue with Apple",
                       leading: "apple",
                       onPressed: () {},
                     ),
-                    SizedBox(
-                      height: height / 40,
-                    ),
+                    AppSpacing.verticalSpaceMedium,
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
@@ -173,9 +158,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 0.90.h * height <= 700
-                          ? .05.h * height
-                          : height * .08.h,
+                      height: 14.sp,
                     ),
                     GestureDetector(
                       onTap: () {

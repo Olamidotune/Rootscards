@@ -37,6 +37,7 @@ class AuthRepository {
         } else {
           // Authenticated, process user data
           await _processUserData(responseData['details']);
+
           debugPrint(email);
           debugPrint(password);
           debugPrint(responseData);
@@ -53,6 +54,7 @@ class AuthRepository {
   Future<void> _processUserData(Map<String, dynamic> userDetails) async {
     await HelperFunction.saveUserEmailSF(userDetails['email']);
     await HelperFunction.saveSpaceNameSF(userDetails['brand']);
+    await HelperFunction.userLoggedInStatus() == true;
 
     if (userDetails['banners'] != null) {
       await _saveBanners(userDetails['banners']);
