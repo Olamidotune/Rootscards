@@ -17,6 +17,7 @@ class HelperFunction {
   static String deviceModelKey = 'DEVICEMODELKEY';
 
   ///save prefs
+
   static Future<bool> saveUserLoggedInStatus(bool isUserLoggedIn) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return await sf.setBool(userLoggedInKey, isUserLoggedIn);

@@ -1,109 +1,10 @@
-import 'dart:convert';
+
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:rootscards/config/app.dart';
 import 'package:rootscards/helper/helper_function.dart';
 
 class AuthServices {
-  //login
-  Future<Map<String, dynamic>> login(String email, String password) async {
-    Map<String, String> requestBody = {
-      'email': email,
-      'password': password,
-    };
-
-    String deviceId = await HelperFunction.getDeviceIDfromSF() ?? "N/A";
-
-    final response = await http.post(
-      Uri.parse("$baseUrl/"),
-      body: json.encode(requestBody),
-      headers: {'deviceid': deviceId, 'Content-Type': 'application/json'},
-    ).timeout(Duration(seconds: 30));
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = json.decode(response.body);
-      String status = responseData['status'];
-      if (status == "201") {
-        String xpub1 = responseData['data']['xpub1'];
-        String xpub2 = responseData['data']['xpub2'];
-        await HelperFunction.saveUserEmailSF(email);
-        await HelperFunction.saveXpub1SF(xpub1);
-        await HelperFunction.saveXpub2SF(xpub2);
-        HelperFunction.userLoggedInKey;
-        debugPrint(email);
-        debugPrint(password);
-        debugPrint(response.body);
-
-        return {
-          'success': true,
-          'email': email,
-          "xpub1": xpub1,
-          "xpub2": xpub2
-        };
-      } else {
-        throw (responseData['data']['message']);
-      }
-    } else {
-      throw Exception('Failed to login');
-    }
-  }
-
-  //OTP
-  Future<Map<String, dynamic>> authOtp(String otp) async {
-    String? xpub1 = await HelperFunction.getXpub1fromSF();
-    String? xpub2 = await HelperFunction.getXpub2fromSF();
-
-    if (xpub1 == null || xpub2 == null) {
-      throw Exception("xpub1 and xpub2 are not found");
-    }
-
-    Map<String, dynamic> requestBody = {
-      "deviceId": await HelperFunction.getDeviceIDfromSF(),
-      "entry": await HelperFunction.getDeviceEntryFromSF(),
-      "deviceName": await HelperFunction.getDeviceNameFromSF(),
-      "deviceType": await HelperFunction.getDeviceTypeFromSF(),
-      "deviceModel": await HelperFunction.getDeviceModelFromSF(),
-      "code": otp,
-    };
-    debugPrint(requestBody.toString());
-    String encodedBody = json.encode(requestBody);
-
-    http.Response response = await http
-        .post(
-          Uri.parse("$baseUrl/user/authorizeDevice"),
-          headers: {
-            HttpHeaders.authorizationHeader:
-                'Basic ${base64Encode(utf8.encode("$xpub1:$xpub2"))}',
-            HttpHeaders.contentTypeHeader: 'application/json',
-          },
-          body: encodedBody,
-        )
-        .timeout(Duration(seconds: 30));
-    if (response.statusCode == 200) {
-      Map<String, dynamic> responseData = json.decode(response.body);
-      String status = responseData['status'];
-
-      if (status == "200") {
-        String authid = responseData['data']['authid'];
-        await HelperFunction.saveAuthIDSF(authid);
-        String userName = responseData['details']['username'];
-        String brand = responseData['details']['brand'];
-        return {
-          'success': true,
-          "authId": authid,
-          "userName": userName,
-          "brand": brand,
-        };
-      } else {
-        throw Exception("Oops ${responseData['data']['message']}");
-      }
-    } else {
-      throw Exception("Something went wrong");
-    }
-  }
-
   ///getDeviceID
 
   Future<void> getDeviceID() async {
@@ -145,4 +46,67 @@ class AuthServices {
     await HelperFunction.saveDeviceTypeSF(deviceType);
     await HelperFunction.saveDeviceModel(deviceModel);
   }
+
+  //   Future<Map<String, dynamic>> logins(String email, String password) async {
+  //   String deviceId = await HelperFunction.getDeviceIDfromSF() ?? "N/A";
+  //   final url = Uri.parse("$baseUrl/");
+  //   final body = jsonEncode({
+  //     'email': email,
+  //     'password': password,
+  //   });
+
+  //   final headers = {
+  //     'deviceid': deviceId,
+  //     'Content-Type': 'application/json',
+  //   };
+
+  //   try {
+  //     final response = await http.post(url, body: body, headers: headers);
+  //     final responseData = jsonDecode(response.body);
+
+  //     if (responseData['status'] == '200' || responseData['status'] == '201') {
+  //       if (responseData['status'] == '201') {
+  //         String xpub1 = responseData['data']['xpub1'];
+  //         String xpub2 = responseData['data']['xpub2'];
+  //         await HelperFunction.saveUserEmailSF(email);
+  //         await HelperFunction.saveXpub1SF(xpub1);
+  //         await HelperFunction.saveXpub2SF(xpub2);
+  //         debugPrint(email);
+  //         debugPrint(password);
+  //         debugPrint("$responseData");
+  //       } else {
+  //         // Authenticated, process user data
+  //         await _processUserData(responseData['details']);
+
+  //         debugPrint(email);
+  //         debugPrint(password);
+  //         debugPrint(responseData);
+  //       }
+  //       return responseData;
+  //     } else if (responseData['status'] == '401') {
+  //       throw 'Incorrect credentials';
+  //     } else {
+  //       throw ('Login failed: ${responseData['data']['message'] ?? 'Something went wrong'}');
+  //     }
+  //   } catch (e) {
+  //     throw 'Something went wrong.';
+  //   }
+  // }
+
+  // Future<void> _processUserData(Map<String, dynamic> userDetails) async {
+  //   await HelperFunction.saveUserEmailSF(userDetails['email']);
+  //   await HelperFunction.saveSpaceNameSF(userDetails['brand']);
+  //   await HelperFunction.userLoggedInStatus() == true;
+
+  //   if (userDetails['banners'] != null) {
+  //     await _saveBanners(userDetails['banners']);
+  //   }
+  // }
+
+  // // You might want to add a method to save banners if needed
+  // Future<void> _saveBanners(List<dynamic> banners) async {
+  //   // Implement banner saving logic here
+  //   // This could involve saving to SharedPreferences or another storage method
+  // }
+
 }

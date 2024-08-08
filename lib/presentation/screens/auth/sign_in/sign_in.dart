@@ -14,6 +14,7 @@ import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.da
 import 'package:rootscards/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
+import 'package:rootscards/services/auth_services.dart';
 
 class SignInScreen extends StatefulWidget {
   static const String routeName = "sign_in_screen";
@@ -35,12 +36,15 @@ class _SignInScreenState extends State<SignInScreen>
 
   bool _busy = false;
   bool _obscurePassword = true;
+  AuthServices authServices = AuthServices();
 
   late TabController _tabController;
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    authServices.getDeviceID();
+    _getEmail();
   }
 
   @override
@@ -77,6 +81,11 @@ class _SignInScreenState extends State<SignInScreen>
             setState(() => _busy = false);
           }
           if (state is AuthFailure) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+          if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.error)),
             );
@@ -546,7 +555,7 @@ class _SignInScreenState extends State<SignInScreen>
                                 pill: true,
                                 onPressed: () {},
                               ),
-                         AppSpacing.verticalSpaceLarge,
+                              AppSpacing.verticalSpaceLarge,
                               Text(
                                 "Or sign in with",
                                 style: Theme.of(context)
@@ -579,7 +588,6 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                               AppSpacing.verticalSpaceMedium,
                               RichText(
-                                
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
                                   text: "By continuing, you agree to Pipel's ",
@@ -615,7 +623,7 @@ class _SignInScreenState extends State<SignInScreen>
                                 ),
                               ),
                               SizedBox(
-                             height: .18.sh,
+                                height: .18.sh,
                               ),
                               RichText(
                                 textAlign: TextAlign.center,
@@ -652,6 +660,8 @@ class _SignInScreenState extends State<SignInScreen>
       ),
     );
   }
+  
+  void _getEmail() {}
 }
 
 // import 'dart:async';

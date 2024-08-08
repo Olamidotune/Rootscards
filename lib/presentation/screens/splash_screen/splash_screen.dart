@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:io';
-
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/helper/helper_function.dart';
+import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
 import 'package:rootscards/services/auth_services.dart';
 
@@ -22,16 +21,20 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   AuthServices authServices = AuthServices();
+  bool isAuthenticated = false;
 
   @override
   void initState() {
     super.initState();
 
-    Timer(const Duration(seconds: 3), () {
+    checkSignInStatus();
+    Timer(Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+          MaterialPageRoute(
+              builder: (context) =>
+                  isAuthenticated ? SignInScreen() : OnboardingScreen()),
         );
       }
     });
@@ -57,7 +60,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   height: .1.sh,
                   color: BLACK,
                 ),
-                AppSpacing.verticalSpaceSmall,
+                AppSpacing.verticalSpaceLarge,
                 Text(
                   "RootsCards",
                   style: context.textTheme.titleLarge?.copyWith(
@@ -83,37 +86,10 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<void> getDeviceID() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    String deviceId = "";
-    // ignore: unused_local_variable
-    String entry = "";
-    String deviceName = "";
-    String deviceType = "";
-    String deviceModel = "";
-
-    try {
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.manufacturer;
-        entry = "android";
-        deviceName = androidInfo.device;
-        deviceType = androidInfo.model;
-        deviceModel = androidInfo.product;
-      } else if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        deviceId = iosInfo.identifierForVendor!;
-        entry = "ios";
-        deviceName = iosInfo.name;
-        deviceType = iosInfo.model;
-        deviceModel = iosInfo.systemName;
-      }
-    } catch (e) {
-      throw Exception('Failed to get device information: $e');
-    }
-    debugPrint(deviceId);
-    debugPrint(deviceName);
-    debugPrint(deviceType);
-    debugPrint(deviceModel);
+  Future<void> checkSignInStatus() async {
+    bool authenticatedUser = await HelperFunction.userLoggedInStatus() ?? false;
+    setState(() {
+      isAuthenticated = authenticatedUser;
+    });
   }
 }

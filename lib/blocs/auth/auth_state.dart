@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 
 abstract class AuthState extends Equatable {
@@ -14,13 +13,26 @@ class AuthLoading extends AuthState {}
 
 class AuthSuccess extends AuthState {
   final bool needsDeviceAuth;
-  AuthSuccess(this.needsDeviceAuth);
+
+  AuthSuccess({required this.needsDeviceAuth});
+
+  @override
+  List<Object> get props => [needsDeviceAuth];
 }
 
 class AuthFailure extends AuthState {
+  final String message;
+
+  const AuthFailure(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class AuthError extends AuthState {
   final String error;
 
-  const AuthFailure(this.error);
+  AuthError({required this.error});
 
   @override
   List<Object> get props => [error];

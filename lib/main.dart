@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rootscards/app_wrapper.dart';
 import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
@@ -100,9 +99,8 @@ class MyApp extends StatelessWidget {
                     //   ),
                     //   scaffoldBackgroundColor: Colors.white,
                     // ),
-                    home: AppWrapper(),
+                    home: SplashScreen(),
                     routes: {
-                      AppWrapper.routeName: (context) => AppWrapper(),
                       SplashScreen.routeName: (context) => SplashScreen(),
                       OnboardingScreen.routeName: (context) =>
                           OnboardingScreen(),

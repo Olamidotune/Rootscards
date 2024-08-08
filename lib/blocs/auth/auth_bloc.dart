@@ -11,16 +11,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onLoginSubmitted(
-    LoginRequested event,
-    Emitter<AuthState> emit,
-  ) async {
-    emit(AuthLoading());
-    try {
-      final result = await authRepository.login(event.email, event.password);
-      final needsDeviceAuth = result['status'] == '201';
-      emit(AuthSuccess(needsDeviceAuth));
-    } catch (e) {
-      emit(AuthFailure(e.toString()));
+  LoginRequested event,
+  Emitter<AuthState> emit,
+) async {
+  emit(AuthLoading());
+  try {
+    final result = await authRepository.login(event.email, event.password);
+    final needsDeviceAuth = result['status'] == '201';
+    emit(AuthSuccess(needsDeviceAuth: needsDeviceAuth));
+  } catch (e) {
+    if (e.toString().contains('Incorrect credentials')) {
+      emit(AuthFailure('Incorrect credentials'));
+    } else {
+      emit(AuthError(error: 'Something went wrong'));
     }
   }
+}
+
 }

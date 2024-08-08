@@ -21,53 +21,58 @@ class AuthRepository {
     };
 
     try {
-      final response = await http.post(url, body: body, headers: headers);
+      final response = await http
+          .post(url, body: body, headers: headers)
+          .timeout(const Duration(seconds: 30));
       final responseData = jsonDecode(response.body);
 
       if (responseData['status'] == '200' || responseData['status'] == '201') {
         if (responseData['status'] == '201') {
-          String xpub1 = responseData['data']['xpub1'];
-          String xpub2 = responseData['data']['xpub2'];
-          await HelperFunction.saveUserEmailSF(email);
-          await HelperFunction.saveXpub1SF(xpub1);
-          await HelperFunction.saveXpub2SF(xpub2);
-          debugPrint(email);
-          debugPrint(password);
-          debugPrint("$responseData");
+          await _handleNewUser(responseData['data'], email);
         } else {
-          // Authenticated, process user data
           await _processUserData(responseData['details']);
-
-          debugPrint(email);
-          debugPrint(password);
-          debugPrint(responseData);
         }
         return responseData;
+      } else if (responseData['status'] == '401') {
+        debugPrint("$responseData");
+        throw 'Incorrect credentials';
       } else {
-        throw ('Login failed: ${responseData['data']['message'] ?? 'Something went wrong'}');
+        throw 'Login failed: ${responseData['data']['message'] ?? 'Something went wrong'}';
       }
     } catch (e) {
-      throw 'Incorrect credentials';
+      throw 'Something went wrong: $e';
     }
+  }
+
+  Future<void> _handleNewUser(Map<String, dynamic> data, String email) async {
+    String xpub1 = data['xpub1'];
+    String xpub2 = data['xpub2'];
+    await HelperFunction.saveUserEmailSF(email);
+    await HelperFunction.saveXpub1SF(xpub1);
+    await HelperFunction.saveXpub2SF(xpub2);
+    debugPrint(email);
+    debugPrint("$data");
   }
 
   Future<void> _processUserData(Map<String, dynamic> userDetails) async {
     await HelperFunction.saveUserEmailSF(userDetails['email']);
     await HelperFunction.saveSpaceNameSF(userDetails['brand']);
-    await HelperFunction.userLoggedInStatus() == true;
+
+    await HelperFunction.saveUserLoggedInStatus(true);
+    debugPrint("$userDetails");
 
     if (userDetails['banners'] != null) {
       await _saveBanners(userDetails['banners']);
     }
   }
 
-  // You might want to add a method to save banners if needed
   Future<void> _saveBanners(List<dynamic> banners) async {
     // Implement banner saving logic here
     // This could involve saving to SharedPreferences or another storage method
   }
 
   ////AUTHENTICATE DEVICE/////
+
   Future<Map<String, dynamic>> authenticateDevice(String otp) async {
     final url = Uri.parse("$baseUrl/user/authorizeDevice");
     final xpubs = await getStoredXpubs();

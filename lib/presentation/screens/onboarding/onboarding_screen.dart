@@ -164,6 +164,7 @@ class _CarouselImage extends StatelessWidget {
             fit: BoxFit.fitWidth,
           ),
           slider,
+           AppSpacing.verticalSpaceMedium,
           Text(
             title,
             style: context.textTheme.bodyLarge!.copyWith(
@@ -175,7 +176,7 @@ class _CarouselImage extends StatelessWidget {
           AppSpacing.verticalSpaceTiny,
           Text(
             subTitle,
-            // textAlign: TextAlign.center,
+            textAlign: TextAlign.center,
             style: context.textTheme.bodyMedium!.copyWith(
               fontSize: 16.sp,
             ),
