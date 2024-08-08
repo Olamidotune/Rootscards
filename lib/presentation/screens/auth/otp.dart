@@ -32,7 +32,6 @@ class _OtpScreenState extends State<OtpScreen> {
 
   _getEmail() async {
     email = await HelperFunction.getUserEmailfromSF();
-    setState(() {});
   }
 
   @override
@@ -105,7 +104,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                             color: Colors.grey,
                           )),
-                  Text(email ?? " ",
+                  Text(email ?? "",
                       style: Theme.of(context)
                           .textTheme
                           .bodyMedium!

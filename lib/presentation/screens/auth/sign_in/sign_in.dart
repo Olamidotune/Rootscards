@@ -16,6 +16,8 @@ import 'package:rootscards/presentation/screens/widgets/button.dart';
 import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
 import 'package:rootscards/services/auth_services.dart';
 
+import '../../../../helper/helper_function.dart';
+
 class SignInScreen extends StatefulWidget {
   static const String routeName = "sign_in_screen";
   const SignInScreen({super.key});
@@ -45,6 +47,10 @@ class _SignInScreenState extends State<SignInScreen>
     _tabController = TabController(length: 2, vsync: this);
     authServices.getDeviceID();
     _getEmail();
+  }
+
+  _getEmail() async {
+    _emailController.text = await HelperFunction.getUserEmailfromSF() ?? '';
   }
 
   @override
@@ -660,8 +666,6 @@ class _SignInScreenState extends State<SignInScreen>
       ),
     );
   }
-  
-  void _getEmail() {}
 }
 
 // import 'dart:async';
