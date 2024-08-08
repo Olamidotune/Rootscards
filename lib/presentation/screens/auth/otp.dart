@@ -71,7 +71,14 @@ class _OtpScreenState extends State<OtpScreen> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),
             );
-          } else if (state is DeviceAuthenticationSuccess) {
+          }
+          if (state is OtpErrorState) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage)),
+            );
+          }
+
+          if (state is DeviceAuthenticationSuccess) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text("Your device has been authenticated")),
             );

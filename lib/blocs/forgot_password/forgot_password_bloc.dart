@@ -21,15 +21,21 @@ class ForgotPasswordBloc
     try {
       final success = await authRepository.resetPassword(event.email);
       if (success) {
-        emit(ForgotPasswordSuccessState(message: "We sent a link to your Email."));
+        emit(ForgotPasswordSuccessState(
+            message: "We sent a link to your email."));
       } else {
-        emit(ForgotPasswordErrorState(
-            errorMessage:
-                "Something went wrong."));
+        emit(
+          ForgotPasswordErrorState(
+            errorMessage: "The provided email isn't found on our server",
+          ),
+        );
       }
     } catch (e) {
-      emit(ForgotPasswordFailedState(
-          message: "Something went wrong ${e.toString()}"));
+      emit(
+        ForgotPasswordFailedState(
+          message: "Something went wrong",
+        ),
+      );
     }
   }
 }

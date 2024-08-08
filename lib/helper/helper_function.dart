@@ -94,6 +94,11 @@ class HelperFunction {
     return sf.getString(userNamekey);
   }
 
+  static Future<String?> getAuthIDfromSF() async {
+    SharedPreferences sf = await SharedPreferences.getInstance();
+    return sf.getString(authIDKey);
+  }
+
   static Future<String?> getXpub1fromSF() async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getString(xpub1Key);

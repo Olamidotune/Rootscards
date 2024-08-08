@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/app.dart';
 import 'package:rootscards/helper/helper_function.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepository {
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -57,9 +56,8 @@ class AuthRepository {
   Future<void> _processUserData(Map<String, dynamic> userDetails) async {
     await HelperFunction.saveUserEmailSF(userDetails['email']);
     await HelperFunction.saveSpaceNameSF(userDetails['brand']);
-
-    await HelperFunction.saveUserLoggedInStatus(true);
     debugPrint("$userDetails");
+     debugPrint("$userDetails");
 
     if (userDetails['banners'] != null) {
       await _saveBanners(userDetails['banners']);
@@ -101,50 +99,25 @@ class AuthRepository {
       final responseData = jsonDecode(response.body);
       debugPrint("$responseData");
       if (responseData['status'] == '200') {
-        await _saveAuthId(responseData['data']['authid']);
+        await HelperFunction.saveAuthIDSF(responseData['data']['authid']);
+        debugPrint(
+            ' ${await HelperFunction.saveAuthIDSF(responseData['data']['authid'])}');
+        await HelperFunction.saveUserLoggedInStatus(true);
         return responseData;
+      }
+      if (responseData['status'] == 401) {
+        throw ('Correct code required');
       } else {
-        throw Exception(
-            responseData['data']['message'] ?? 'Authentication failed');
+        throw ("Correct code required.");
       }
     } catch (e) {
-      throw Exception('Network error: $e');
+      final errorMessage = (e is String) ? e : "Something went wrong";
+      debugPrint("Error in authenticateDevice: $errorMessage");
+      throw errorMessage;
     }
   }
 
   ////RESET PASSWORD////
-  // Future<void> resetPassword(String email) async {
-  //   final url = Uri.parse('$baseUrl/user/forgotPassword');
-  //   final String basicAuth =
-  //       'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
-
-  //   try {
-  //     final response = await http
-  //         .post(
-  //           url,
-  //           headers: <String, String>{
-  //             'Authorization': basicAuth,
-  //             'Content-Type': 'application/json',
-  //           },
-  //           body: jsonEncode(<String, String>{
-  //             'email': email,
-  //           }),
-  //         )
-  //         .timeout(const Duration(seconds: 30));
-
-  //     if (response.statusCode == 200) {
-  //       Map<String, dynamic> responseData = json.decode(response.body);
-  //       String status = responseData['status'];
-  //       if (status == "200") {
-  //         responseData['data']['message'];
-  //       } else {
-  //         "Wrong Email";
-  //       }
-  //     }
-  //   } catch (e) {
-  //     "Something went wrong";
-  //   }
-  // }
 
   Future<bool> resetPassword(String email) async {
     final url = Uri.parse('$baseUrl/user/forgotPassword');
@@ -182,20 +155,12 @@ class AuthRepository {
         return false;
       }
     } catch (e) {
-      // Log the error or handle accordingly
       return false;
     }
   }
 
-  Future<String?> getAuthId() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('authId');
-  }
 
-  Future<void> _saveAuthId(String authId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('authId', authId);
-  }
+
 }
 
 Future<Map<String, String?>> getStoredXpubs() async {

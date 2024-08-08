@@ -26,15 +26,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     checkSignInStatus();
     Timer(Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  isAuthenticated ? SignInScreen() : OnboardingScreen()),
+            builder: (context) =>
+                isAuthenticated ? SignInScreen() : OnboardingScreen(),
+          ),
         );
       }
     });
@@ -87,9 +87,9 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> checkSignInStatus() async {
-    bool authenticatedUser = await HelperFunction.userLoggedInStatus() ?? false;
+    String? hasEmail = await HelperFunction.getUserEmailfromSF();
     setState(() {
-      isAuthenticated = authenticatedUser;
+      isAuthenticated = hasEmail != null;
     });
   }
 }

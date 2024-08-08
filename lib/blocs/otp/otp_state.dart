@@ -20,6 +20,12 @@ class DeviceAuthenticationSuccess extends OtpAuthState {
   List<Object> get props => [authId];
 }
 
+final class OtpErrorState extends OtpAuthState {
+  final String errorMessage;
+
+  OtpErrorState(this.errorMessage);
+}
+
 final class OtpFailedState extends OtpAuthState {
   final String message;
 

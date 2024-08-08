@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/repos/repos.dart';
 
 part 'otp_event.dart';
@@ -22,11 +23,11 @@ class OtpAuthBloc extends Bloc<OtpAuthEvent, OtpAuthState> {
     emit(OtpLoadingState());
     try {
       final result = await authRepository.authenticateDevice(event.otp);
-      final authId = await authRepository.getAuthId();
+      final authId = await HelperFunction.getAuthIDfromSF();
       if (authId != null) {
         emit(DeviceAuthenticationSuccess(authId));
       } else {
-        emit(OtpFailedState('Failed to retrieve authId'));
+        emit(OtpErrorState('Failed to retrieve authId'));
       }
     } catch (e) {
       emit(OtpFailedState(e.toString()));
