@@ -39,7 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^1.2.0
   flutter_svg: ^2.0.9
-  carousel_slider: ^4.2.1
+  carousel_slider: ^5.0.0
   email_validator: ^2.1.17
   dio: ^5.4.1
   retrofit: ^4.1.0
