@@ -2,11 +2,8 @@
 
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
@@ -30,16 +27,32 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final FocusNode _phoneNumberFocusNode = FocusNode();
-  final FocusNode _passwordFocusNode = FocusNode();
-
-  bool _obscurePassword = true;
   bool _busy = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          centerTitle: true,
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: Icon(
+              Icons.arrow_back,
+            ),
+          ),
+          title: Text(
+            "Sign Up",
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.info_outline),
+            ),
+          ]),
         body: SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -84,204 +97,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               Form(
                 key: _formKey,
                 child: AutofillGroup(
-                  child: Column(
-                    children: [
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Email"),
-                      ),
-                      SizedBox(
-                        height: 0.5.h,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailController,
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (EmailValidator.validate(value?.trim() ?? "")) {
-                            return null;
-                          }
-                          return "Please provide a valid email address";
-                        },
-                        style: const TextStyle(),
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          prefixIcon:
-                              Image.asset("assets/images/message-icon.png"),
-                          hintText: "enter your email",
-                          hintStyle: const TextStyle(color: Colors.black26),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                7,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 1.h,
-                      ),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Fullname"),
-                      ),
-                      SizedBox(
-                        height: 0.5.h,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.name,
-                        controller: _fullNameController,
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please provide your fullname.";
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (_) =>
-                            _phoneNumberFocusNode.requestFocus(),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp("[a-zA-z0-9]")),
-                        ],
-                        style: const TextStyle(),
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          prefixIcon:
-                              Image.asset("assets/images/user-icon.png"),
-                          hintText: "enter your fullname",
-                          hintStyle: const TextStyle(color: Colors.black26),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                7,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 1.h,
-                      ),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Phone Number"),
-                      ),
-                      SizedBox(
-                        height: 0.5.h,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.phone,
-                        controller: _phoneNumberController,
-                        textInputAction: TextInputAction.next,
-                        validator: (value) {
-                          if (value == null ||
-                              value.isEmpty ||
-                              value.length < 11) {
-                            return "Please provide a valid phone number.";
-                          }
-                          return null;
-                        },
-                        onFieldSubmitted: (_) =>
-                            _phoneNumberFocusNode.requestFocus(),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[0-9]")),
-                        ],
-                        style: const TextStyle(),
-                        autofillHints: const [AutofillHints.telephoneNumber],
-                        decoration: InputDecoration(
-                          prefixIcon:
-                              Image.asset("assets/images/phone-icon.png"),
-                          hintText: "enter your phone number",
-                          hintStyle: const TextStyle(color: Colors.black26),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                7,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 1.h,
-                      ),
-                      const Align(
-                        alignment: Alignment.topLeft,
-                        child: Text("Password"),
-                      ),
-                      SizedBox(
-                        height: 0.5.h,
-                      ),
-                      TextFormField(
-                        keyboardType: TextInputType.text,
-                        controller: _passwordController,
-                        focusNode: _passwordFocusNode,
-                        textInputAction: TextInputAction.go,
-                        obscureText: _obscurePassword,
-                        onFieldSubmitted: (_) {
-                          if (_formKey.currentState!.validate()) {
-                            _signUp(
-                                _emailController.text,
-                                _fullNameController.text,
-                                _passwordController.text,
-                                _passwordController.text,
-                                "individual",
-                                "nil",
-                                context);
-                          }
-                        },
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return "Please provide a password.";
-                          }
-                          return null;
-                        },
-                        style: const TextStyle(),
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          prefixIcon:
-                              Image.asset("assets/images/password-icon.png"),
-                          suffixIcon: IconButton(
-                              onPressed: () => setState(
-                                  () => _obscurePassword = !_obscurePassword),
-                              icon: _obscurePassword
-                                  ? const Icon(Icons.visibility)
-                                  : const Icon(Icons.visibility_off)),
-                          hintText: "enter your password",
-                          hintStyle: const TextStyle(color: Colors.black26),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(7),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                7,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                  child: Text("data")
                 ),
               ),
               SizedBox(

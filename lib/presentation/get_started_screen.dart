@@ -5,6 +5,7 @@ import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
+import 'package:rootscards/presentation/screens/auth/sign_up.dart';
 import 'package:rootscards/presentation/screens/widgets/big_social_media_button.dart';
 
 class GetStartedScreen extends StatefulWidget {
@@ -97,7 +98,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                     SocialMediaButton(
                       title: "Use Email or Phone Number",
                       leading: "sms",
-                      onPressed: () {},
+                      onPressed: () => Navigator.of(context)
+                          .pushNamed(SignUpScreen.routeName),
                     ),
                     AppSpacing.verticalSpaceSmall,
                     Text("or"),
@@ -158,9 +160,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       ),
                     ),
                     SizedBox(
-                    height: 0.90.h * height <= 700
-                          ? .02.sh 
-                          : .17.sh,
+                      height: 0.90.h * height <= 700 ? .02.sh : .17.sh,
                     ),
                     GestureDetector(
                       onTap: () {
