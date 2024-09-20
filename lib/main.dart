@@ -7,15 +7,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
-import 'package:rootscards/presentation/get_started_screen.dart';
-import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
-import 'package:rootscards/presentation/screens/auth/passowrd/password_recovery.dart';
-import 'package:rootscards/presentation/screens/auth/otp.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
-import 'package:rootscards/presentation/screens/auth/sign_up.dart';
-import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
-import 'package:rootscards/presentation/screens/space/space_screen.dart';
-import 'package:rootscards/presentation/screens/splash_screen/splash_screen.dart';
+import '../src/presentation/get_started_screen.dart';
+import '../src/presentation/screens/auth/passowrd/forgot_password.dart';
+import '../src/presentation/screens/auth/passowrd/password_recovery.dart';
+import '../src/presentation/screens/auth/otp.dart';
+import '../src/presentation/screens/auth/sign_in/sign_in.dart';
+import '../src/presentation/screens/auth/sign_up.dart';
+import '../src/presentation/screens/onboarding/onboarding_screen.dart';
+import '../src/presentation/screens/space/space_screen.dart';
+import '../src/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:rootscards/repos/repos.dart';
 
 void main() {

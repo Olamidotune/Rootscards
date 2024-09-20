@@ -9,14 +9,13 @@ import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/auth/auth_event.dart';
 import 'package:rootscards/blocs/auth/auth_state.dart';
 import 'package:rootscards/config/dimensions.dart';
-import 'package:rootscards/presentation/screens/auth/otp.dart';
-import 'package:rootscards/presentation/screens/auth/passowrd/forgot_password.dart';
-import 'package:rootscards/presentation/screens/space/space_screen.dart';
-import 'package:rootscards/presentation/screens/widgets/button.dart';
-import 'package:rootscards/presentation/screens/widgets/small_social_button.dart';
+import 'package:rootscards/helper/helper_function.dart';
+import '../otp.dart';
+import '../passowrd/forgot_password.dart';
+import '../../space/space_screen.dart';
+import 'package:rootscards/src/shared/widgets/button.dart';
+import 'package:rootscards/src/shared/widgets/small_social_button.dart';
 import 'package:rootscards/services/auth_services.dart';
-
-import '../../../../helper/helper_function.dart';
 
 class SignInScreen extends StatefulWidget {
   static const String routeName = "sign_in_screen";
