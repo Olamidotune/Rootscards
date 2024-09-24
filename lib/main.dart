@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
@@ -19,8 +20,10 @@ import '../src/presentation/screens/space/space_screen.dart';
 import '../src/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:rootscards/repos/repos.dart';
 
-void main() {
+Future<void> main() async {
+  await dotenv.load(fileName: ".env.production");
   WidgetsFlutterBinding.ensureInitialized();
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
@@ -115,8 +118,8 @@ class MyApp extends StatelessWidget {
                       SpaceScreen.routeName: (context) => SpaceScreen(),
                       PasswordRecovery.routeName: (context) =>
                           PasswordRecovery(),
-
-                      SecondSignUpScreen.routeName: (context)=> SecondSignUpScreen(),
+                      SecondSignUpScreen.routeName: (context) =>
+                          SecondSignUpScreen(),
                     },
                   ),
                 )));
