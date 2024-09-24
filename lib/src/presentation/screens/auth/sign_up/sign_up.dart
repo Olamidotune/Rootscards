@@ -10,7 +10,9 @@ import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'sign_in/sign_in.dart';
+import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
+import 'package:rootscards/src/shared/widgets/text_field.dart';
+import '../sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,9 +27,8 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+
   bool _busy = false;
 
   @override
@@ -69,9 +70,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     child: Text(
                       "Create Account",
                       style: context.textTheme.titleLarge?.copyWith(
-                        color: Colors.black,
-                        fontSize: 45,
-                      ),
+                          color: Colors.black,
+                          fontSize: 36,
+                          fontWeight: FontWeight.bold),
                     ),
                   ),
                   AppSpacing.verticalSpaceLarge,
@@ -97,16 +98,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     busy: _busy,
                     "Continue",
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _signUp(
-                            _emailController.text,
-                            _fullNameController.text,
-                            _passwordController.text,
-                            _passwordController.text,
-                            "individual",
-                            "nil",
-                            context);
-                      }
+                      Navigator.of(context)
+                          .pushNamed(SecondSignUpScreen.routeName);
+                      // if (_formKey.currentState!.validate()) {
+                      //   _signUp(
+                      //       _emailController.text,
+                      //       _fullNameController.text,
+                      //       _passwordController.text,
+                      //       _passwordController.text,
+                      //       "individual",
+                      //       "nil",
+                      //       context);
+                      // }
                     },
                   ),
                   SizedBox(
@@ -214,6 +217,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ));
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
   Future<void> _signUp(

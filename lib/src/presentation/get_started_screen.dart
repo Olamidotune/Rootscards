@@ -5,7 +5,7 @@ import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'screens/auth/sign_in/sign_in.dart';
-import 'screens/auth/sign_up.dart';
+import 'screens/auth/sign_up/sign_up.dart';
 import 'package:rootscards/src/shared/widgets/big_social_media_button.dart';
 
 class GetStartedScreen extends StatefulWidget {

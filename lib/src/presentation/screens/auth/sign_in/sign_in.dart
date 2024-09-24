@@ -10,6 +10,7 @@ import 'package:rootscards/blocs/auth/auth_event.dart';
 import 'package:rootscards/blocs/auth/auth_state.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
+import 'package:rootscards/src/shared/widgets/text_field.dart';
 import '../otp.dart';
 import '../passowrd/forgot_password.dart';
 import '../../space/space_screen.dart';
@@ -646,105 +647,11 @@ class _SignInScreenState extends State<SignInScreen>
       ),
     );
   }
-}
-
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    super.key,
-    this.controller,
-    required this.textInputAction,
-    this.textAlign = TextAlign.start,
-    required this.hintText,
-    this.validator,
-    this.onFieldSubmitted,
-    this.obscureText = false,
-    this.initialValue,
-    this.suffixIcon,
-    this.suffix,
-    this.prefixIcon,
-    this.prefix,
-    this.maxLength,
-    this.focusNode,
-    this.value,
-    this.counter,
-    this.height,
-    this.autoCorrect = true,
-    this.autoFocus = false,
-    this.canRequestFocus = false,
-    this.textCapitalization,
-    this.onEditingComplete,
-    required this.textInputType,
-  });
-
-  final TextEditingController? controller;
-  final TextInputAction? textInputAction;
-  final TextAlign? textAlign;
-  final String? Function(String?)? validator;
-  final ValueChanged<String?>? onFieldSubmitted;
-  final bool obscureText;
-  final String? initialValue;
-  final Widget? suffixIcon;
-  final Widget? suffix;
-  final String hintText;
-  final Widget? prefixIcon;
-  final Widget? prefix;
-  final int? maxLength;
-  final FocusNode? focusNode;
-  final String? value;
-  final Widget? counter;
-  final double? height;
-  final bool? autoCorrect;
-  final bool? autoFocus;
-  final bool? canRequestFocus;
-  final TextCapitalization? textCapitalization;
-  final VoidCallback? onEditingComplete;
-  final TextInputType textInputType;
 
   @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      keyboardType: textInputType,
-      controller: controller,
-      textInputAction: textInputAction,
-      validator: validator,
-      obscureText: obscureText,
-      maxLength: maxLength,
-      decoration: InputDecoration(
-        hintText: hintText,
-        suffix: suffix,
-        suffixIcon: suffixIcon,
-        prefix: prefix,
-        prefixIcon: prefixIcon,
-        contentPadding:
-            EdgeInsets.symmetric(vertical: .025.sh, horizontal: 25.w),
-        hintStyle: Theme.of(context)
-            .textTheme
-            .bodySmall!
-            .copyWith(color: Colors.black26, fontWeight: FontWeight.bold),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.grey.shade200),
-          borderRadius: BorderRadius.all(
-            Radius.circular(60.w),
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green),
-          borderRadius: BorderRadius.all(
-            Radius.circular(
-              60.w,
-            ),
-          ),
-        ),
-      ),
-      // validator: (value) {
-      //   if (EmailValidator.validate(value?.trim() ?? "")) {
-      //     return null;
-      //   }
-      //   return "Please provide a valid email address";
-      // },
-      // style: Theme.of(context).textTheme.bodySmall!.copyWith(
-      //       color: Colors.black,
-      //     ),
-    );
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 }
