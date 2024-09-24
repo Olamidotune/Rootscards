@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'package:rootscards/config/app.dart';
 import 'package:rootscards/helper/helper_function.dart';
 
 class AuthRepository {
-  final String apiBaseUrl = dotenv.env['BASE_URL'] ?? '';
+  final String apiBaseUrl = dotenv.env['API_BASE_URL'] ?? '';
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     String deviceId = await HelperFunction.getDeviceIDfromSF() ?? "N/A";
     final url = Uri.parse("$apiBaseUrl/");
-    print(baseUrl);
     final body = jsonEncode({
       'email': email,
       'password': password,
@@ -75,7 +74,7 @@ class AuthRepository {
   ////AUTHENTICATE DEVICE/////
 
   Future<Map<String, dynamic>> authenticateDevice(String otp) async {
-    final url = Uri.parse("$baseUrl/user/authorizeDevice");
+    final url = Uri.parse("$apiBaseUrl/user/authorizeDevice");
     final xpubs = await getStoredXpubs();
 
     if (xpubs['xpub1'] == null || xpubs['xpub2'] == null) {
@@ -123,7 +122,7 @@ class AuthRepository {
   ////RESET PASSWORD////
 
   Future<bool> resetPassword(String email) async {
-    final url = Uri.parse('$baseUrl/user/forgotPassword');
+    final url = Uri.parse('$apiBaseUrl/user/forgotPassword');
     final String basicAuth =
         'Basic ${base64Encode(utf8.encode('x-api:$email'))}';
 

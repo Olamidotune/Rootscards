@@ -20,7 +20,7 @@ import '../src/presentation/screens/space/space_screen.dart';
 import '../src/presentation/screens/splash_screen/splash_screen.dart';
 import 'package:rootscards/repos/repos.dart';
 
-void main() async {
+Future<void> main() async {
   await dotenv.load(fileName: ".env.production");
   WidgetsFlutterBinding.ensureInitialized();
 
