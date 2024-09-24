@@ -6,8 +6,8 @@ import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/helper/helper_function.dart';
-import 'package:rootscards/presentation/screens/auth/sign_in/sign_in.dart';
-import 'package:rootscards/presentation/screens/onboarding/onboarding_screen.dart';
+import '../auth/sign_in/sign_in.dart';
+import '../onboarding/onboarding_screen.dart';
 import 'package:rootscards/services/auth_services.dart';
 
 class SplashScreen extends StatefulWidget {

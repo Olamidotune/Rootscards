@@ -11,12 +11,14 @@ class AppSpacing {
   static double horizontalSpacingMedium = 15.w;
   static double horizontalSpacingSmall= 5.w;
 
+//vertical spacing
   static Widget verticalSpaceTiny = SizedBox(height: 5.h);
   static Widget verticalSpaceSmall = SizedBox(height: 10.h);
   static Widget verticalSpaceMedium = SizedBox(height: 25.h);
   static Widget verticalSpaceLarge = SizedBox(height: 40.h);
   static Widget verticalSpaceHuge = SizedBox(height: 60.h);
 
+//horizontal spacing
   static Widget horizontalSpaceTiny = SizedBox(width: 5.w);
   static Widget horizontalSpaceSmall = SizedBox(width: 10.w);
   static Widget horizontalSpaceMedium = SizedBox(width: 25.w);
