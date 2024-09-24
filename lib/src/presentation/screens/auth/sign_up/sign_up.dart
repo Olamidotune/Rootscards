@@ -27,7 +27,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _emailController = TextEditingController();
 
   bool _busy = false;
 
@@ -98,8 +98,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     busy: _busy,
                     "Continue",
                     onPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(SecondSignUpScreen.routeName);
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context)
+                            .pushNamed(SecondSignUpScreen.routeName);
+                      }
+
                       // if (_formKey.currentState!.validate()) {
                       //   _signUp(
                       //       _emailController.text,
@@ -219,11 +222,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         ));
   }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _emailController.dispose();
+  //   super.dispose();
+  // }
 
   Future<void> _signUp(
     String email,

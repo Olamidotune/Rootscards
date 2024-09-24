@@ -116,6 +116,15 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                                       Icons.visibility_off,
                                     ),
                             ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please provide a password";
+                              }
+                              if (value.length < 6) {
+                                return "Password cannot be less than 6 characters";
+                              }
+                              return null;
+                            },
                             obscureText: _obscureText,
                             controller: _passwordController,
                             textInputAction: TextInputAction.go,
@@ -143,18 +152,12 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                   Button(
                     pill: true,
                     busy: _busy,
-                    "Continue",
+                    "Create Account",
                     onPressed: () {
-                      // if (_formKey.currentState!.validate()) {
-                      //   _signUp(
-                      //       _emailController.text,
-                      //       _fullNameController.text,
-                      //       _passwordController.text,
-                      //       _passwordController.text,
-                      //       "individual",
-                      //       "nil",
-                      //       context);
-                      // }
+                      if (_formKey.currentState!.validate()) {
+                        Navigator.of(context)
+                            .popAndPushNamed(SignInScreen.routeName);
+                      }
                     },
                   ),
                   SizedBox(
