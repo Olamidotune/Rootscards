@@ -1,14 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/app.dart';
 import 'package:rootscards/helper/helper_function.dart';
 
 class AuthRepository {
+  final String apiBaseUrl = dotenv.env['BASE_URL'] ?? '';
   Future<Map<String, dynamic>> login(String email, String password) async {
     String deviceId = await HelperFunction.getDeviceIDfromSF() ?? "N/A";
-    final url = Uri.parse("$baseUrl/");
+    final url = Uri.parse("$apiBaseUrl/");
+    print(baseUrl);
     final body = jsonEncode({
       'email': email,
       'password': password,
@@ -57,7 +60,7 @@ class AuthRepository {
     await HelperFunction.saveUserEmailSF(userDetails['email']);
     await HelperFunction.saveSpaceNameSF(userDetails['brand']);
     debugPrint("$userDetails");
-     debugPrint("$userDetails");
+    debugPrint("$userDetails");
 
     if (userDetails['banners'] != null) {
       await _saveBanners(userDetails['banners']);
@@ -158,9 +161,6 @@ class AuthRepository {
       return false;
     }
   }
-
-
-
 }
 
 Future<Map<String, String?>> getStoredXpubs() async {
