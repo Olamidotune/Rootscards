@@ -247,80 +247,6 @@ class _SignInScreenState extends State<SignInScreen>
                                                   ),
                                           ),
                                         ),
-                                        // TextFormField(
-                                        //   keyboardType: TextInputType.text,
-                                        //   controller: _passwordController,
-                                        //   focusNode: _passwordFocusNode,
-                                        //   textInputAction: TextInputAction.go,
-                                        //   obscureText: _obscurePassword,
-                                        //   onFieldSubmitted: (_) => {
-                                        //     if (_formKey.currentState!
-                                        //         .validate())
-                                        //       {
-                                        //         setState(() => _busy = !_busy),
-                                        //         context.read<AuthBloc>().add(
-                                        //             LoginRequested(
-                                        //                 _emailController.text,
-                                        //                 _passwordController
-                                        //                     .text))
-                                        //       }
-                                        //   },
-                                        //   validator: (value) {
-                                        //     if (value == null ||
-                                        //         value.isEmpty) {
-                                        //       return "Please provide a password.";
-                                        //     }
-                                        //     return null;
-                                        //   },
-                                        //   style: Theme.of(context)
-                                        //       .textTheme
-                                        //       .bodySmall!
-                                        //       .copyWith(
-                                        //         color: Colors.black,
-                                        //       ),
-                                        //   autofillHints: const [
-                                        //     AutofillHints.email
-                                        //   ],
-                                        //   decoration: InputDecoration(
-                                        //     contentPadding:
-                                        //         EdgeInsets.symmetric(
-                                        //             vertical: .035.sh,
-                                        //             horizontal: 25.w),
-                                        //     suffixIcon: IconButton(
-                                        //         padding:
-                                        //             EdgeInsets.only(right: 30),
-                                        //         onPressed: () => setState(() =>
-                                        //             _obscurePassword =
-                                        //                 !_obscurePassword),
-                                        //         icon: _obscurePassword
-                                        //             ? const Icon(
-                                        //                 Icons.visibility)
-                                        //             : const Icon(
-                                        //                 Icons.visibility_off)),
-                                        //     hintText: "Password",
-                                        //     hintStyle: Theme.of(context)
-                                        //         .textTheme
-                                        //         .bodySmall!
-                                        //         .copyWith(
-                                        //             color: Colors.black26,
-                                        //             fontWeight:
-                                        //                 FontWeight.bold),
-                                        //     border: OutlineInputBorder(
-                                        //       borderRadius: BorderRadius.all(
-                                        //         Radius.circular(60.w),
-                                        //       ),
-                                        //     ),
-                                        //     focusedBorder: OutlineInputBorder(
-                                        //       borderSide: BorderSide(
-                                        //           color: Colors.green),
-                                        //       borderRadius: BorderRadius.all(
-                                        //         Radius.circular(
-                                        //           60.w,
-                                        //         ),
-                                        //       ),
-                                        //     ),
-                                        //   ),
-                                        // ),
                                         AppSpacing.verticalSpaceSmall,
                                         Row(
                                           mainAxisAlignment:
@@ -335,7 +261,7 @@ class _SignInScreenState extends State<SignInScreen>
                                                     onChanged:
                                                         (bool? checkTerms) {},
                                                   ),
-                                                  Text("Accept Terms")
+                                                  Text("Remember me")
                                                 ],
                                               ),
                                             ),
