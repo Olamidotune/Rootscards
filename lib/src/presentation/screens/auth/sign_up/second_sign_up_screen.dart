@@ -70,7 +70,7 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                           fontWeight: FontWeight.bold),
                     ),
                   ),
-                  AppSpacing.verticalSpaceLarge,
+                  AppSpacing.verticalSpaceMedium,
                   Form(
                     key: _formKey,
                     child: AutofillGroup(
@@ -88,7 +88,7 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                               return null;
                             },
                           ),
-                          AppSpacing.verticalSpaceMedium,
+                          AppSpacing.verticalSpaceSmall,
                           CustomTextField(
                             controller: _phoneNumberController,
                             textInputAction: TextInputAction.next,
@@ -102,7 +102,7 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                               return null;
                             },
                           ),
-                          AppSpacing.verticalSpaceMedium,
+                          AppSpacing.verticalSpaceSmall,
                           CustomTextField(
                             suffixIcon: IconButton(
                               onPressed: () {
@@ -161,7 +161,7 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                     },
                   ),
                   SizedBox(
-                    height: 0.1.sh,
+                    height: 0.05.sh,
                   ),
                   Text(
                     "Or sign up with",
@@ -262,11 +262,11 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
         ));
   }
 
-  @override
-  void dispose() {
-    _userNameController.dispose();
-    _phoneNumberController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _userNameController.dispose();
+  //   _phoneNumberController.dispose();
+  //   _passwordController.dispose();
+  //   super.dispose();
+  // }
 }

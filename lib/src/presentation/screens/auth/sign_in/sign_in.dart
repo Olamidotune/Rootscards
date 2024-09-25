@@ -38,6 +38,7 @@ class _SignInScreenState extends State<SignInScreen>
   bool _busy = false;
   bool _obscurePassword = true;
   AuthServices authServices = AuthServices();
+  bool isRemembered = false;
 
   late TabController _tabController;
   @override
@@ -325,14 +326,18 @@ class _SignInScreenState extends State<SignInScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Text(
-                                              "Remember me",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.copyWith(
-                                                    color: Colors.black,
+                                            Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Row(
+                                                children: [
+                                                  Checkbox(
+                                                    value: isRemembered,
+                                                    onChanged:
+                                                        (bool? checkTerms) {},
                                                   ),
+                                                  Text("Accept Terms")
+                                                ],
+                                              ),
                                             ),
                                             GestureDetector(
                                               onTap: () => Navigator.of(context)

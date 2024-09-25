@@ -71,7 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       "Create Account",
                       style: context.textTheme.titleLarge?.copyWith(
                           color: Colors.black,
-                          fontSize: 36,
+                          fontSize: 36.sp,
                           fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -116,7 +116,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     },
                   ),
                   SizedBox(
-                    height: 0.25.sh,
+                    height: 0.30.sh,
                   ),
                   Text(
                     "Or sign up with",
@@ -186,7 +186,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ],
                     ),
                   ),
-                  AppSpacing.verticalSpaceHuge,
+                  AppSpacing.verticalSpaceMedium,
                   // SizedBox(
                   //   height: 0.90 * height <= 700
                   //       ? .03.h * height
