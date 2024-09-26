@@ -30,8 +30,9 @@ class Button extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-       height: .07.sh,
+       height: 45,
       child: ElevatedButton(
+        
         style: ButtonStyle(
           backgroundColor:
               WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {

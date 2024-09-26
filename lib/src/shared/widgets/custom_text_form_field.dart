@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
@@ -28,6 +28,7 @@ class CustomTextField extends StatelessWidget {
     this.textCapitalization,
     this.onEditingComplete,
     required this.textInputType,
+    this.inputFormatters,
   });
 
   final TextEditingController? controller;
@@ -53,11 +54,13 @@ class CustomTextField extends StatelessWidget {
   final TextCapitalization? textCapitalization;
   final VoidCallback? onEditingComplete;
   final TextInputType textInputType;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       keyboardType: textInputType,
+      inputFormatters: inputFormatters,
       controller: controller,
       textInputAction: textInputAction,
       validator: validator,
@@ -69,8 +72,7 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         prefix: prefix,
         prefixIcon: prefixIcon,
-        contentPadding:
-            EdgeInsets.symmetric(vertical: .025.sh, horizontal: 25.w),
+        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
         hintStyle: Theme.of(context)
             .textTheme
             .bodySmall!
@@ -90,15 +92,6 @@ class CustomTextField extends StatelessWidget {
           ),
         ),
       ),
-      // validator: (value) {
-      //   if (EmailValidator.validate(value?.trim() ?? "")) {
-      //     return null;
-      //   }
-      //   return "Please provide a valid email address";
-      // },
-      // style: Theme.of(context).textTheme.bodySmall!.copyWith(
-      //       color: Colors.black,
-      //     ),
     );
   }
 }

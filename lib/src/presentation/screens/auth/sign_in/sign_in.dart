@@ -10,7 +10,7 @@ import 'package:rootscards/blocs/auth/auth_event.dart';
 import 'package:rootscards/blocs/auth/auth_state.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
-import 'package:rootscards/src/shared/widgets/text_field.dart';
+import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import '../otp.dart';
 import '../passowrd/forgot_password.dart';
 import '../../space/space_screen.dart';
@@ -139,7 +139,7 @@ class _SignInScreenState extends State<SignInScreen>
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 5.w),
                   child: Container(
-                    height: .07.sh,
+                    height: 45,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60.w),
                         color: Colors.grey.shade200),
@@ -423,10 +423,11 @@ class _SignInScreenState extends State<SignInScreen>
                           physics: BouncingScrollPhysics(),
                           child: Column(
                             children: [
-                              TextFormField(
-                                keyboardType: TextInputType.phone,
+                              CustomTextField(
                                 controller: _phoneNumberController,
-                                textInputAction: TextInputAction.next,
+                                textInputAction: TextInputAction.go,
+                                hintText: 'Phone number',
+                                textInputType: TextInputType.number,
                                 inputFormatters: [
                                   FilteringTextInputFormatter.allow(
                                     RegExp(
@@ -434,35 +435,6 @@ class _SignInScreenState extends State<SignInScreen>
                                     ),
                                   ),
                                 ],
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodySmall!
-                                    .copyWith(
-                                      color: Colors.black,
-                                    ),
-                                decoration: InputDecoration(
-                                  contentPadding: EdgeInsets.symmetric(
-                                      vertical: .035.sh, horizontal: 25.w),
-                                  hintText: "Phone number",
-                                  hintStyle: const TextStyle(
-                                      color: Colors.black26,
-                                      fontWeight: FontWeight.bold),
-                                  border: OutlineInputBorder(
-                                    borderSide:
-                                        BorderSide(color: Colors.grey.shade200),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(60.w),
-                                    ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.green),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        60.w,
-                                      ),
-                                    ),
-                                  ),
-                                ),
                               ),
                               AppSpacing.verticalSpaceMedium,
                               Button(
