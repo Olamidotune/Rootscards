@@ -4,6 +4,7 @@ import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
+import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 
 class PasswordRecovery extends StatefulWidget {
   static const String routeName = "password_recovery_screen";
@@ -19,8 +20,8 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
   final FocusNode _passwordFocusNode1 = FocusNode();
   final FocusNode _passwordFocusNode2 = FocusNode();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _obscurePassword1 = true;
-  bool _obscurePassword2 = true;
+  bool _obscurePassword1 = false;
+  bool _obscurePassword2 = false;
 // ignore: prefer_final_fields
   bool _busy = false;
 
@@ -82,66 +83,56 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                             context.textTheme.bodyMedium!.copyWith(color: GREY),
                       ),
                       AppSpacing.verticalSpaceMedium,
-                      TextFormField(
-                        keyboardType: TextInputType.text,
+                      CustomTextField(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword1
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: BLACK,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword1 = !_obscurePassword1;
+                            });
+                          },
+                        ),
+                        hintText: 'Password',
+                        textInputType: TextInputType.text,
                         controller: _passwordController1,
                         focusNode: _passwordFocusNode1,
                         textInputAction: TextInputAction.go,
                         obscureText: _obscurePassword1,
-                        // onFieldSubmitted: (_) => _signIn(
-                        //     _emailController.text,
-                        //     _passwordController.text,
-                        //     context),
-
+                        inputFormatters: [],
+                        autoCorrect: true,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Please provide a password.";
                           }
                           return null;
                         },
-                        style: context.textTheme.bodySmall!.copyWith(
-                          color: BLACK,
-                        ),
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: .035.sh, horizontal: 25.w),
-                          suffixIcon: IconButton(
-                              onPressed: () => setState(
-                                  () => _obscurePassword1 = !_obscurePassword1),
-                              icon: _obscurePassword1
-                                  ? const Icon(Icons.visibility)
-                                  : const Icon(Icons.visibility_off)),
-                          hintText: "Password",
-                          hintStyle: const TextStyle(
-                              color: Colors.black26,
-                              fontWeight: FontWeight.bold),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(60),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: BUTTONGREEN),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                60,
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                       AppSpacing.verticalSpaceSmall,
-                      TextFormField(
-                        keyboardType: TextInputType.text,
+                      CustomTextField(
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword2
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: BLACK,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword2 = !_obscurePassword2;
+                            });
+                          },
+                        ),
+                        hintText: 'Confirm Password',
+                        textInputType: TextInputType.text,
                         controller: _passwordController2,
                         focusNode: _passwordFocusNode2,
                         textInputAction: TextInputAction.go,
                         obscureText: _obscurePassword2,
-                        // onFieldSubmitted: (_) => _signIn(
-                        //     _emailController.text,
-                        //     _passwordController.text,
-                        //     context),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return "Please provide a password.";
@@ -151,40 +142,9 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                           }
                           return null;
                         },
-                        style: context.textTheme.bodySmall!.copyWith(
-                          color: BLACK,
-                        ),
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: .035.sh, horizontal: 25.w),
-                          suffixIcon: IconButton(
-                              onPressed: () => setState(
-                                  () => _obscurePassword2 = !_obscurePassword2),
-                              icon: _obscurePassword2
-                                  ? const Icon(Icons.visibility)
-                                  : const Icon(Icons.visibility_off)),
-                          hintText: "Confirm Password",
-                          hintStyle: const TextStyle(
-                              color: Colors.black26,
-                              fontWeight: FontWeight.bold),
-                          border: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(60),
-                            ),
-                          ),
-                          focusedBorder: const OutlineInputBorder(
-                            borderSide: BorderSide(color: BUTTONGREEN),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                60,
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                       SizedBox(
-                      height: .4.sh,
+                        height: .4.sh,
                       ),
                       Button(
                         busy: _busy,

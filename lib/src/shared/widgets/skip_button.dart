@@ -15,7 +15,7 @@ class SkipButton extends StatelessWidget {
         bottom: 5,
       ),
       width: .2.sw,
-      height: .04.sh,
+      height: .05.sh,
       decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(30),

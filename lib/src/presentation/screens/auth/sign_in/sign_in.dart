@@ -213,6 +213,7 @@ class _SignInScreenState extends State<SignInScreen>
                                     child: Column(
                                       children: [
                                         CustomTextField(
+                                          height: .1,
                                           controller: _emailController,
                                           hintText: "Email or Username",
                                           validator: (value) {

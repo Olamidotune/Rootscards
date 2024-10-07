@@ -26,7 +26,7 @@ class GetStartedButton extends StatelessWidget {
           bottom: 5,
         ),
         width: double.infinity,
-            height: .05.sh,
+            height: .06.sh,
         decoration: BoxDecoration(
           color: BLACK,
           borderRadius: BorderRadius.circular(30),

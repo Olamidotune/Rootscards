@@ -72,7 +72,7 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         prefix: prefix,
         prefixIcon: prefixIcon,
-        contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 25),
+        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 25),
         hintStyle: Theme.of(context)
             .textTheme
             .bodySmall!

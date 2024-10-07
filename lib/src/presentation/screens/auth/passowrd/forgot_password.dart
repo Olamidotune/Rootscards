@@ -10,6 +10,7 @@ import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import 'password_recovery.dart';
 import '../sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
@@ -105,8 +106,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                             context.textTheme.bodyMedium!.copyWith(color: GREY),
                       ),
                       AppSpacing.verticalSpaceMedium,
-                      TextFormField(
-                        keyboardType: TextInputType.emailAddress,
+                      CustomTextField(
+                        hintText: "Email or Username",
+                        textInputType: TextInputType.emailAddress,
                         controller: _emailController,
                         textInputAction: TextInputAction.next,
                         validator: (value) {
@@ -126,32 +128,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   ))
                             }
                         },
-                        style: context.textTheme.bodySmall!.copyWith(
-                          color: BLACK,
-                        ),
-                        autofillHints: const [AutofillHints.email],
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: .035.sh, horizontal: 25.w),
-                          hintText: "Email or Username",
-                          hintStyle: const TextStyle(
-                              color: Colors.black26,
-                              fontWeight: FontWeight.bold),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide(color: GREY2),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(60.w),
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: BUTTONGREEN),
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(
-                                30.w,
-                              ),
-                            ),
-                          ),
-                        ),
                       ),
                       AppSpacing.verticalSpaceMedium,
                       Button(

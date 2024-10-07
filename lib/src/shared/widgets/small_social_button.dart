@@ -17,7 +17,7 @@ class SmallSocialButton extends StatelessWidget {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        height: .07.sh,
+        height: .06.sh,
         padding: EdgeInsets.symmetric(vertical: .02.sh),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(60.w),
