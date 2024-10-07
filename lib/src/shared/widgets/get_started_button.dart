@@ -22,14 +22,19 @@ class GetStartedButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
+        padding: EdgeInsets.only(
+          bottom: 5,
+        ),
         width: double.infinity,
-          height: .08.sh,
+            height: .05.sh,
         decoration: BoxDecoration(
           color: BLACK,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: BLACK),
+          border: Border.all(color: THEME),
+          
         ),
-        child: Center(
+        child: Align(
+          alignment: Alignment.center,
           child: Text(
             "Get Started",
             style: TextStyle(

@@ -18,16 +18,20 @@ class LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
       child: Container(
+        padding: EdgeInsets.only(
+          bottom: 5,
+        ),
         width: double.infinity,
-      height: .08.sh,
+        height: .05.sh,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           border: Border.all(color: BLACK),
         ),
-        child: Center(
+        child: Align(
+          alignment: Alignment.center,
           child: Text(
             "Login",
             style: TextStyle(
