@@ -10,13 +10,28 @@ class SkipButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: .30.w, ),
+    return Container(
+      padding: EdgeInsets.only(
+        bottom: 5,
+      ),
+      width: .2.sw,
+      height: .04.sh,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.black),
+      ),
       child: GestureDetector(
         onTap: onTap,
-        child: Image.asset(
-          "assets/images/skip_button.png",
-          height: .05.sh,
+        child: Center(
+          child: Text(
+            "Skip",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );

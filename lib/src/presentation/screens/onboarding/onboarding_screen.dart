@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
-import 'package:rootscards/extensions/build_context.dart';
 import '../../get_started_screen.dart';
 import '../auth/sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/carousel_inidicator.dart';
@@ -106,21 +105,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 1,
-                  child: GetStartedButton(
-                    onTap: () => Navigator.of(context)
-                        .pushNamed(GetStartedScreen.routeName),
-                  ),
+                GetStartedButton(
+                  onTap: () => Navigator.of(context)
+                      .pushNamed(GetStartedScreen.routeName),
                 ),
                 AppSpacing.verticalSpaceSmall,
-                Expanded(
-                  flex: 1,
-                  child: LoginButton(
-                    onTap: () =>
-                        Navigator.of(context).pushNamed(SignInScreen.routeName),
-                    textColor: BLACK,
-                  ),
+                LoginButton(
+                  onTap: () =>
+                      Navigator.of(context).pushNamed(SignInScreen.routeName),
+                  textColor: BLACK,
                 ),
                 AppSpacing.verticalSpaceMedium
               ],
@@ -167,7 +160,7 @@ class _CarouselImage extends StatelessWidget {
            AppSpacing.verticalSpaceMedium,
           Text(
             title,
-            style: context.textTheme.bodyLarge!.copyWith(
+            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
               fontFamily: "LoveYaLikeASister",
               fontSize: 30.sp,
             ),
@@ -177,7 +170,8 @@ class _CarouselImage extends StatelessWidget {
           Text(
             subTitle,
             textAlign: TextAlign.center,
-            style: context.textTheme.bodyMedium!.copyWith(
+            style: Theme.of(context).textTheme.bodySmall!.copyWith(
+              color: BLACK,
               fontSize: 16.sp,
             ),
           ),

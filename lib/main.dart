@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
 import '../src/presentation/get_started_screen.dart';
 import '../src/presentation/screens/auth/passowrd/forgot_password.dart';
@@ -70,11 +71,13 @@ class MyApp extends StatelessWidget {
                       useMaterial3: true,
                       textTheme: TextTheme(
                         bodyMedium: TextStyle(
+                          fontFamily: 'Lato',
                           fontSize: 14.sp,
                         ),
                         bodySmall: TextStyle(
                           fontSize: 12.sp,
-                          color: Colors.amber,
+                          color: BLACK,
+                          fontFamily: 'Lato',
                         ),
                         titleLarge: TextStyle(color: Colors.black),
                         titleMedium: TextStyle(color: Colors.black),
