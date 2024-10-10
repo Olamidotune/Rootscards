@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
+import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
 import '../src/presentation/get_started_screen.dart';
@@ -61,6 +62,8 @@ class MyApp extends StatelessWidget {
                     BlocProvider(
                       create: (context) => ForgotPasswordBloc(authRepository),
                     ),
+                    BlocProvider(
+                        create: (context) => SignUpBloc(authRepository)),
                   ],
                   child: MaterialApp(
                     debugShowCheckedModeBanner: false,

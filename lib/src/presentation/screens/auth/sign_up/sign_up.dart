@@ -5,8 +5,10 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http/http.dart' as http;
+import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
@@ -27,7 +29,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   bool _busy = false;
 
@@ -55,167 +57,198 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 icon: Icon(Icons.info_outline),
               ),
             ]),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "Create Account",
-                      style: context.textTheme.titleLarge?.copyWith(
-                          color: Colors.black,
-                          fontSize: 36.sp,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  AppSpacing.verticalSpaceLarge,
-                  Form(
-                    key: _formKey,
-                    child: AutofillGroup(
-                      child: CustomTextField(
-                        textInputAction: TextInputAction.go,
-                        hintText: "Enter your email here",
-                        textInputType: TextInputType.emailAddress,
-                        validator: (value) {
-                          if (EmailValidator.validate(value?.trim() ?? "")) {
-                            return null;
-                          }
-                          return "Please provide a valid email address";
-                        },
+        body: BlocListener<SignUpBloc, SignUpState>(
+          listener: (context, state) {
+            if (state is CheckSignUpMailLoading) {
+              setState(() => _busy = true);
+            } else {
+              setState(() => _busy = false);
+            }
+            if (state is CheckSignUpMailSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                ),
+              );
+            }
+            if (state is CheckSignUpMailFailed) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                ),
+              );
+              Navigator.of(context).pushNamed(SecondSignUpScreen.routeName);
+            } else if (state is CheckSignUpMailError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.error),
+                ),
+              );
+            }
+          },
+          child: SafeArea(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                alignment: Alignment.center,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Create Account",
+                        style: context.textTheme.titleLarge?.copyWith(
+                            color: Colors.black,
+                            fontSize: 36.sp,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                  AppSpacing.verticalSpaceSmall,
-                  Button(
-                    pill: true,
-                    busy: _busy,
-                    "Continue",
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context)
-                            .pushNamed(SecondSignUpScreen.routeName);
-                      }
+                    AppSpacing.verticalSpaceLarge,
+                    Form(
+                      key: _formKey,
+                      child: AutofillGroup(
+                        child: Column(
+                          children: [
+                            CustomTextField(
+                              controller: _emailController,
+                              textInputAction: TextInputAction.go,
+                              hintText: "Enter your email here",
+                              textInputType: TextInputType.emailAddress,
+                              validator: (value) {
+                                if (EmailValidator.validate(
+                                    value?.trim() ?? "")) {
+                                  return null;
+                                }
+                                return "Please provide a valid email address";
+                              },
+                            ),
+                            AppSpacing.verticalSpaceSmall,
+                            Button(
+                              pill: true,
+                              busy: _busy,
+                              "Continue",
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  context
+                                      .read<SignUpBloc>()
+                                      .add(CheckSignUpMail(
+                                        _emailController.text,
+                                        'password',
+                                      ));
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                      // if (_formKey.currentState!.validate()) {
-                      //   _signUp(
-                      //       _emailController.text,
-                      //       _fullNameController.text,
-                      //       _passwordController.text,
-                      //       _passwordController.text,
-                      //       "individual",
-                      //       "nil",
-                      //       context);
-                      // }
-                    },
-                  ),
-                  SizedBox(
-                    height: 0.30.sh,
-                  ),
-                  Text(
-                    "Or sign up with",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: Colors.grey),
-                  ),
-                  AppSpacing.verticalSpaceSmall,
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SmallSocialButton(
-                          iconName: "facebook",
-                          onPressed: () {},
-                        ),
-                      ),
-                      AppSpacing.horizontalSpaceSmall,
-                      Expanded(
-                        child: SmallSocialButton(
-                          iconName: "google",
-                          onPressed: () {},
-                        ),
-                      ),
-                      AppSpacing.horizontalSpaceSmall,
-                      Expanded(
-                        child: SmallSocialButton(
-                          iconName: "apple",
-                          onPressed: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                  AppSpacing.verticalSpaceMedium,
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: "By continuing, you agree to Pipel's ",
-                      style: TextStyle(
-                          fontFamily: "lato",
-                          fontSize: 13.sp,
-                          color: Colors.grey),
+                    SizedBox(
+                      height: 0.30.sh,
+                    ),
+                    Text(
+                      "Or sign up with",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: Colors.grey),
+                    ),
+                    AppSpacing.verticalSpaceSmall,
+                    Row(
                       children: [
-                        TextSpan(
-                          text: "Terms of Service\n",
-                          style: TextStyle(
-                              fontFamily: "lato",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.sp,
-                              color: Colors.black),
+                        Expanded(
+                          child: SmallSocialButton(
+                            iconName: "facebook",
+                            onPressed: () {},
+                          ),
                         ),
-                        TextSpan(
-                          text: " and ",
-                          style: TextStyle(
-                              fontFamily: "lato",
-                              fontSize: 13.sp,
-                              color: Colors.grey),
+                        AppSpacing.horizontalSpaceSmall,
+                        Expanded(
+                          child: SmallSocialButton(
+                            iconName: "google",
+                            onPressed: () {},
+                          ),
                         ),
-                        TextSpan(
-                          text: "Privacy Policy",
-                          style: TextStyle(
-                              fontFamily: "lato",
-                              fontWeight: FontWeight.bold,
-                              fontSize: 13.sp,
-                              color: Colors.black),
-                        )
+                        AppSpacing.horizontalSpaceSmall,
+                        Expanded(
+                          child: SmallSocialButton(
+                            iconName: "apple",
+                            onPressed: () {},
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                  AppSpacing.verticalSpaceMedium,
-                  // SizedBox(
-                  //   height: 0.90 * height <= 700
-                  //       ? .03.h * height
-                  //       : height * .19.h,
-                  // ),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                        text: "Already have an account? ",
+                    AppSpacing.verticalSpaceMedium,
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                        text: "By continuing, you agree to Pipel's ",
                         style: TextStyle(
                             fontFamily: "lato",
                             fontSize: 13.sp,
                             color: Colors.grey),
                         children: [
                           TextSpan(
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () => Navigator.of(context).pushNamed(
-                                    SignInScreen.routeName,
-                                  ),
-                            text: " Login",
+                            text: "Terms of Service\n",
                             style: TextStyle(
                                 fontFamily: "lato",
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13.sp,
                                 color: Colors.black),
                           ),
-                        ]),
-                  ),
-                ],
+                          TextSpan(
+                            text: " and ",
+                            style: TextStyle(
+                                fontFamily: "lato",
+                                fontSize: 13.sp,
+                                color: Colors.grey),
+                          ),
+                          TextSpan(
+                            text: "Privacy Policy",
+                            style: TextStyle(
+                                fontFamily: "lato",
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13.sp,
+                                color: Colors.black),
+                          )
+                        ],
+                      ),
+                    ),
+                    AppSpacing.verticalSpaceMedium,
+                    // SizedBox(
+                    //   height: 0.90 * height <= 700
+                    //       ? .03.h * height
+                    //       : height * .19.h,
+                    // ),
+                    RichText(
+                      textAlign: TextAlign.center,
+                      text: TextSpan(
+                          text: "Already have an account? ",
+                          style: TextStyle(
+                              fontFamily: "lato",
+                              fontSize: 13.sp,
+                              color: Colors.grey),
+                          children: [
+                            TextSpan(
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () => Navigator.of(context).pushNamed(
+                                      SignInScreen.routeName,
+                                    ),
+                              text: " Login",
+                              style: TextStyle(
+                                  fontFamily: "lato",
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13.sp,
+                                  color: Colors.black),
+                            ),
+                          ]),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
