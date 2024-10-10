@@ -18,14 +18,19 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       CheckSignUpMail event, Emitter<SignUpState> emit) async {
     emit(CheckSignUpMailLoading());
     try {
-      final bool emailExists = await authRepository.checkEmail(
+      final bool emailExists = await authRepository.checkSignUpEmail(
         event.email,
         event.password,
       );
       if (emailExists) {
-        emit(CheckSignUpMailSuccess(message: "Email exists"));
+        emit(
+          CheckSignUpMailSuccess(
+            message:
+                "Opps! Email already exists, login with your existing email and password",
+          ),
+        );
       } else {
-        emit(CheckSignUpMailFailed("Email does not exist"));
+        emit(CheckSignUpMailFailed("Compelete your sign up process"));
       }
     } catch (e) {
       print(e);

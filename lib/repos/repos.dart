@@ -73,7 +73,7 @@ class AuthRepository {
   }
 
   ////Sign UP////
-  Future<bool> checkEmail(String email, String password) async {
+  Future<bool> checkSignUpEmail(String email, String password) async {
     final url = Uri.parse('$apiBaseUrl/check');
     final body = jsonEncode({
       'email': email,
@@ -93,6 +93,7 @@ class AuthRepository {
         print(responseData);
         return true;
       } else if (responseData['status'] == '401') {
+        print(responseData);
         return false;
       } else {
         throw Exception(
