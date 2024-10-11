@@ -18,11 +18,11 @@ class SignUpScreen extends HookWidget {
   const SignUpScreen({super.key});
   static const String routeName = "sign_up screen";
 
+  @override
   Widget build(BuildContext context) {
     final formKey = useMemoized(GlobalKey<FormState>.new);
     final busy = useState(false);
     final emailController = useTextEditingController();
-
 
     return Scaffold(
         appBar: AppBar(
@@ -50,6 +50,8 @@ class SignUpScreen extends HookWidget {
           listener: (context, state) {
             if (state is CheckSignUpMailLoading) {
               busy.value = true;
+            } else {
+              busy.value = false;
             }
 
             if (state is CheckSignUpMailSuccess) {
@@ -128,7 +130,8 @@ class SignUpScreen extends HookWidget {
                                         emailController.value.text,
                                         'password',
                                       ));
-                                      debugPrint("Email: ${emailController.value.text}");
+                                  debugPrint(
+                                      "Email: ${emailController.value.text}");
                                 }
                               },
                             ),
