@@ -1,15 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
-
-import 'dart:async';
-import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:http/http.dart' as http;
 import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
-import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
@@ -17,24 +13,17 @@ import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import '../sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-class SignUpScreen extends StatefulWidget {
-  static const String routeName = "sign_up screen";
+class SignUpScreen extends HookWidget {
   const SignUpScreen({super.key});
+  static const String routeName = "sign_up screen";
 
-  @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
-}
-
-class _SignUpScreenState extends State<SignUpScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-
-  bool _busy = false;
-
-  @override
   Widget build(BuildContext context) {
+    final formKey = useMemoized(GlobalKey<FormState>.new);
+    final busy = useState(false);
+    final emailController = useTextEditingController();
+
+
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
@@ -60,10 +49,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         body: BlocListener<SignUpBloc, SignUpState>(
           listener: (context, state) {
             if (state is CheckSignUpMailLoading) {
-              setState(() => _busy = true);
-            } else {
-              setState(() => _busy = false);
+              busy.value = true;
             }
+
             if (state is CheckSignUpMailSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -109,12 +97,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     AppSpacing.verticalSpaceLarge,
                     Form(
-                      key: _formKey,
+                      key: formKey,
                       child: AutofillGroup(
                         child: Column(
                           children: [
                             CustomTextField(
-                              controller: _emailController,
+                              controller: emailController,
                               textInputAction: TextInputAction.go,
                               hintText: "Enter your email here",
                               textInputType: TextInputType.emailAddress,
@@ -129,16 +117,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             AppSpacing.verticalSpaceSmall,
                             Button(
                               pill: true,
-                              busy: _busy,
+                              busy: busy.value,
                               "Continue",
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
+                                if (formKey.currentState!.validate()) {
+                                  busy.value = true;
                                   context
                                       .read<SignUpBloc>()
                                       .add(CheckSignUpMail(
-                                        _emailController.text,
+                                        emailController.value.text,
                                         'password',
                                       ));
+                                      debugPrint("Email: ${emailController.value.text}");
                                 }
                               },
                             ),
@@ -253,228 +243,5 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
         ));
-  }
-
-  // @override
-  // void dispose() {
-  //   _emailController.dispose();
-  //   super.dispose();
-  // }
-
-  Future<void> _signUp(
-    String email,
-    String fullName,
-    String password,
-    String phoneNumber,
-    String account,
-    String referer,
-    BuildContext context,
-  ) async {
-    String apiUrl = 'https://api.idonland.com/signup';
-
-    if (_busy) return;
-    if (_formKey.currentState!.validate()) return;
-    setState(() {
-      setState(() => _busy = true);
-    });
-
-    Timer(const Duration(minutes: 1), () {
-      if (_busy) {
-        ScaffoldMessenger.of(context).showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Colors.white,
-            shadowColor: Colors.red,
-            elevation: 2,
-            leading: const Icon(
-              Icons.error,
-              color: Colors.red,
-            ),
-            content: RichText(
-              text: const TextSpan(
-                text: "Oops!",
-                style: TextStyle(
-                  color: BLACK,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-                children: [
-                  TextSpan(
-                    text: "\nRequest timed out. Please try again.",
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.normal,
-                      fontSize: 11,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                },
-                icon: const Icon(Icons.close),
-              ),
-            ],
-          ),
-        );
-        Future.delayed(const Duration(seconds: 3), () {
-          ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-        });
-        setState(() => _busy = false);
-      }
-    });
-
-    Map<String, String> requestBody = {
-      'email': email,
-      'fullName': fullName,
-      'password': password,
-      'phoneNumber': phoneNumber,
-      'account': account,
-      'referer': referer,
-    };
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('email', email);
-
-    try {
-      final http.Response response = await http.post(
-        Uri.parse(apiUrl),
-        body: json.encode(requestBody),
-        headers: {'Content-Type': 'application/json'},
-      );
-
-      if (response.statusCode == 200) {
-        Map<String, dynamic> responseData = json.decode(response.body);
-        String status = responseData['status'];
-        setState(() => _busy = false);
-        if (status == '200') {
-          debugPrint('Sign Up Successful: $responseData');
-          ScaffoldMessenger.of(context).showMaterialBanner(
-            MaterialBanner(
-              backgroundColor: Colors.white,
-              shadowColor: Colors.green,
-              elevation: 2,
-              leading: const Icon(
-                Icons.check,
-                color: Colors.green,
-              ),
-              content: RichText(
-                text: const TextSpan(
-                  text: "Successful",
-                  style: TextStyle(
-                      color: BLACK,
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15),
-                  children: [
-                    TextSpan(
-                      text: "\nYour account was created successfully",
-                      style: TextStyle(
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.normal,
-                          fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-              actions: const [
-                Icon(
-                  Icons.close,
-                ),
-              ],
-            ),
-          );
-          Future.delayed(const Duration(seconds: 2), () {
-            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-            Navigator.of(context).popAndPushNamed(
-              SignInScreen.routeName,
-            );
-          });
-          setState(() => _busy = false);
-        } else {
-          // User is not authenticated, handle the error
-          debugPrint('Sign Up Failed. Status Code: $status');
-          String errorMessage = responseData['data']['message'];
-          ScaffoldMessenger.of(context).showMaterialBanner(
-            MaterialBanner(
-              backgroundColor: Colors.white,
-              shadowColor: Colors.red,
-              elevation: 2,
-              leading: const Icon(
-                Icons.error,
-                color: Colors.red,
-              ),
-              content: Text(errorMessage),
-              actions: const [
-                Icon(
-                  Icons.close,
-                ),
-              ],
-            ),
-          );
-          Future.delayed(const Duration(seconds: 2), () {
-            ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-          });
-          setState(() => _busy = false);
-        }
-      } else {
-        // Handle other status codes
-        debugPrint('Sign Up Failed. Status Code: ${response.statusCode}');
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            backgroundColor: Colors.red,
-            content: Text("Something went wrong"),
-            duration: Duration(seconds: 2),
-          ),
-        );
-        setState(() => _busy = false);
-      }
-    } catch (e) {
-      debugPrint('Something went wrong: $e');
-
-      ScaffoldMessenger.of(context).showMaterialBanner(
-        MaterialBanner(
-          backgroundColor: Colors.white,
-          shadowColor: Colors.red,
-          elevation: 2,
-          leading: const Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-          content: RichText(
-            text: const TextSpan(
-              text: "Oops!",
-              style: TextStyle(
-                  color: BLACK,
-                  fontFamily: "Poppins",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15),
-              children: [
-                TextSpan(
-                  text: "\nCheck your internet connection and try again.",
-                  style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.normal,
-                      fontSize: 11),
-                ),
-              ],
-            ),
-          ),
-          actions: const [
-            Icon(
-              Icons.close,
-            ),
-          ],
-        ),
-      );
-      Future.delayed(const Duration(seconds: 2), () {
-        ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-      });
-
-      setState(() => _busy = false);
-    }
   }
 }
