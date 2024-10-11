@@ -93,11 +93,15 @@ class AuthRepository {
         print(responseData);
         return true;
       } else if (responseData['status'] == '401') {
+        await HelperFunction.saveUserEmailSF(email);
+      
+        print(email)  ;
         print(responseData);
         return false;
       } else {
         throw Exception(
-            'Unexpected response status: ${responseData['status']}');
+          'Unexpected response status: ${responseData['status']}',
+        );
       }
     } on http.ClientException {
       throw Exception('Network error');

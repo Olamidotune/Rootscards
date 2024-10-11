@@ -10,6 +10,7 @@ import 'package:rootscards/blocs/auth/auth_event.dart';
 import 'package:rootscards/blocs/auth/auth_state.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
+import 'package:rootscards/src/presentation/screens/auth/sign_up/sign_up.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import '../otp.dart';
 import '../passowrd/forgot_password.dart';
@@ -399,7 +400,10 @@ class _SignInScreenState extends State<SignInScreen>
                                       children: [
                                         TextSpan(
                                           recognizer: TapGestureRecognizer()
-                                            ..onTap = () {},
+                                            ..onTap = () {
+                                              Navigator.of(context).pushNamed(
+                                                  SignUpScreen.routeName);
+                                            },
                                           text: " Create Account",
                                           style: TextStyle(
                                               fontFamily: "lato",
