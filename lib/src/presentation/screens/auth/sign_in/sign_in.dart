@@ -4,58 +4,51 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/auth/auth_bloc.dart';
 import 'package:rootscards/blocs/auth/auth_event.dart';
 import 'package:rootscards/blocs/auth/auth_state.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
+import 'package:rootscards/src/presentation/screens/auth/otp.dart';
+import 'package:rootscards/src/presentation/screens/auth/passowrd/forgot_password.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/sign_up.dart';
+import 'package:rootscards/src/presentation/screens/space/space_screen.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
-import '../otp.dart';
-import '../passowrd/forgot_password.dart';
-import '../../space/space_screen.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';
-import 'package:rootscards/services/auth_services.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends HookWidget {
   static const String routeName = "sign_in_screen";
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
-}
-
-class _SignInScreenState extends State<SignInScreen>
-    with TickerProviderStateMixin {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final ScrollController _scrollControllerEmail = ScrollController();
-  final ScrollController _scrollControllerPhone = ScrollController();
-
-  bool _busy = false;
-  bool _obscurePassword = true;
-  AuthServices authServices = AuthServices();
-  bool isRemembered = false;
-
-  late TabController _tabController;
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-    authServices.getDeviceID();
-    _getEmail();
-  }
-
-  _getEmail() async {
-    _emailController.text = await HelperFunction.getUserEmailfromSF() ?? '';
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final formKey = useMemoized(() => GlobalKey<FormState>());
+    final emailController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final scrollControllerEmail = useScrollController();
+    final scrollControllerPhone = useScrollController();
+    final tabController = useTabController(initialLength: 2);
+    final busy = useState(false);
+    final obscurePassword = useState(true);
+    final isRemembered = useState(false);
+    final phoneNumberController = useTextEditingController();
+
+    Future<void> getEmail() async {
+      String email = await HelperFunction.getUserEmailfromSF() ?? '';
+      emailController.text = email;
+    }
+
+    useEffect(() {
+      getEmail();
+
+      return () {
+        emailController.dispose();
+      };
+    }, []);
     final double height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
@@ -83,30 +76,24 @@ class _SignInScreenState extends State<SignInScreen>
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthLoading) {
-            setState(() => _busy = true);
+            busy.value = true;
           } else {
-            setState(() => _busy = false);
-          }
-          if (state is AuthFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-          if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.error)),
-            );
-          } else if (state is AuthSuccess) {
-            if (state.needsDeviceAuth) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Welcome")),
-              );
-              Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Welcome Back")),
-              );
-              Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+            busy.value = false;
+
+            if (state is AuthSuccess) {
+              if (state.needsDeviceAuth) {
+                CustomSnackbar.show(context, "Please verify your device",
+                    isError: false);
+                Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
+              } else {
+                CustomSnackbar.show(context, "Login successful",
+                    isError: false);
+                Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+              }
+            } else if (state is AuthFailure) {
+              CustomSnackbar.show(context, state.message, isError: true);
+            } else if (state is AuthError) {
+              CustomSnackbar.show(context, state.error, isError: true);
             }
           }
         },
@@ -145,14 +132,12 @@ class _SignInScreenState extends State<SignInScreen>
                         borderRadius: BorderRadius.circular(60.w),
                         color: Colors.grey.shade200),
                     child: TabBar(
-                      controller: _tabController,
+                      controller: tabController,
                       dividerColor: Colors.transparent,
                       onTap: (value) {
                         WidgetsBinding.instance
                             .addPostFrameCallback((timeStamp) {
-                          setState(() {
-                            _tabController.index = value;
-                          });
+                          tabController.animateTo(value);
                         });
                       },
                       indicator: BoxDecoration(
@@ -168,7 +153,7 @@ class _SignInScreenState extends State<SignInScreen>
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                    color: _tabController.index == 0
+                                    color: tabController.index == 0
                                         ? Colors.white
                                         : Colors.black),
                           ),
@@ -180,7 +165,7 @@ class _SignInScreenState extends State<SignInScreen>
                                 .textTheme
                                 .bodyMedium
                                 ?.copyWith(
-                                    color: _tabController.index == 1
+                                    color: tabController.index == 1
                                         ? Colors.white
                                         : Colors.black),
                           ),
@@ -192,16 +177,16 @@ class _SignInScreenState extends State<SignInScreen>
                 AppSpacing.verticalSpaceMedium,
                 Expanded(
                   child: TabBarView(
-                    controller: _tabController,
+                    controller: tabController,
                     physics: NeverScrollableScrollPhysics(),
                     children: [
                       RawScrollbar(
-                        controller: _scrollControllerEmail,
+                        controller: scrollControllerEmail,
                         thumbVisibility: true,
                         radius: Radius.circular(10),
                         thumbColor: Colors.grey,
                         child: SingleChildScrollView(
-                          controller: _scrollControllerEmail,
+                          controller: scrollControllerEmail,
                           physics: BouncingScrollPhysics(),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -209,13 +194,13 @@ class _SignInScreenState extends State<SignInScreen>
                             child: Column(
                               children: [
                                 Form(
-                                  key: _formKey,
+                                  key: formKey,
                                   child: AutofillGroup(
                                     child: Column(
                                       children: [
                                         CustomTextField(
                                           height: .1,
-                                          controller: _emailController,
+                                          controller: emailController,
                                           hintText: "Email or Username",
                                           validator: (value) {
                                             if (EmailValidator.validate(
@@ -230,19 +215,17 @@ class _SignInScreenState extends State<SignInScreen>
                                         ),
                                         AppSpacing.verticalSpaceSmall,
                                         CustomTextField(
-                                          controller: _passwordController,
+                                          controller: passwordController,
                                           textInputAction: TextInputAction.go,
                                           hintText: "Password",
                                           textInputType: TextInputType.text,
-                                          obscureText: _obscurePassword,
+                                          obscureText: obscurePassword.value,
                                           suffixIcon: IconButton(
                                             onPressed: () {
-                                              setState(() {
-                                                _obscurePassword =
-                                                    !_obscurePassword;
-                                              });
+                                              obscurePassword.value =
+                                                  !obscurePassword.value;
                                             },
-                                            icon: _obscurePassword
+                                            icon: obscurePassword.value
                                                 ? Icon(Icons.visibility)
                                                 : Icon(
                                                     Icons.visibility_off,
@@ -259,7 +242,7 @@ class _SignInScreenState extends State<SignInScreen>
                                               child: Row(
                                                 children: [
                                                   Checkbox(
-                                                    value: isRemembered,
+                                                    value: isRemembered.value,
                                                     onChanged:
                                                         (bool? checkTerms) {},
                                                   ),
@@ -288,25 +271,25 @@ class _SignInScreenState extends State<SignInScreen>
                                         ),
                                         AppSpacing.verticalSpaceMedium,
                                         Button(
-                                            busy: _busy,
+                                            busy: busy.value,
                                             "Login",
                                             textColor: Colors.black,
                                             disabledTextColor: Colors.black,
                                             pill: true,
-                                            onPressed: _busy
+                                            onPressed: busy.value
                                                 ? null
                                                 : () {
-                                                    if (_formKey.currentState!
+                                                    if (formKey.currentState!
                                                         .validate()) {
-                                                      setState(
-                                                          () => _busy = !_busy);
+                                                      busy.value = !busy.value;
+
                                                       context
                                                           .read<AuthBloc>()
                                                           .add(LoginRequested(
-                                                              _emailController
-                                                                  .text,
-                                                              _passwordController
-                                                                  .text));
+                                                              emailController
+                                                                  .value.text,
+                                                              passwordController
+                                                                  .value.text));
                                                     }
                                                   }),
                                       ],
@@ -419,17 +402,17 @@ class _SignInScreenState extends State<SignInScreen>
                         ),
                       ),
                       RawScrollbar(
-                        controller: _scrollControllerPhone,
+                        controller: scrollControllerPhone,
                         thumbVisibility: true,
                         radius: Radius.circular(10),
                         thumbColor: Colors.grey,
                         child: SingleChildScrollView(
-                          controller: _scrollControllerPhone,
+                          controller: scrollControllerPhone,
                           physics: BouncingScrollPhysics(),
                           child: Column(
                             children: [
                               CustomTextField(
-                                controller: _phoneNumberController,
+                                controller: phoneNumberController,
                                 textInputAction: TextInputAction.go,
                                 hintText: 'Phone number',
                                 textInputType: TextInputType.number,
@@ -443,7 +426,7 @@ class _SignInScreenState extends State<SignInScreen>
                               ),
                               AppSpacing.verticalSpaceMedium,
                               Button(
-                                busy: _busy,
+                                busy: busy.value,
                                 "Send Verification Code",
                                 textColor: Colors.black,
                                 disabledTextColor: Colors.black,
@@ -554,12 +537,5 @@ class _SignInScreenState extends State<SignInScreen>
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }

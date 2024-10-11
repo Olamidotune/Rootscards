@@ -73,7 +73,9 @@ class AuthRepository {
   }
 
   ////Validate Sign Up Email////
-  Future<bool> checkSignUpEmail(String email, String password
+  Future<bool> checkSignUpEmail(
+    String email,
+    String password,
   ) async {
     final url = Uri.parse('$apiBaseUrl/check');
     final body = jsonEncode({
@@ -147,9 +149,6 @@ class AuthRepository {
         return true;
       } else if (responseData['status'] == '401') {
         print(responseData);
-        throw Exception(
-          'Unexpected response status: ${responseData['status']}',
-        );
       }
     } on http.ClientException {
       throw Exception('Network error');
@@ -158,7 +157,7 @@ class AuthRepository {
     } catch (e) {
       throw Exception();
     }
-    return false; // Ensure a boolean is always returned
+    return false;
   }
 
   ////AUTHENTICATE DEVICE/////

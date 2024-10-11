@@ -9,6 +9,7 @@ import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import '../sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
@@ -52,28 +53,19 @@ class SignUpScreen extends HookWidget {
               busy.value = true;
             } else {
               busy.value = false;
-            }
 
-            if (state is CheckSignUpMailSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                ),
-              );
+              if (state is CheckSignUpMailSuccess) {
+                CustomSnackbar.show(context,
+                    "Email already exists, login with your existing email and password",
+                    isError: true);
+                Navigator.of(context).popAndPushNamed(SignInScreen.routeName);
+              }
             }
             if (state is CheckSignUpMailFailed) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.error),
-                ),
-              );
+              CustomSnackbar.show(context, state.error, isError: true);
               Navigator.of(context).pushNamed(SecondSignUpScreen.routeName);
             } else if (state is CheckSignUpMailError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.error),
-                ),
-              );
+              CustomSnackbar.show(context, state.error, isError: true);
             }
           },
           child: SafeArea(

@@ -115,6 +115,8 @@ class MyApp extends StatelessWidget {
                       OnboardingScreen.routeName: (context) =>
                           OnboardingScreen(),
                       SignUpScreen.routeName: (context) => SignUpScreen(),
+                      SecondSignUpScreen.routeName: (context) =>
+                          SecondSignUpScreen(),
                       SignInScreen.routeName: (context) => SignInScreen(),
                       GetStartedScreen.routeName: (context) =>
                           GetStartedScreen(),
@@ -124,8 +126,7 @@ class MyApp extends StatelessWidget {
                       SpaceScreen.routeName: (context) => SpaceScreen(),
                       PasswordRecovery.routeName: (context) =>
                           PasswordRecovery(),
-                      SecondSignUpScreen.routeName: (context) =>
-                          SecondSignUpScreen(),
+                      
                     },
                   ),
                 )));

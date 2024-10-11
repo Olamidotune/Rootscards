@@ -61,7 +61,14 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
         emit(SignUpFailed("Sign up failed. Try again later"));
       }
     } catch (e) {
-      emit(SignUpFailed('Something went wrong'));
+      print(e);
+      if (e.toString().contains('Network Error') ||
+          e.toString().contains('Connection timed out')) {
+        emit(SignUpError(
+            'Network error. Please check your internet connection.'));
+      } else {
+        emit(SignUpError('Something went wrong. Please try again'));
+      }
     }
   }
 }

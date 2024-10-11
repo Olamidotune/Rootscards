@@ -9,6 +9,7 @@ import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 
@@ -26,7 +27,7 @@ class SecondSignUpScreen extends HookWidget {
     final obscurePassword = useState(true);
     final checkTerms = useState(false);
 
-    final Future<String> email = getEmail() ;
+    final Future<String> email = getEmail();
 
     return Scaffold(
         appBar: AppBar(
@@ -50,147 +51,130 @@ class SecondSignUpScreen extends HookWidget {
                 icon: Icon(Icons.info_outline),
               ),
             ]),
-        body: BlocListener<SignUpBloc, SignUpState>(
-          listener: (context, state) {
-            if (state is SignUpLoading) {
-              busy.value = true;
-            }
-            if (state is SignUpSuccess) {
-              busy.value = false;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
-              Navigator.of(context).pushNamed(SignInScreen.routeName);
-            }
-            if (state is SignUpFailed) {
-              busy.value = false;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            } else if (state is SignUp) {
-              busy.value = false;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Sign up failed. Try again later'),
-                  backgroundColor: Colors.red,
-                ),
-              );
-            }
-          },
-          child: SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: InkWell(
-                        onTap: () async {
-                           final emailValue = await email;
-                          debugPrint(emailValue.toString());
-                        },
-                        child: Text(
-                          "Create Account",
-                          style: context.textTheme.titleLarge?.copyWith(
-                              color: Colors.black,
-                              fontSize: 36,
-                              fontWeight: FontWeight.bold),
-                        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: InkWell(
+                      onTap: () async {
+                        final emailValue = await email;
+                        debugPrint(emailValue.toString());
+                      },
+                      child: Text(
+                        "Create Account",
+                        style: context.textTheme.titleLarge?.copyWith(
+                            color: Colors.black,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
-                    AppSpacing.verticalSpaceMedium,
-                    Form(
-                      key: formKey,
-                      child: AutofillGroup(
-                        child: Column(
-                          children: [
-                            CustomTextField(
-                              controller: userNameController,
-                              textInputAction: TextInputAction.next,
-                              hintText: "Username",
-                              textInputType: TextInputType.name,
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Please provide a Username";
-                                }
-                                return null;
-                              },
-                            ),
-                            AppSpacing.verticalSpaceSmall,
-                            CustomTextField(
-                              controller: phoneNumberController,
-                              textInputAction: TextInputAction.next,
-                              hintText: "Phone Number",
-                              textInputType: TextInputType.phone,
-                              maxLength: 11,
-                              validator: (value) {
-                                if (value!.isEmpty || value.length < 11) {
-                                  return "Please provide a valid phone number";
-                                }
-                                return null;
-                              },
-                            ),
-                            AppSpacing.verticalSpaceSmall,
-                            CustomTextField(
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  obscurePassword.value =
-                                      !obscurePassword.value;
-                                },
-                                icon: obscurePassword.value
-                                    ? Icon(Icons.visibility)
-                                    : Icon(
-                                        Icons.visibility_off,
-                                      ),
-                              ),
-                              validator: (value) {
-                                if (value!.isEmpty) {
-                                  return "Please provide a password";
-                                }
-                                if (value.length < 6) {
-                                  return "Password cannot be less than 6 characters";
-                                }
-                                return null;
-                              },
-                              obscureText: obscurePassword.value,
-                              controller: passwordController,
-                              textInputAction: TextInputAction.go,
-                              hintText: "Password",
-                              textInputType: TextInputType.text,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    AppSpacing.verticalSpaceTiny,
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
+                  ),
+                  AppSpacing.verticalSpaceMedium,
+                  Form(
+                    key: formKey,
+                    child: AutofillGroup(
+                      child: Column(
                         children: [
-                          Checkbox(
-                            value: checkTerms.value,
-                            onChanged: (bool? checkTerms) {
-                              checkTerms = checkTerms!;
+                          CustomTextField(
+                            controller: userNameController,
+                            textInputAction: TextInputAction.next,
+                            hintText: "Username",
+                            textInputType: TextInputType.name,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please provide a Username";
+                              }
+                              return null;
                             },
                           ),
-                          Text("Accept Terms")
+                          AppSpacing.verticalSpaceSmall,
+                          CustomTextField(
+                            controller: phoneNumberController,
+                            textInputAction: TextInputAction.next,
+                            hintText: "Phone Number",
+                            textInputType: TextInputType.phone,
+                            maxLength: 11,
+                            validator: (value) {
+                              if (value!.isEmpty || value.length < 11) {
+                                return "Please provide a valid phone number";
+                              }
+                              return null;
+                            },
+                          ),
+                          AppSpacing.verticalSpaceSmall,
+                          CustomTextField(
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                obscurePassword.value = !obscurePassword.value;
+                              },
+                              icon: obscurePassword.value
+                                  ? Icon(Icons.visibility)
+                                  : Icon(
+                                      Icons.visibility_off,
+                                    ),
+                            ),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Please provide a password";
+                              }
+                              if (value.length < 6) {
+                                return "Password cannot be less than 6 characters";
+                              }
+                              return null;
+                            },
+                            obscureText: obscurePassword.value,
+                            controller: passwordController,
+                            textInputAction: TextInputAction.go,
+                            hintText: "Password",
+                            textInputType: TextInputType.text,
+                          ),
                         ],
                       ),
                     ),
-                    AppSpacing.verticalSpaceLarge,
-                    Button(
+                  ),
+                  AppSpacing.verticalSpaceTiny,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      children: [
+                        Checkbox(
+                          value: checkTerms.value,
+                          onChanged: (bool? checkTerms) {
+                            checkTerms = checkTerms!;
+                          },
+                        ),
+                        Text("Accept Terms")
+                      ],
+                    ),
+                  ),
+                  AppSpacing.verticalSpaceLarge,
+                  BlocListener<SignUpBloc, SignUpState>(
+                    listener: (context, state) {
+                      if (state is SignUpLoading) {
+                        busy.value = true;
+                      } else {
+                        busy.value = false;
+                      }
+                      if (state is SignUpSuccess) {
+                        CustomSnackbar.show(context, state.message);
+                      }
+                      if (state is SignUpFailed) {
+                        CustomSnackbar.show(context, state.message,
+                            isError: true);
+                      } else if (state is SignUpError) {
+                        CustomSnackbar.show(context, state.error,
+                            isError: true);
+                      }
+                    },
+                    child: Button(
                       pill: true,
                       busy: busy.value,
                       "Create Account",
@@ -210,111 +194,111 @@ class SecondSignUpScreen extends HookWidget {
                         }
                       },
                     ),
-                    SizedBox(
-                      height: 0.05.sh,
-                    ),
-                    Text(
-                      "Or sign up with",
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: Colors.grey),
-                    ),
-                    AppSpacing.verticalSpaceSmall,
-                    Row(
+                  ),
+                  SizedBox(
+                    height: 0.05.sh,
+                  ),
+                  Text(
+                    "Or sign up with",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: Colors.grey),
+                  ),
+                  AppSpacing.verticalSpaceSmall,
+                  Row(
+                    children: [
+                      Expanded(
+                        child: SmallSocialButton(
+                          iconName: "facebook",
+                          onPressed: () {},
+                        ),
+                      ),
+                      AppSpacing.horizontalSpaceSmall,
+                      Expanded(
+                        child: SmallSocialButton(
+                          iconName: "google",
+                          onPressed: () {},
+                        ),
+                      ),
+                      AppSpacing.horizontalSpaceSmall,
+                      Expanded(
+                        child: SmallSocialButton(
+                          iconName: "apple",
+                          onPressed: () {},
+                        ),
+                      ),
+                    ],
+                  ),
+                  AppSpacing.verticalSpaceMedium,
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: "By continuing, you agree to Pipel's ",
+                      style: TextStyle(
+                          fontFamily: "lato",
+                          fontSize: 13.sp,
+                          color: Colors.grey),
                       children: [
-                        Expanded(
-                          child: SmallSocialButton(
-                            iconName: "facebook",
-                            onPressed: () {},
-                          ),
+                        TextSpan(
+                          text: "Terms of Service\n",
+                          style: TextStyle(
+                              fontFamily: "lato",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.sp,
+                              color: Colors.black),
                         ),
-                        AppSpacing.horizontalSpaceSmall,
-                        Expanded(
-                          child: SmallSocialButton(
-                            iconName: "google",
-                            onPressed: () {},
-                          ),
+                        TextSpan(
+                          text: " and ",
+                          style: TextStyle(
+                              fontFamily: "lato",
+                              fontSize: 13.sp,
+                              color: Colors.grey),
                         ),
-                        AppSpacing.horizontalSpaceSmall,
-                        Expanded(
-                          child: SmallSocialButton(
-                            iconName: "apple",
-                            onPressed: () {},
-                          ),
-                        ),
+                        TextSpan(
+                          text: "Privacy Policy",
+                          style: TextStyle(
+                              fontFamily: "lato",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 13.sp,
+                              color: Colors.black),
+                        )
                       ],
                     ),
-                    AppSpacing.verticalSpaceMedium,
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        text: "By continuing, you agree to Pipel's ",
+                  ),
+                  AppSpacing.verticalSpaceHuge,
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                        text: "Already have an account? ",
                         style: TextStyle(
                             fontFamily: "lato",
                             fontSize: 13.sp,
                             color: Colors.grey),
                         children: [
                           TextSpan(
-                            text: "Terms of Service\n",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () => Navigator.of(context).pushNamed(
+                                    SignInScreen.routeName,
+                                  ),
+                            text: " Login",
                             style: TextStyle(
                                 fontFamily: "lato",
                                 fontWeight: FontWeight.bold,
                                 fontSize: 13.sp,
                                 color: Colors.black),
                           ),
-                          TextSpan(
-                            text: " and ",
-                            style: TextStyle(
-                                fontFamily: "lato",
-                                fontSize: 13.sp,
-                                color: Colors.grey),
-                          ),
-                          TextSpan(
-                            text: "Privacy Policy",
-                            style: TextStyle(
-                                fontFamily: "lato",
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13.sp,
-                                color: Colors.black),
-                          )
-                        ],
-                      ),
-                    ),
-                    AppSpacing.verticalSpaceHuge,
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                          text: "Already have an account? ",
-                          style: TextStyle(
-                              fontFamily: "lato",
-                              fontSize: 13.sp,
-                              color: Colors.grey),
-                          children: [
-                            TextSpan(
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () => Navigator.of(context).pushNamed(
-                                      SignInScreen.routeName,
-                                    ),
-                              text: " Login",
-                              style: TextStyle(
-                                  fontFamily: "lato",
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 13.sp,
-                                  color: Colors.black),
-                            ),
-                          ]),
-                    ),
-                  ],
-                ),
+                        ]),
+                  ),
+                ],
               ),
             ),
           ),
-        ));  
+        ));
   }
 
-  
- Future<String> getEmail() async {
+ 
+  Future<String> getEmail() async {
     String email = await HelperFunction.getUserEmailfromSF() ?? '';
     return email;
   }
