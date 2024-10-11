@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -71,8 +72,95 @@ class AuthRepository {
     // This could involve saving to SharedPreferences or another storage method
   }
 
-  ////AUTHENTICATE DEVICE/////
+  ////Validate Sign Up Email////
+  Future<bool> checkSignUpEmail(
+    String email,
+    String password,
+  ) async {
+    final url = Uri.parse('$apiBaseUrl/check');
+    final body = jsonEncode({
+      'email': email,
+      'password': password,
+    });
 
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ).timeout(Duration(seconds: 30));
+      final responseData = jsonDecode(response.body);
+      if (responseData['status'] == '200') {
+        print(responseData);
+        return true;
+      } else if (responseData['status'] == '401') {
+        await HelperFunction.saveUserEmailSF(email);
+        print(responseData);
+        return false;
+      } else {
+        throw Exception(
+          'Unexpected response status: ${responseData['status']}',
+        );
+      }
+    } on http.ClientException {
+      throw Exception('Network error');
+    } on TimeoutException {
+      throw Exception('Connection timed out');
+    } catch (e) {
+      throw Exception('Something went wrong: ${e.toString()}');
+    }
+  }
+
+  ////SIGN UP////
+  Future<bool> signUp(
+    String email,
+    String fullName,
+    String password,
+    String phoneNumber,
+    String account,
+    String referer,
+  ) async {
+    final url = Uri.parse('$apiBaseUrl/signup');
+    final body = jsonEncode({
+      'email': email,
+      'password': password,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+      'account': 'individual',
+      'referer': referer,
+    });
+
+    await HelperFunction.saveUserNameSF(fullName);
+    await HelperFunction.savePhoneNumberSF(phoneNumber);
+
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ).timeout(Duration(seconds: 30));
+      final responseData = jsonDecode(response.body);
+      if (responseData['status'] == '200') {
+        print(responseData);
+        return true;
+      } else if (responseData['status'] == '401') {
+        print(responseData);
+      }
+    } on http.ClientException {
+      throw Exception('Network error');
+    } on TimeoutException {
+      throw Exception('Connection timed out');
+    } catch (e) {
+      throw Exception();
+    }
+    return false;
+  }
+
+  ////AUTHENTICATE DEVICE/////
   Future<Map<String, dynamic>> authenticateDevice(String otp) async {
     final url = Uri.parse("$apiBaseUrl/user/authorizeDevice");
     final xpubs = await getStoredXpubs();
@@ -170,4 +258,8 @@ Future<Map<String, String?>> getStoredXpubs() async {
     'xpub1': xpub1,
     'xpub2': xpub2,
   };
+}
+
+class AuthRepo {
+  final String apiBaseUrl = 'YOUR_API_BASE_URL';
 }

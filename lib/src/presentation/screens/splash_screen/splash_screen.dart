@@ -91,5 +91,7 @@ class _SplashScreenState extends State<SplashScreen> {
     setState(() {
       isAuthenticated = hasEmail != null;
     });
+    print("hasEmail: $hasEmail");
   }
+ 
 }

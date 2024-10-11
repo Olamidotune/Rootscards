@@ -1,33 +1,34 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 
-class SecondSignUpScreen extends StatefulWidget {
+class SecondSignUpScreen extends HookWidget {
   static const String routeName = "sign_up second screen";
   const SecondSignUpScreen({super.key});
 
   @override
-  State<SecondSignUpScreen> createState() => _SecondSignUpScreenState();
-}
-
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-final TextEditingController _userNameController = TextEditingController();
-final TextEditingController _phoneNumberController = TextEditingController();
-final TextEditingController _passwordController = TextEditingController();
-
-bool _busy = false;
-bool _obscureText = true;
-bool checkTerms = false;
-
-class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
-  @override
   Widget build(BuildContext context) {
+    final formKey = useMemoized(GlobalKey<FormState>.new);
+    final busy = useState(false);
+    final userNameController = useTextEditingController();
+    final phoneNumberController = useTextEditingController();
+    final passwordController = useTextEditingController();
+    final obscurePassword = useState(true);
+    final checkTerms = useState(false);
+
+    final Future<String> email = getEmail();
+
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
@@ -62,22 +63,28 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                 children: [
                   Align(
                     alignment: Alignment.topLeft,
-                    child: Text(
-                      "Create Account",
-                      style: context.textTheme.titleLarge?.copyWith(
-                          color: Colors.black,
-                          fontSize: 36,
-                          fontWeight: FontWeight.bold),
+                    child: InkWell(
+                      onTap: () async {
+                        final emailValue = await email;
+                        debugPrint(emailValue.toString());
+                      },
+                      child: Text(
+                        "Create Account",
+                        style: context.textTheme.titleLarge?.copyWith(
+                            color: Colors.black,
+                            fontSize: 36,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                   AppSpacing.verticalSpaceMedium,
                   Form(
-                    key: _formKey,
+                    key: formKey,
                     child: AutofillGroup(
                       child: Column(
                         children: [
                           CustomTextField(
-                            controller: _userNameController,
+                            controller: userNameController,
                             textInputAction: TextInputAction.next,
                             hintText: "Username",
                             textInputType: TextInputType.name,
@@ -90,7 +97,7 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                           ),
                           AppSpacing.verticalSpaceSmall,
                           CustomTextField(
-                            controller: _phoneNumberController,
+                            controller: phoneNumberController,
                             textInputAction: TextInputAction.next,
                             hintText: "Phone Number",
                             textInputType: TextInputType.phone,
@@ -106,11 +113,9 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                           CustomTextField(
                             suffixIcon: IconButton(
                               onPressed: () {
-                                setState(() {
-                                  _obscureText = !_obscureText;
-                                });
+                                obscurePassword.value = !obscurePassword.value;
                               },
-                              icon: _obscureText
+                              icon: obscurePassword.value
                                   ? Icon(Icons.visibility)
                                   : Icon(
                                       Icons.visibility_off,
@@ -125,8 +130,8 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                               }
                               return null;
                             },
-                            obscureText: _obscureText,
-                            controller: _passwordController,
+                            obscureText: obscurePassword.value,
+                            controller: passwordController,
                             textInputAction: TextInputAction.go,
                             hintText: "Password",
                             textInputType: TextInputType.text,
@@ -141,24 +146,54 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
                     child: Row(
                       children: [
                         Checkbox(
-                          value: checkTerms,
-                          onChanged: (bool? checkTerms) {},
+                          value: checkTerms.value,
+                          onChanged: (bool? checkTerms) {
+                            checkTerms = checkTerms!;
+                          },
                         ),
                         Text("Accept Terms")
                       ],
                     ),
                   ),
                   AppSpacing.verticalSpaceLarge,
-                  Button(
-                    pill: true,
-                    busy: _busy,
-                    "Create Account",
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        Navigator.of(context)
-                            .popAndPushNamed(SignInScreen.routeName);
+                  BlocListener<SignUpBloc, SignUpState>(
+                    listener: (context, state) {
+                      if (state is SignUpLoading) {
+                        busy.value = true;
+                      } else {
+                        busy.value = false;
+                      }
+                      if (state is SignUpSuccess) {
+                        CustomSnackbar.show(context, state.message);
+                      }
+                      if (state is SignUpFailed) {
+                        CustomSnackbar.show(context, state.message,
+                            isError: true);
+                      } else if (state is SignUpError) {
+                        CustomSnackbar.show(context, state.error,
+                            isError: true);
                       }
                     },
+                    child: Button(
+                      pill: true,
+                      busy: busy.value,
+                      "Create Account",
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          final emailValue = await email;
+                          context.read<SignUpBloc>().add(
+                                SignUp(
+                                  email: emailValue,
+                                  password: passwordController.text,
+                                  fullName: userNameController.text,
+                                  phoneNumber: phoneNumberController.text,
+                                  account: "individual",
+                                  referer: "referer",
+                                ),
+                              );
+                        }
+                      },
+                    ),
                   ),
                   SizedBox(
                     height: 0.05.sh,
@@ -262,11 +297,9 @@ class _SecondSignUpScreenState extends State<SecondSignUpScreen> {
         ));
   }
 
-  // @override
-  // void dispose() {
-  //   _userNameController.dispose();
-  //   _phoneNumberController.dispose();
-  //   _passwordController.dispose();
-  //   super.dispose();
-  // }
+ 
+  Future<String> getEmail() async {
+    String email = await HelperFunction.getUserEmailfromSF() ?? '';
+    return email;
+  }
 }
