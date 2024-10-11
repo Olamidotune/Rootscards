@@ -72,8 +72,9 @@ class AuthRepository {
     // This could involve saving to SharedPreferences or another storage method
   }
 
-  ////Sign UP////
-  Future<bool> checkSignUpEmail(String email, String password) async {
+  ////Validate Sign Up Email////
+  Future<bool> checkSignUpEmail(String email, String password
+  ) async {
     final url = Uri.parse('$apiBaseUrl/check');
     final body = jsonEncode({
       'email': email,
@@ -94,8 +95,6 @@ class AuthRepository {
         return true;
       } else if (responseData['status'] == '401') {
         await HelperFunction.saveUserEmailSF(email);
-      
-        print(email)  ;
         print(responseData);
         return false;
       } else {
@@ -110,6 +109,56 @@ class AuthRepository {
     } catch (e) {
       throw Exception('Something went wrong: ${e.toString()}');
     }
+  }
+
+  ////SIGN UP////
+  Future<bool> signUp(
+    String email,
+    String fullName,
+    String password,
+    String phoneNumber,
+    String account,
+    String referer,
+  ) async {
+    final url = Uri.parse('$apiBaseUrl/signup');
+    final body = jsonEncode({
+      'email': email,
+      'password': password,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+      'account': 'individual',
+      'referer': referer,
+    });
+
+    await HelperFunction.saveUserNameSF(fullName);
+    await HelperFunction.savePhoneNumberSF(phoneNumber);
+
+    try {
+      final response = await http.post(
+        url,
+        body: body,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ).timeout(Duration(seconds: 30));
+      final responseData = jsonDecode(response.body);
+      if (responseData['status'] == '200') {
+        print(responseData);
+        return true;
+      } else if (responseData['status'] == '401') {
+        print(responseData);
+        throw Exception(
+          'Unexpected response status: ${responseData['status']}',
+        );
+      }
+    } on http.ClientException {
+      throw Exception('Network error');
+    } on TimeoutException {
+      throw Exception('Connection timed out');
+    } catch (e) {
+      throw Exception();
+    }
+    return false; // Ensure a boolean is always returned
   }
 
   ////AUTHENTICATE DEVICE/////

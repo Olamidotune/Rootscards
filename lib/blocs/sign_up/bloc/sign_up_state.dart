@@ -41,3 +41,36 @@ final class CheckSignUpMailError extends SignUpState {
   @override
   List<Object> get props => [error];
 }
+
+final class SignUpLoading extends SignUpState {}
+
+final class SignUpSuccess extends SignUpState {
+  final String message;
+
+  SignUpSuccess({
+    required this.message,
+  });
+
+  @override
+  List<Object> get props => [
+        message,
+      ];
+}
+
+final class SignUpFailed extends SignUpState {
+  final String message;
+
+  const SignUpFailed(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+final class SignUpError extends SignUpState {
+  final String error;
+
+  const SignUpError(this.error);
+
+  @override
+  List<Object> get props => [error];
+}

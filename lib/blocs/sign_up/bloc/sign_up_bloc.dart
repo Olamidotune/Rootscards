@@ -12,6 +12,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
 
   SignUpBloc(this.authRepository) : super(SignUpInitial()) {
     on<CheckSignUpMail>(_checkSignUpMail);
+    on<SignUp>(_signUp);
   }
 
   Future<void> _checkSignUpMail(
@@ -41,6 +42,26 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       } else {
         emit(CheckSignUpMailError("Something went wrong. Please try again."));
       }
+    }
+  }
+
+  Future<void> _signUp(SignUp event, Emitter<SignUpState> emit) async {
+    emit(SignUpLoading());
+    try {
+      final bool success = await authRepository.signUp(
+          event.email,
+          event.password,
+          event.fullName,
+          event.phoneNumber,
+          event.account,
+          event.referer);
+      if (success) {
+        emit(SignUpSuccess(message: "Sign up successful"));
+      } else {
+        emit(SignUpFailed("Sign up failed. Try again later"));
+      }
+    } catch (e) {
+      emit(SignUpFailed('Something went wrong'));
     }
   }
 }
