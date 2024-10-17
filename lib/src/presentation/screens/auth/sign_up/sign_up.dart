@@ -204,11 +204,11 @@ class SignUpScreen extends HookWidget {
                       ),
                     ),
                     AppSpacing.verticalSpaceMedium,
-                    // SizedBox(
-                    //   height: 0.90 * height <= 700
-                    //       ? .03.h * height
-                    //       : height * .19.h,
-                    // ),
+                    SizedBox(
+                    height: MediaQuery.of(context).size.height < MIN_SUPPORTED_SCREEN_HEIGHT
+                        ? 20.h
+                        : 0.07.sh,
+                    ),
                     RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(

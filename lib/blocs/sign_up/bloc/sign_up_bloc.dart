@@ -58,7 +58,11 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
       if (success) {
         emit(SignUpSuccess(message: "Sign up successful"));
       } else {
-        emit(SignUpFailed("Sign up failed. Try again later"));
+        emit(
+          SignUpFailed(
+            "Email already exists, login with your existing email and password",
+          ),
+        );
       }
     } catch (e) {
       print(e);

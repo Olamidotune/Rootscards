@@ -390,12 +390,12 @@ class SignInScreen extends HookWidget {
                                   ],
                                 ),
                               ),
-                              // SizedBox(
-                              //   height: 0.90 * height <= 700
-                              //       ? .03.h * height
-                              //       : height * .19.h,
-                              // ),
-                              AppSpacing.verticalSpaceLarge,
+                              SizedBox(
+                                height: MediaQuery.of(context).size.height < MIN_SUPPORTED_SCREEN_HEIGHT
+                                    ? .18.sh
+                                    : .15.sh,
+                              ),
+                          
                               RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
@@ -525,8 +525,10 @@ class SignInScreen extends HookWidget {
                               ),
                             ),
                             SizedBox(
-                              height: .18.sh,
-                            ),
+                                height: MediaQuery.of(context).size.height < MIN_SUPPORTED_SCREEN_HEIGHT
+                                    ? .18.sh
+                                    : .28.sh,
+                              ),
                             RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
