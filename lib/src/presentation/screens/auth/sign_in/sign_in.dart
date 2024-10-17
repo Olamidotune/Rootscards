@@ -15,7 +15,7 @@ import 'package:rootscards/src/presentation/screens/auth/otp.dart';
 import 'package:rootscards/src/presentation/screens/auth/passowrd/forgot_password.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/sign_up.dart';
 import 'package:rootscards/src/presentation/screens/space/space_screen.dart';
-import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';

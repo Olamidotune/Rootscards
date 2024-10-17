@@ -9,7 +9,7 @@ import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/helper/helper_function.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
-import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
 import 'package:rootscards/src/shared/widgets/small_social_button.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 
