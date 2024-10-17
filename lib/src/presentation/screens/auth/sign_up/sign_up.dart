@@ -9,7 +9,7 @@ import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
-import 'package:rootscards/src/shared/widgets/custom_snackabar.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import '../sign_in/sign_in.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
@@ -62,7 +62,7 @@ class SignUpScreen extends HookWidget {
               }
             }
             if (state is CheckSignUpMailFailed) {
-              CustomSnackbar.show(context, state.error, isError: true);
+              CustomSnackbar.show(context, state.error, isError: false);
               Navigator.of(context).pushNamed(SecondSignUpScreen.routeName);
             } else if (state is CheckSignUpMailError) {
               CustomSnackbar.show(context, state.error, isError: true);
