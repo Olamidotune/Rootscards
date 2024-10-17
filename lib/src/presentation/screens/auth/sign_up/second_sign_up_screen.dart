@@ -26,8 +26,9 @@ class SecondSignUpScreen extends HookWidget {
     final passwordController = useTextEditingController();
     final obscurePassword = useState(true);
     final checkTerms = useState(false);
+    final emailFuture = useMemoized(() => HelperFunction.getUserEmailfromSF());
 
-    final Future<String> email = getEmail();
+    final email = useFuture(emailFuture);
 
     return Scaffold(
         appBar: AppBar(
@@ -157,44 +158,53 @@ class SecondSignUpScreen extends HookWidget {
                   ),
                   AppSpacing.verticalSpaceLarge,
                   BlocListener<SignUpBloc, SignUpState>(
-                    listener: (context, state) {
-                      if (state is SignUpLoading) {
-                        busy.value = true;
-                      } else {
-                        busy.value = false;
-                      }
-                      if (state is SignUpSuccess) {
-                        CustomSnackbar.show(context, state.message);
-                      }
-                      if (state is SignUpFailed) {
-                        CustomSnackbar.show(context, state.message,
-                            isError: true);
-                      } else if (state is SignUpError) {
-                        CustomSnackbar.show(context, state.error,
-                            isError: true);
-                      }
-                    },
-                    child: Button(
-                      pill: true,
-                      busy: busy.value,
-                      "Create Account",
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          final emailValue = await email;
-                          context.read<SignUpBloc>().add(
-                                SignUp(
-                                  email: emailValue,
-                                  password: passwordController.text,
-                                  fullName: userNameController.text,
-                                  phoneNumber: phoneNumberController.text,
-                                  account: "individual",
-                                  referer: "referer",
-                                ),
-                              );
+                      listener: (context, state) {
+                        if (state is SignUpLoading) {
+                          busy.value = true;
+                        } else {
+                          busy.value = false;
+                        }
+                        if (state is SignUpSuccess) {
+                          CustomSnackbar.show(context, state.message);
+                        }
+                        if (state is SignUpFailed) {
+                          CustomSnackbar.show(context, state.message,
+                              isError: true);
+                        } else if (state is SignUpError) {
+                          CustomSnackbar.show(context, state.error,
+                              isError: true);
                         }
                       },
-                    ),
-                  ),
+                      child: Button(
+                        pill: true,
+                        busy: busy.value,
+                        "Create Account",
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            final emailValue =
+                                await HelperFunction.getUserEmailfromSF();
+                            if (emailValue != null) {
+                              context.read<SignUpBloc>().add(
+                                    SignUp(
+                                      email: emailValue,
+                                      password: passwordController.text,
+                                      fullName: userNameController.text,
+                                      phoneNumber: phoneNumberController.text,
+                                      account: "individual",
+                                      referer: "referer",
+                                    ),
+                                  );
+                            } else {
+                              // Handle the case where no email is stored
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        "No email found. Please enter your email.")),
+                              );
+                            }
+                          }
+                        },
+                      )),
                   SizedBox(
                     height: 0.05.sh,
                   ),
@@ -297,7 +307,6 @@ class SecondSignUpScreen extends HookWidget {
         ));
   }
 
- 
   Future<String> getEmail() async {
     String email = await HelperFunction.getUserEmailfromSF() ?? '';
     return email;

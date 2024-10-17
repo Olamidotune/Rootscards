@@ -13,7 +13,7 @@ class HelperFunction {
   static String deviceIDKey = 'DEVICEIDKEY';
   static String deviceEntryKey = 'DEVICEENTRYKEY';
   static String deviceNameKey = "DEVICENAMEKEY";
-  static String deviceTypeKey = ' DEVICETYPEKEY';
+  static String deviceTypeKey = 'DEVICETYPEKEY';
   static String deviceModelKey = 'DEVICEMODELKEY';
 
   ///save prefs

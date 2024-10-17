@@ -44,10 +44,7 @@ class SignInScreen extends HookWidget {
 
     useEffect(() {
       getEmail();
-
-      return () {
-        emailController.dispose();
-      };
+      return null;
     }, []);
     final double height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
@@ -79,11 +76,11 @@ class SignInScreen extends HookWidget {
             busy.value = true;
           } else {
             busy.value = false;
-
             if (state is AuthSuccess) {
               if (state.needsDeviceAuth) {
-                CustomSnackbar.show(context, "Please verify your device",
-                    isError: false);
+                CustomSnackbar.show(
+                    context, "Welcome, Please verify your device",
+                    isError: true);
                 Navigator.of(context).popAndPushNamed(OtpScreen.routeName);
               } else {
                 CustomSnackbar.show(context, "Login successful",
