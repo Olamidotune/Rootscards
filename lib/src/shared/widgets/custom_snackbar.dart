@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rootscards/config/colors.dart';
 
 class CustomSnackbar {
   static void show(
@@ -17,7 +18,7 @@ class CustomSnackbar {
       ),
       dismissDirection: DismissDirection.horizontal,
       behavior: SnackBarBehavior.floating,
-      backgroundColor: isError ? Colors.red : Colors.green,
+      backgroundColor: isError ? ERROR : Colors.green,
       margin: const EdgeInsets.all(10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),

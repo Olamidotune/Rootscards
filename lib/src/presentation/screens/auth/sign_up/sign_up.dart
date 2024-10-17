@@ -62,7 +62,7 @@ class SignUpScreen extends HookWidget {
               }
             }
             if (state is CheckSignUpMailFailed) {
-              CustomSnackbar.show(context, state.error, isError: true);
+              CustomSnackbar.show(context, state.error, isError: false);
               Navigator.of(context).pushNamed(SecondSignUpScreen.routeName);
             } else if (state is CheckSignUpMailError) {
               CustomSnackbar.show(context, state.error, isError: true);

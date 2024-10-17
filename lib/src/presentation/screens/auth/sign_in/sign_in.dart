@@ -36,6 +36,7 @@ class SignInScreen extends HookWidget {
     final busy = useState(false);
     final obscurePassword = useState(true);
     final isRemembered = useState(false);
+    final currentIndex = useState(0);
     final phoneNumberController = useTextEditingController();
 
     Future<void> getEmail() async {
@@ -44,9 +45,14 @@ class SignInScreen extends HookWidget {
     }
 
     useEffect(() {
+      void listener() {
+        currentIndex.value = tabController.index;
+      }
+      tabController.addListener(listener);
       getEmail();
-      return null;
-    }, []);
+      return () => tabController.removeListener(listener);
+    }, [tabController]);
+
     final double height =
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
@@ -108,7 +114,6 @@ class SignInScreen extends HookWidget {
                     onTap: (value) {
                       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         tabController.animateTo(value);
-                        print(value);
                       });
                     },
                     indicator: BoxDecoration(
@@ -120,14 +125,12 @@ class SignInScreen extends HookWidget {
                       Tab(
                         child: Text(
                           "Email",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
-                              ?.copyWith(
-                                color: tabController.index == 0
-                                    ? Colors.white
-                                    : Colors.black,
-                                 ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: tabController.index == 0
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                         ),
                       ),
                       Tab(
@@ -224,7 +227,7 @@ class SignInScreen extends HookWidget {
                                               children: [
                                                 Checkbox(
                                                   value: isRemembered.value,
-                                                  checkColor:BLACK ,
+                                                  checkColor: BLACK,
                                                   activeColor: BUTTONGREEN,
                                                   onChanged:
                                                       (bool? checkTerms) {
