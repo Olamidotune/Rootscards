@@ -8,7 +8,9 @@ class CustomSnackbar {
     bool isError = false,
   }) {
     ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
     final snackBar = SnackBar(
+      showCloseIcon: true,
       content: Text(
         message,
         style: Theme.of(context)
@@ -16,19 +18,11 @@ class CustomSnackbar {
             .bodyMedium!
             .copyWith(color: Colors.white),
       ),
-      dismissDirection: DismissDirection.horizontal,
       behavior: SnackBarBehavior.floating,
       backgroundColor: isError ? ERROR : Colors.green,
-      margin: const EdgeInsets.all(10),
+      margin: const EdgeInsets.only(top: 10, left: 10, right: 10, bottom: 10),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
-      ),
-      action: SnackBarAction(
-        label: 'Close',
-        textColor: Colors.white,
-        onPressed: () {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        },
       ),
     );
 

@@ -109,13 +109,13 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       leading: "facebook",
                       onPressed: () {},
                     ),
-                    AppSpacing.verticalSpaceSmall,
+                    AppSpacing.verticalSpaceMedium,
                     SocialMediaButton(
                       title: "Continue with Google",
                       leading: "google",
                       onPressed: () {},
                     ),
-                    AppSpacing.verticalSpaceSmall,
+                    AppSpacing.verticalSpaceMedium,
                     SocialMediaButton(
                       title: "Continue with Apple",
                       leading: "apple",
@@ -160,7 +160,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: 0.90.h * height <= 700 ? .02.sh : .17.sh,
+                      height: height < MIN_SUPPORTED_SCREEN_HEIGHT ? .2.sh : .23.sh,
                     ),
                     GestureDetector(
                       onTap: () {

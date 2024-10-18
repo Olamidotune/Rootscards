@@ -84,7 +84,7 @@ class HelperFunction {
   }
 
   /// get saved prefs////
-  static Future<bool?> userLoggedInStatus() async {
+  static Future<bool?> getUserLoggedInStatus(bool bool) async {
     SharedPreferences sf = await SharedPreferences.getInstance();
     return sf.getBool(userLoggedInKey);
   }

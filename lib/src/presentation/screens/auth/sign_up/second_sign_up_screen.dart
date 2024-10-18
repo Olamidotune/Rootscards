@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
+import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
 import 'package:rootscards/helper/helper_function.dart';
@@ -27,9 +28,10 @@ class SecondSignUpScreen extends HookWidget {
     final obscurePassword = useState(true);
     final checkTerms = useState(false);
     final emailFuture = useMemoized(() => HelperFunction.getUserEmailfromSF());
-
     final email = useFuture(emailFuture);
 
+    final double height =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
@@ -148,8 +150,10 @@ class SecondSignUpScreen extends HookWidget {
                       children: [
                         Checkbox(
                           value: checkTerms.value,
-                          onChanged: (bool? checkTerms) {
-                            checkTerms = checkTerms!;
+                          checkColor: BLACK,
+                          activeColor: BUTTONGREEN,
+                          onChanged: (value) {
+                            checkTerms.value = value!;
                           },
                         ),
                         Text("Accept Terms")
@@ -168,8 +172,13 @@ class SecondSignUpScreen extends HookWidget {
                           CustomSnackbar.show(context, state.message);
                         }
                         if (state is SignUpFailed) {
-                          CustomSnackbar.show(context, state.message,
-                              isError: true);
+                          CustomSnackbar.show(
+                            context,
+                            state.message,
+                            isError: true,
+                          );
+                          Navigator.of(context)
+                              .popAndPushNamed(SignInScreen.routeName);
                         } else if (state is SignUpError) {
                           CustomSnackbar.show(context, state.error,
                               isError: true);
@@ -181,26 +190,25 @@ class SecondSignUpScreen extends HookWidget {
                         "Create Account",
                         onPressed: () async {
                           if (formKey.currentState!.validate()) {
-                            final emailValue =
-                                await HelperFunction.getUserEmailfromSF();
-                            if (emailValue != null) {
-                              context.read<SignUpBloc>().add(
-                                    SignUp(
-                                      email: emailValue,
-                                      password: passwordController.text,
-                                      fullName: userNameController.text,
-                                      phoneNumber: phoneNumberController.text,
-                                      account: "individual",
-                                      referer: "referer",
-                                    ),
-                                  );
+                            if (!checkTerms.value) {
+                              CustomSnackbar.show(
+                                  context, "Please accept the terms",
+                                  isError: true);
                             } else {
-                              // Handle the case where no email is stored
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        "No email found. Please enter your email.")),
-                              );
+                              final emailValue =
+                                  await HelperFunction.getUserEmailfromSF();
+                              if (emailValue != null) {
+                                context.read<SignUpBloc>().add(
+                                      SignUp(
+                                        email: emailValue,
+                                        password: passwordController.text,
+                                        fullName: userNameController.text,
+                                        phoneNumber: phoneNumberController.text,
+                                        account: "individual",
+                                        referer: "referer",
+                                      ),
+                                    );
+                              }
                             }
                           }
                         },
@@ -276,7 +284,12 @@ class SecondSignUpScreen extends HookWidget {
                       ],
                     ),
                   ),
-                  AppSpacing.verticalSpaceHuge,
+                  SizedBox(
+                    height:height <
+                            MIN_SUPPORTED_SCREEN_HEIGHT
+                        ? 0.05.sh
+                        : 0.12.sh,
+                  ),
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(

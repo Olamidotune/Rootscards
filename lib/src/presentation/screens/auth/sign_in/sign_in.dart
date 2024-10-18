@@ -48,6 +48,7 @@ class SignInScreen extends HookWidget {
       void listener() {
         currentIndex.value = tabController.index;
       }
+
       tabController.addListener(listener);
       getEmail();
       return () => tabController.removeListener(listener);
@@ -302,9 +303,15 @@ class SignInScreen extends HookWidget {
                                                   : () {
                                                       if (formKey.currentState!
                                                           .validate()) {
+                                                        if (isRemembered
+                                                            .value) {
+                                                          HelperFunction
+                                                              .saveUserEmailSF(
+                                                                  emailController
+                                                                      .text);
+                                                        }
                                                         busy.value =
                                                             !busy.value;
-
                                                         context
                                                             .read<AuthBloc>()
                                                             .add(LoginRequested(
@@ -390,12 +397,12 @@ class SignInScreen extends HookWidget {
                                   ],
                                 ),
                               ),
-                              // SizedBox(
-                              //   height: 0.90 * height <= 700
-                              //       ? .03.h * height
-                              //       : height * .19.h,
-                              // ),
-                              AppSpacing.verticalSpaceLarge,
+                             SizedBox(
+                                height: height <
+                                        MIN_SUPPORTED_SCREEN_HEIGHT
+                                    ? .06.sh
+                                    : .15.sh,
+                              ),
                               RichText(
                                 textAlign: TextAlign.center,
                                 text: TextSpan(
@@ -525,7 +532,10 @@ class SignInScreen extends HookWidget {
                               ),
                             ),
                             SizedBox(
-                              height: .18.sh,
+                              height: height <
+                                      MIN_SUPPORTED_SCREEN_HEIGHT
+                                  ? .24.sh
+                                  : .28.sh,
                             ),
                             RichText(
                               textAlign: TextAlign.center,

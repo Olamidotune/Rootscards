@@ -10,6 +10,7 @@ import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import 'password_recovery.dart';
 import '../sign_in/sign_in.dart';
@@ -65,17 +66,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               setState(() => _busy = false);
             }
             if (state is ForgotPasswordErrorState) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.errorMessage)));
+              CustomSnackbar.show(context, state.errorMessage, isError: true);
             }
             if (state is ForgotPasswordFailedState) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
+              CustomSnackbar.show(context, state.message, isError: true);
             }
             if (state is ForgotPasswordSuccessState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              CustomSnackbar.show(context, state.message, isError: false);
               Navigator.of(context).popAndPushNamed(PasswordRecovery.routeName);
             }
           },

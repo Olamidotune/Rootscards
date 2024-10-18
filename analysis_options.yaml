@@ -11,6 +11,7 @@ analyzer:
   errors:
     annotate_overrides: ignore
     prefer_const_constructors_in_immutables: ignore
+    use_build_context_synchronously: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:
