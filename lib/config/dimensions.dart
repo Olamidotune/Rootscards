@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
-const double MIN_SUPPORTED_SCREEN_HEIGHT = 667;
+const double MIN_SUPPORTED_SCREEN_HEIGHT = 800;
 const double MIN_SUPPORTED_SCREEN_WIDTH = 540;
 
 class AppSpacing {

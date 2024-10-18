@@ -28,9 +28,10 @@ class SecondSignUpScreen extends HookWidget {
     final obscurePassword = useState(true);
     final checkTerms = useState(false);
     final emailFuture = useMemoized(() => HelperFunction.getUserEmailfromSF());
-
     final email = useFuture(emailFuture);
 
+    final double height =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
@@ -284,7 +285,7 @@ class SecondSignUpScreen extends HookWidget {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height <
+                    height:height <
                             MIN_SUPPORTED_SCREEN_HEIGHT
                         ? 0.05.sh
                         : 0.12.sh,

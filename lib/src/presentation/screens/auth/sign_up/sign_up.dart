@@ -25,6 +25,8 @@ class SignUpScreen extends HookWidget {
     final busy = useState(false);
     final emailController = useTextEditingController();
 
+    final double height =
+        MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
         appBar: AppBar(
             centerTitle: true,
@@ -131,7 +133,6 @@ class SignUpScreen extends HookWidget {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 0.30.sh,
                     ),
@@ -205,9 +206,10 @@ class SignUpScreen extends HookWidget {
                     ),
                     AppSpacing.verticalSpaceMedium,
                     SizedBox(
-                    height: MediaQuery.of(context).size.height < MIN_SUPPORTED_SCREEN_HEIGHT
-                        ? 20.h
-                        : 0.07.sh,
+                      height:height <
+                              MIN_SUPPORTED_SCREEN_HEIGHT
+                          ? 0.05.sh
+                          : 0.07.sh,
                     ),
                     RichText(
                       textAlign: TextAlign.center,

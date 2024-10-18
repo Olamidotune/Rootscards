@@ -109,13 +109,13 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       leading: "facebook",
                       onPressed: () {},
                     ),
-                    AppSpacing.verticalSpaceSmall,
+                    AppSpacing.verticalSpaceMedium,
                     SocialMediaButton(
                       title: "Continue with Google",
                       leading: "google",
                       onPressed: () {},
                     ),
-                    AppSpacing.verticalSpaceSmall,
+                    AppSpacing.verticalSpaceMedium,
                     SocialMediaButton(
                       title: "Continue with Apple",
                       leading: "apple",

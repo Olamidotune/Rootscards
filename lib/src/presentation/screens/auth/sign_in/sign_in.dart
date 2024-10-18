@@ -303,9 +303,13 @@ class SignInScreen extends HookWidget {
                                                   : () {
                                                       if (formKey.currentState!
                                                           .validate()) {
-                                                            if (isRemembered.value) {
-                                                              HelperFunction.saveUserEmailSF(emailController.text);
-                                                            }
+                                                        if (isRemembered
+                                                            .value) {
+                                                          HelperFunction
+                                                              .saveUserEmailSF(
+                                                                  emailController
+                                                                      .text);
+                                                        }
                                                         busy.value =
                                                             !busy.value;
                                                         context
@@ -393,10 +397,10 @@ class SignInScreen extends HookWidget {
                                   ],
                                 ),
                               ),
-                              SizedBox(
-                                height: MediaQuery.of(context).size.height <
+                             SizedBox(
+                                height: height <
                                         MIN_SUPPORTED_SCREEN_HEIGHT
-                                    ? .18.sh
+                                    ? .06.sh
                                     : .15.sh,
                               ),
                               RichText(
@@ -528,9 +532,9 @@ class SignInScreen extends HookWidget {
                               ),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height <
+                              height: height <
                                       MIN_SUPPORTED_SCREEN_HEIGHT
-                                  ? .18.sh
+                                  ? .24.sh
                                   : .28.sh,
                             ),
                             RichText(
