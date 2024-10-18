@@ -143,9 +143,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                           return null;
                         },
                       ),
-                      SizedBox(
-                        height: .4.sh,
-                      ),
+                     SizedBox(height: MediaQuery.of(context).size.height < 600 ? 20 : .5.sh),
                       Button(
                         busy: _busy,
                         "Send",

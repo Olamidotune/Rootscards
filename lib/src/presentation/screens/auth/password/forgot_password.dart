@@ -69,13 +69,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               CustomSnackbar.show(context, state.errorMessage, isError: true);
             }
             if (state is ForgotPasswordFailedState) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.message)));
+              CustomSnackbar.show(context, state.message, isError: true);
             }
             if (state is ForgotPasswordSuccessState) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.message)),
-              );
+              CustomSnackbar.show(context, state.message, isError: false);
               Navigator.of(context).popAndPushNamed(PasswordRecovery.routeName);
             }
           },

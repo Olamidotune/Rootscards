@@ -160,7 +160,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: height == MIN_SUPPORTED_SCREEN_HEIGHT ? 20.h : .23.sh,
+                      height: height < MIN_SUPPORTED_SCREEN_HEIGHT ? .2.sh : .23.sh,
                     ),
                     GestureDetector(
                       onTap: () {

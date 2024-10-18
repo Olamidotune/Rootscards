@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/config/dimensions.dart';
 
 class SocialMediaButton extends StatelessWidget {
   final String? leading;
@@ -17,27 +18,32 @@ class SocialMediaButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: .06.sh,
-        padding: EdgeInsets.only(left: .01.sh, right: .01.sh, bottom: .01.sh),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(80),
-          border: Border.all(color: Colors.grey.shade400),
-        ),
-        child: ListTile(
-          leading: SvgPicture.asset(
-            "assets/svg/$leading.svg",
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(80),
+            border: Border.all(color: Colors.grey.shade400),
           ),
-          title: Text(
-            title ?? "",
-            textAlign: TextAlign.center,
-          ),
-          titleTextStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 14.sp,
-            color: BLACK,
-          ),
-          onTap: onPressed,
-        ));
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                "assets/svg/$leading.svg",
+              ),
+              AppSpacing.horizontalSpaceHuge,
+              AppSpacing.horizontalSpaceSmall,
+              Text(
+                title ?? "",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14.sp,
+                  color: BLACK,
+                ),
+              ),
+            ],
+          )),
+    );
   }
 }

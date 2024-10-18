@@ -21,19 +21,25 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   AuthServices authServices = AuthServices();
-  bool isAuthenticated = false;
+     bool isLoggedIn = false;
 
   @override
   void initState() {
     super.initState();
+    print('isAuthenticated: $checkSignInStatus');
     checkSignInStatus();
     Timer(Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-            builder: (context) =>
-                isAuthenticated ? SignInScreen() : OnboardingScreen(),
+          PageRouteBuilder<void>(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return isLoggedIn ? SignInScreen() : OnboardingScreen();
+            },
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(opacity: animation, child: child);
+            },
           ),
         );
       }
@@ -86,12 +92,11 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 
-  Future<void> checkSignInStatus() async {
-    String? hasEmail = await HelperFunction.getUserEmailfromSF();
-    setState(() {
-      isAuthenticated = hasEmail != null;
+  void checkSignInStatus() async {
+    await HelperFunction.getUserLoggedInStatus(isLoggedIn).then((value) {
+      isLoggedIn = value?? false;
     });
-    print("hasEmail: $hasEmail");
+      print(isLoggedIn);
   }
- 
+
 }

@@ -59,6 +59,7 @@ class AuthRepository {
   Future<void> _processUserData(Map<String, dynamic> userDetails) async {
     await HelperFunction.saveUserEmailSF(userDetails['email']);
     await HelperFunction.saveSpaceNameSF(userDetails['brand']);
+    await HelperFunction.saveUserLoggedInStatus(true);
     debugPrint("$userDetails");
     debugPrint("$userDetails");
 

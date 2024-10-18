@@ -23,4 +23,5 @@ class AppSpacing {
   static Widget horizontalSpaceSmall = SizedBox(width: 10.w);
   static Widget horizontalSpaceMedium = SizedBox(width: 25.w);
   static Widget horizontalSpaceLarge = SizedBox(width: 40.w);
+  static Widget horizontalSpaceHuge = SizedBox(width: 60.w);
 }
