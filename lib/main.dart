@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +8,9 @@ import 'package:rootscards/blocs/forgot_password/forgot_password_bloc.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
 import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/colors.dart';
+import 'package:rootscards/src/presentation/home/pages/dashboard.dart';
+import 'package:rootscards/src/presentation/home/pages/tabs/home.dart';
+import 'package:rootscards/src/presentation/home/pages/tabs/link.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
 import '../src/presentation/get_started_screen.dart';
 import 'src/presentation/screens/auth/password/forgot_password.dart';
@@ -126,7 +127,9 @@ class MyApp extends StatelessWidget {
                       SpaceScreen.routeName: (context) => SpaceScreen(),
                       PasswordRecovery.routeName: (context) =>
                           PasswordRecovery(),
-                      
+                      Dashboard.routeName: (context) => Dashboard(),
+                      HomeScreen.routeName: (context) => HomeScreen(),
+                      LinkScreen.routeName: (context) => LinkScreen(),
                     },
                   ),
                 )));

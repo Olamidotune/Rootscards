@@ -12,10 +12,10 @@ import 'package:rootscards/blocs/auth/auth_state.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
+import 'package:rootscards/src/presentation/home/pages/dashboard.dart';
 import 'package:rootscards/src/presentation/screens/auth/otp.dart';
 import 'package:rootscards/src/presentation/screens/auth/password/forgot_password.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/sign_up.dart';
-import 'package:rootscards/src/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
 import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
@@ -278,7 +278,7 @@ class SignInScreen extends HookWidget {
                                                     isError: false);
                                                 Navigator.of(context)
                                                     .popAndPushNamed(
-                                                        SpaceScreen.routeName);
+                                                        Dashboard.routeName);
                                               }
                                             } else if (state is AuthFailure) {
                                               CustomSnackbar.show(
