@@ -95,7 +95,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   Text(
                     "Enter Confirmation Code",
                     style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                        fontFamily: "LoveYaLikeASister", fontSize: 28.sp),
+                        fontFamily: "DarkerGrotesque", fontSize: 28.sp),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                   ),

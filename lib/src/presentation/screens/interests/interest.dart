@@ -48,20 +48,23 @@ class _InterestScreenState extends State<InterestScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: 20,
-            vertical: 20.h,
           ),
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             controller: _scrollController,
             child: Column(
               children: [
-                Text(
-                  'Select Topic That Interests You',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontSize: 32.sp,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w300,
-                      ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Select Topic\nThat Interests You',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontFamily: 'DarkerGrotesque',
+                          fontSize: 32.sp,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w300,
+                        ),
+                  ),
                 ),
                 Text(
                   'Choose from a diverse range of interests that align with your passions and preferences.',
@@ -96,20 +99,25 @@ class _InterestScreenState extends State<InterestScreen> {
                     ),
                   ),
                 ),
-                AppSpacing.verticalSpaceMedium,
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Pick your Creative category (Optional)',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: BLACK,
-                          fontWeight: FontWeight.w100,
-                          fontSize: 14.sp,
-                        ),
-                    textAlign: TextAlign.justify,
-                  ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height <
+                          MIN_SUPPORTED_SCREEN_HEIGHT
+                      ? 0.1.sh
+                      : 0.16.sh,
                 ),
-                AppSpacing.verticalSpaceMedium,
+                // Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Text(
+                //     'Pick your Creative category (Optional)',
+                //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                //           color: BLACK,
+                //           fontWeight: FontWeight.w100,
+                //           fontSize: 14.sp,
+                //         ),
+                //     textAlign: TextAlign.justify,
+                //   ),
+                // ),
+                // AppSpacing.verticalSpaceMedium,
                 // SizedBox(
                 //   height: .3.sh,
                 //   child: GridView.builder(

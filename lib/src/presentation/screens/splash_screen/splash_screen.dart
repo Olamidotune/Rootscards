@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   style: context.textTheme.titleLarge?.copyWith(
                       color: Colors.black,
                       fontSize: 30.sp,
-                      fontFamily: "LoveYaLikeASister"),
+                      fontFamily: "DarkerGrotesque"),
                 ),
                 SizedBox(
                   height: .35.sh,

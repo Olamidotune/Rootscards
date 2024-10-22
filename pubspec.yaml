@@ -47,7 +47,6 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   rxdart: ^0.27.7
   fluttertoast: ^8.2.4
-  # pin_code_text_field: ^1.8.0
   device_info_plus: ^9.1.2
   shared_preferences: ^2.2.2
   flutter_screenutil: ^5.9.3
@@ -108,15 +107,15 @@ flutter:
         - asset: assets/fonts/Poppins-Regular.ttf
         - asset: assets/fonts/Poppins-Regular.ttf
           weight: 700
-    - family: LoveYaLikeASister
-      fonts:
-        - asset: assets/fonts/LoveYaLikeASister-Regular.ttf
-        - asset: assets/fonts/LoveYaLikeASister-Regular.ttf
-          weight: 700
     - family: Lato
       fonts:
         - asset: assets/fonts/Lato-Regular.ttf
         - asset: assets/fonts/Lato-Regular.ttf
+          weight: 700
+    - family: DarkerGrotesque
+      fonts:
+        - asset: assets/fonts/DarkerGrotesque-Regular.ttf
+        - asset: assets/fonts/DarkerGrotesque-Regular.ttf
           weight: 700
   #
   # For details regarding fonts from package dependencies,
