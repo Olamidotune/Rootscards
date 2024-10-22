@@ -4,11 +4,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/extensions/build_context.dart';
-import 'package:rootscards/src/shared/widgets/get_started_button.dart';
+import 'package:rootscards/src/shared/widgets/button.dart';
+import 'package:rootscards/src/shared/widgets/custom_text_form_field.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -29,100 +31,104 @@ class _SpaceScreenState extends State<SpaceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.black,
+          ),
+        ),
+        title: Text(
+          'Welcome',
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+        ),
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.all(30.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: 5.h,
-                ),
-                Text(
-                  "Start",
-                  style: context.textTheme.titleLarge?.copyWith(
-                    color: Colors.black,
-                    fontSize: 45,
+                AppSpacing.verticalSpaceHuge,
+                Container(
+                  color: Colors.transparent,
+                  child: Image.asset(
+                    "assets/images/space_avatar.png",
+                    height: 60,
                   ),
                 ),
                 SizedBox(
                   height: 0.5.h,
                 ),
-                const Text(
-                  "We need you to create your space",
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Let's make a",
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontFamily: 'DarkerGrotesque',
+                        color: Colors.black,
+                        fontSize: 36,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    SvgPicture.asset(
+                      "assets/svg/cool.svg",
+                      height: 50,
+                    ),
+                    Text(
+                      "space",
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontFamily: 'DarkerGrotesque',
+                        color: Colors.black,
+                        fontSize: 36,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ],
                 ),
+                AppSpacing.horizontalSpaceMedium,
+                Text(
+                  "Add photos and videos from your gallery, and discover communities based on your interests.",
+                  style: context.textTheme.bodyMedium?.copyWith(
+                    color: GREY,
+                    fontWeight: FontWeight.w100,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                AppSpacing.verticalSpaceMedium,
                 Form(
                   key: _formKey,
-                  child: AutofillGroup(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 0.5.h,
-                        ),
-                        TextFormField(
-                          onFieldSubmitted: (_) => _createSpace(
-                            _spaceNameController.text.trim(),
-                          ),
-                          keyboardType: TextInputType.text,
-                          controller: _spaceNameController,
-                          textInputAction: TextInputAction.go,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "please provide a space name";
-                            }
-                            return null;
-                          },
-                          style: const TextStyle(),
-                          autofillHints: const [AutofillHints.email],
-                          decoration: InputDecoration(
-                            hintText: "enter your space name",
-                            hintStyle: const TextStyle(color: Colors.black26),
-                            border: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(7),
-                              ),
-                            ),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(
-                                  7,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height <=
-                                  MIN_SUPPORTED_SCREEN_HEIGHT
-                              ? MediaQuery.of(context).size.height * 0.45
-                              : MediaQuery.of(context).size.height * 0.56,
-                          // height: MediaQuery.of(context).size.height * 0.56,
-                        ),
-                        GetStartedButton(
-                          busy: _busy,
-                          onTap: () {
-                            if (_formKey.currentState!.validate()) {
-                              _createSpace(_spaceNameController.text.trim());
-                              debugPrint(_spaceNameController.text.trim());
-                            }
-                          },
-                        ),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height <=
-                                    MIN_SUPPORTED_SCREEN_HEIGHT
-                                ? MediaQuery.of(context).size.height * 0.03
-                                : MediaQuery.of(context).size.height / 95),
-                        const Text(
-                          "rootcards.com",
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        )
-                      ],
-                    ),
+                  child: CustomTextField(
+                    textInputAction: TextInputAction.go,
+                    hintText: 'Enter your space name',
+                    textInputType: TextInputType.text,
+                    validator: (p0) {
+                      if (p0!.isEmpty) {
+                        return 'Space name cannot be empty';
+                      }
+                      return null;
+                    },
                   ),
                 ),
+                AppSpacing.verticalSpaceMedium,
+                Button('Create Space', pill: true, busy: _busy, onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    _createSpace(
+                      _spaceNameController.text.trim(),
+                    );
+                  }
+                }),
               ],
             ),
           ),
