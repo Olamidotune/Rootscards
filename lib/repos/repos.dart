@@ -209,7 +209,6 @@ class AuthRepository {
   }
 
   ////RESET PASSWORD////
-
   Future<bool> resetPassword(String email) async {
     final url = Uri.parse('$apiBaseUrl/user/forgotPassword');
     final String basicAuth =
@@ -247,6 +246,40 @@ class AuthRepository {
       }
     } catch (e) {
       return false;
+    }
+  }
+
+  ///CREATE SPACES///
+  
+  Future<Map<String, dynamic>> createSpace(String spaceName) async {
+    final url = Uri.parse('$apiBaseUrl/space');
+    final authid = await HelperFunction.getAuthIDfromSF();
+    final body = jsonEncode({
+      'spaceName': spaceName,
+    });
+
+    final headers = {
+      HttpHeaders.authorizationHeader: 'Bearer $authid',
+      HttpHeaders.contentTypeHeader: 'application/json',
+    };
+
+    try {
+      final response = await http
+          .post(
+            url,
+            body: body,
+            headers: headers,
+          )
+          .timeout(const Duration(seconds: 30));
+      final responseData = jsonDecode(response.body);
+
+      if (responseData['status'] == '200') {
+        return responseData;
+      } else {
+        throw Exception('Failed to create space');
+      }
+    } catch (e) {
+      throw Exception('Failed to create space: $e');
     }
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
+import 'package:rootscards/src/presentation/screens/interests/models/creative_categories.dart';
 import 'package:rootscards/src/presentation/screens/interests/models/interest_list.dart';
 import 'package:rootscards/src/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
@@ -104,42 +105,39 @@ class _InterestScreenState extends State<InterestScreen> {
                       ? 0.01.sh
                       : 0.02.sh,
                 ),
-                // Align(
-                //   alignment: Alignment.centerLeft,
-                //   child: Text(
-                //     'Pick your Creative category (Optional)',
-                //     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                //           color: BLACK,
-                //           fontWeight: FontWeight.w100,
-                //           fontSize: 14.sp,
-                //         ),
-                //     textAlign: TextAlign.justify,
-                //   ),
-                // ),
-                // AppSpacing.verticalSpaceMedium,
-                // SizedBox(
-                //   height: .3.sh,
-                //   child: GridView.builder(
-                //     controller: _scrollController,
-                //     shrinkWrap: true,
-                //     itemCount: creativeCategories.length,
-                //     itemBuilder: (context, index) {
-                //       final creativeCategory = creativeCategories[index];
-                //       return CreativeCategoriesWidget(
-                //         onTap: () => _toggleCreativeCat(creativeCategory),
-                //         text: creativeCategory,
-                //         isSelected: selectedCreativeCategories
-                //             .contains(creativeCategory),
-                //       );
-                //     },
-                //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                //       crossAxisCount: 3,
-                //       childAspectRatio: 2,
-                //       mainAxisSpacing: 7.h,
-                //       crossAxisSpacing: 7.w,
-                //     ),
-                //   ),
-                // ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Pick your Creative category (Optional)',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: BLACK,
+                          fontWeight: FontWeight.w100,
+                          fontSize: 16.sp,
+                        ),
+                    textAlign: TextAlign.justify,
+                  ),
+                ),
+                AppSpacing.verticalSpaceMedium,
+                GridView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: creativeCategories.length,
+                  itemBuilder: (context, index) {
+                    final creativeCategory = creativeCategories[index];
+                    return CreativeCategoriesWidget(
+                      onTap: () => _toggleCreativeCat(creativeCategory),
+                      text: creativeCategory,
+                      isSelected:
+                          selectedCreativeCategories.contains(creativeCategory),
+                    );
+                  },
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 2,
+                    mainAxisSpacing: 7.h,
+                    crossAxisSpacing: 7.w,
+                  ),
+                ),
                 AppSpacing.verticalSpaceMedium,
                 Button(
                   'Continue',
@@ -170,13 +168,14 @@ class _InterestScreenState extends State<InterestScreen> {
                     });
                   },
                 ),
-
                 AppSpacing.verticalSpaceSmall,
                 GreyButton(
                   'Skip',
                   pill: true,
                   color: GREY,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(SpaceScreen.routeName);
+                  },
                 ),
               ],
             ),
