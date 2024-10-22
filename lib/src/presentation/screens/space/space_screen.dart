@@ -110,6 +110,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
                 Form(
                   key: _formKey,
                   child: CustomTextField(
+                    controller: _spaceNameController,
                     textInputAction: TextInputAction.go,
                     hintText: 'Enter your space name',
                     textInputType: TextInputType.text,
@@ -123,11 +124,11 @@ class _SpaceScreenState extends State<SpaceScreen> {
                 ),
                 AppSpacing.verticalSpaceMedium,
                 Button('Create Space', pill: true, busy: _busy, onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _createSpace(
-                      _spaceNameController.text.trim(),
-                    );
-                  }
+                  // if (_formKey.currentState!.validate()) {
+                  //   _createSpace(
+                  //     _spaceNameController.text.trim(),
+                  //   );
+                  // }
                 }),
               ],
             ),
