@@ -1,0 +1,17 @@
+const List<String> creativeCategories = [
+  'Editor',
+  'Food Photographer',
+  'Event Photographer',
+  'Researcher',
+  'Potrait Photographer',
+  'Sport Drafting',
+  'Tailor',
+  'Draft Making',
+  'Fashion Illustrator',
+  'Model',
+  'Fashion Designer',
+  'Pattern Drafting',
+  'Shoes',
+  'Jewelries',
+  'Hair Care',
+];

@@ -71,9 +71,10 @@ class MyApp extends StatelessWidget {
                     theme: ThemeData(
                       visualDensity: VisualDensity.adaptivePlatformDensity,
                       fontFamily: 'Lato',
-                      // scaffoldBackgroundColor: BLACK,
+                      scaffoldBackgroundColor: Colors.white,
                       useMaterial3: true,
                       textTheme: TextTheme(
+
                         bodyMedium: TextStyle(
                           fontFamily: 'Lato',
                           fontSize: 14.sp,
@@ -110,7 +111,7 @@ class MyApp extends StatelessWidget {
                     //   ),
                     //   scaffoldBackgroundColor: Colors.white,
                     // ),
-                    home: InterestScreen(),
+                    home: SplashScreen(),
                     routes: {
                       SplashScreen.routeName: (context) => SplashScreen(),
                       OnboardingScreen.routeName: (context) =>
