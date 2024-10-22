@@ -5,7 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/src/presentation/screens/interests/models/interest_list.dart';
+import 'package:rootscards/src/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
+import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
 import 'package:rootscards/src/shared/widgets/grey_button.dart';
 
 class InterestScreen extends StatefulWidget {
@@ -76,34 +78,31 @@ class _InterestScreenState extends State<InterestScreen> {
                   textAlign: TextAlign.justify,
                 ),
                 AppSpacing.verticalSpaceMedium,
-                SizedBox(
-                  height: .3.sh,
-                  child: GridView.builder(
-                    controller: _scrollController,
-                    shrinkWrap: true,
-                    itemCount: interestList.length,
-                    itemBuilder: (context, index) {
-                      final interest = interestList[index];
-                      return InterestsWidget(
-                        onTap: () => _toggleInterest(interest),
-                        text: interest['name'],
-                        emoji: interest['emoji'],
-                        isSelected: selectedInterests.contains(interest),
-                      );
-                    },
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      childAspectRatio: 2,
-                      mainAxisSpacing: 7.h,
-                      crossAxisSpacing: 7.w,
-                    ),
+                GridView.builder(
+                  controller: _scrollController,
+                  shrinkWrap: true,
+                  itemCount: interestList.length,
+                  itemBuilder: (context, index) {
+                    final interest = interestList[index];
+                    return InterestsWidget(
+                      onTap: () => _toggleInterest(interest),
+                      text: interest['name'],
+                      emoji: interest['emoji'],
+                      isSelected: selectedInterests.contains(interest),
+                    );
+                  },
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 2,
+                    mainAxisSpacing: 7.h,
+                    crossAxisSpacing: 7.w,
                   ),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height <
                           MIN_SUPPORTED_SCREEN_HEIGHT
-                      ? 0.1.sh
-                      : 0.16.sh,
+                      ? 0.01.sh
+                      : 0.02.sh,
                 ),
                 // Align(
                 //   alignment: Alignment.centerLeft,
@@ -142,30 +141,43 @@ class _InterestScreenState extends State<InterestScreen> {
                 //   ),
                 // ),
                 AppSpacing.verticalSpaceMedium,
-                Button('Continue', busy: busy, pill: true, onPressed: () {
-                  setState(() {
-                    busy = true;
-                  });
-                  Timer(Duration(seconds: 3), () {
-                    _saveSelectedInterests();
-                    Navigator.of(context).pushNamed(InterestScreen.routeName);
+                Button(
+                  'Continue',
+                  busy: busy,
+                  pill: true,
+                  onPressed: () {
+                    if (selectedInterests.isEmpty) {
+                      CustomSnackbar.show(
+                        context,
+                        'Please select at least one interest',
+                        isError: true,
+                      );
+                      return;
+                    }
                     setState(() {
-                      busy = false;
+                      busy = true;
                     });
-                  });
-                }),
+                    Future.delayed(const Duration(seconds: 2), () {
+                      setState(() {
+                        busy = false;
+                      });
+                      CustomSnackbar.show(
+                        context,
+                        'Interests saved successfully',
+                        isError: false,
+                      );
+                      Navigator.of(context).pushNamed(SpaceScreen.routeName);
+                    });
+                  },
+                ),
+
                 AppSpacing.verticalSpaceSmall,
                 GreyButton(
                   'Skip',
                   pill: true,
                   color: GREY,
-                  onPressed: () {
-                    Timer(Duration(seconds: 3), () {
-                      Navigator.of(context).pushNamed(InterestScreen.routeName);
-                    });
-                  },
+                  onPressed: () {},
                 ),
-                AppSpacing.verticalSpaceMedium,
               ],
             ),
           ),

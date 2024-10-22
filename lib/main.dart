@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
                     //   ),
                     //   scaffoldBackgroundColor: Colors.white,
                     // ),
-                    home: SplashScreen(),
+                    home: InterestScreen(),
                     routes: {
                       SplashScreen.routeName: (context) => SplashScreen(),
                       OnboardingScreen.routeName: (context) =>
