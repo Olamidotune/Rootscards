@@ -72,7 +72,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                       Text(
                         "Password Recovery",
                         style: context.textTheme.headlineLarge!.copyWith(
-                            fontFamily: "LoveYaLikeASister", fontSize: 32.sp),
+                            fontFamily: "DarkerGrotesque", fontSize: 32.sp),
                         textAlign: TextAlign.center,
                         maxLines: 1,
                       ),

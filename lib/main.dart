@@ -11,6 +11,7 @@ import 'package:rootscards/blocs/otp/otp_bloc.dart';
 import 'package:rootscards/blocs/sign_up/bloc/sign_up_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/src/presentation/screens/auth/sign_up/second_sign_up_screen.dart';
+import 'package:rootscards/src/presentation/screens/interests/interest.dart';
 import '../src/presentation/get_started_screen.dart';
 import 'src/presentation/screens/auth/password/forgot_password.dart';
 import 'src/presentation/screens/auth/password/password_recovery.dart';
@@ -70,9 +71,10 @@ class MyApp extends StatelessWidget {
                     theme: ThemeData(
                       visualDensity: VisualDensity.adaptivePlatformDensity,
                       fontFamily: 'Lato',
-                      // scaffoldBackgroundColor: BLACK,
+                      scaffoldBackgroundColor: Colors.white,
                       useMaterial3: true,
                       textTheme: TextTheme(
+
                         bodyMedium: TextStyle(
                           fontFamily: 'Lato',
                           fontSize: 14.sp,
@@ -109,7 +111,7 @@ class MyApp extends StatelessWidget {
                     //   ),
                     //   scaffoldBackgroundColor: Colors.white,
                     // ),
-                    home: SplashScreen(),
+                    home: InterestScreen(),
                     routes: {
                       SplashScreen.routeName: (context) => SplashScreen(),
                       OnboardingScreen.routeName: (context) =>
@@ -126,6 +128,7 @@ class MyApp extends StatelessWidget {
                       SpaceScreen.routeName: (context) => SpaceScreen(),
                       PasswordRecovery.routeName: (context) =>
                           PasswordRecovery(),
+                      InterestScreen.routeName: (context) => InterestScreen(),
                       
                     },
                   ),

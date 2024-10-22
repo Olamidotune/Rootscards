@@ -161,7 +161,7 @@ class _CarouselImage extends StatelessWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              fontFamily: "LoveYaLikeASister",
+              fontFamily: "DarkerGrotesque",
               fontSize: 30.sp,
             ),
             textAlign: TextAlign.center,

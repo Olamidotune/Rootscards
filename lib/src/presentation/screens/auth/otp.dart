@@ -1,13 +1,14 @@
 // ignore_for_file: prefer_const_constructors, use_build_context_synchronously
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:rootscards/blocs/otp/otp_bloc.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
 import 'package:rootscards/helper/helper_function.dart';
+import 'package:rootscards/src/presentation/screens/interests/interest.dart';
 import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
-import '../space/space_screen.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,6 +38,7 @@ class _OtpScreenState extends State<OtpScreen> {
         MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top;
     return Scaffold(
       appBar: AppBar(
+          backgroundColor: Colors.white,
           centerTitle: true,
           leading: IconButton(
             onPressed: () => Navigator.pop(context),
@@ -65,16 +67,15 @@ class _OtpScreenState extends State<OtpScreen> {
             setState(() => _busy = false);
           }
           if (state is OtpFailedState) {
-            
-          CustomSnackbar.show(context, state.message, isError: true);
+            CustomSnackbar.show(context, state.message, isError: true);
           }
           if (state is OtpErrorState) {
             CustomSnackbar.show(context, state.errorMessage, isError: true);
           }
 
           if (state is DeviceAuthenticationSuccess) {
-           CustomSnackbar.show(context, "OTP Verified", isError: false);
-            Navigator.of(context).popAndPushNamed(SpaceScreen.routeName);
+            CustomSnackbar.show(context, "OTP Verified", isError: false);
+            Navigator.of(context).popAndPushNamed(InterestScreen.routeName);
           }
         },
         child: SingleChildScrollView(
@@ -94,7 +95,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   Text(
                     "Enter Confirmation Code",
                     style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                        fontFamily: "LoveYaLikeASister", fontSize: 28.sp),
+                        fontFamily: "DarkerGrotesque", fontSize: 28.sp),
                     textAlign: TextAlign.center,
                     maxLines: 1,
                   ),
@@ -111,35 +112,40 @@ class _OtpScreenState extends State<OtpScreen> {
                   AppSpacing.verticalSpaceHuge,
                   Center(
                     child: PinCodeTextField(
-                      highlightPinBoxColor: BLACK,
-                      isCupertino: true,
-                      keyboardType: TextInputType.number,
-                      hideCharacter: false,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      appContext: context,
+                      length: 4,
                       controller: _otpController,
-                      autofocus: false,
-                      pinBoxHeight: 50.h,
-                      pinBoxWidth: 70.w,
-                      maxLength: 4,
-                      onDone: (String value) {
+                      dialogConfig: DialogConfig(
+                        dialogTitle: 'Enter OTP',
+                        dialogContent: 'Enter the code sent to your email',
+                      ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                      ],
+                      animationType: AnimationType.fade,
+                      onCompleted: (otpValue) {
                         if (!_busy) {
                           context.read<OtpAuthBloc>().add(
                               DeviceAuthenticationRequested(
                                   _otpController.text));
                         }
-                        debugPrint('Entered OTP: $value');
+                        debugPrint('Entered OTP: $otpValue');
                       },
-                      pinTextStyle: TextStyle(fontSize: 20),
-                      pinBoxDecoration: (borderColor, pinBoxColor,
-                          {double borderWidth = 0, double? radius}) {
-                        return BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                            width: borderWidth,
-                          ),
-                          color: Colors.transparent,
-                        );
-                      },
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius:
+                            BorderRadius.all(Radius.elliptical(50, 60)),
+                        fieldHeight: 50,
+                        fieldWidth: 70,
+                        activeFillColor: BLACK,
+                        inactiveFillColor: GREY.withOpacity(0.1),
+                        selectedFillColor: BLACK,
+                        activeColor: BLACK,
+                        inactiveColor: GREY,
+                        selectedColor: BLACK,
+                      ),
                     ),
                   ),
                   AppSpacing.verticalSpaceMedium,
@@ -188,7 +194,7 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   _getEmail() async {
-   String? savedEmail = await HelperFunction.getUserEmailfromSF();
+    String? savedEmail = await HelperFunction.getUserEmailfromSF();
     setState(() {
       email = savedEmail;
     });
