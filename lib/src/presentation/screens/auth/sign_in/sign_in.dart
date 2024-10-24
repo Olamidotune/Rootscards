@@ -196,6 +196,19 @@ class SignInScreen extends HookWidget {
                                         hintText: "Password",
                                         textInputType: TextInputType.text,
                                         obscureText: obscurePassword.value,
+                                        onFieldSubmitted: (value) {
+                                          if (formKey.currentState!.validate()) {
+                                            if (isRemembered.value) {
+                                              HelperFunction.saveUserEmailSF(
+                                                  emailController.text);
+                                            }
+                                            busy.value = !busy.value;
+                                            context.read<AuthBloc>().add(
+                                                LoginRequested(
+                                                    emailController.value.text,
+                                                    passwordController.value.text));
+                                          }
+                                        },
                                         validator: (value) {
                                           if (value!.isEmpty) {
                                             return "Password cannot be empty";
@@ -215,6 +228,7 @@ class SignInScreen extends HookWidget {
                                               : Icon(
                                                   Icons.visibility_off,
                                                 ),
+                                                
                                         ),
                                       ),
                                       AppSpacing.verticalSpaceSmall,
