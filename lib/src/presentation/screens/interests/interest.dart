@@ -4,12 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/config/colors.dart';
 import 'package:rootscards/config/dimensions.dart';
-import 'package:rootscards/src/presentation/screens/interests/models/creative_categories.dart';
 import 'package:rootscards/src/presentation/screens/interests/models/interest_list.dart';
 import 'package:rootscards/src/presentation/screens/space/space_screen.dart';
 import 'package:rootscards/src/shared/widgets/button.dart';
 import 'package:rootscards/src/shared/widgets/custom_snackbar.dart';
-import 'package:rootscards/src/shared/widgets/grey_button.dart';
 
 class InterestScreen extends StatefulWidget {
   const InterestScreen({super.key});
@@ -20,10 +18,12 @@ class InterestScreen extends StatefulWidget {
   State<InterestScreen> createState() => _InterestScreenState();
 }
 
-List<Map<String, dynamic>> selectedInterests = [];
-List<String> selectedCreativeCategories = [];
 ScrollController _scrollController = ScrollController();
 bool busy = false;
+List<dynamic> interests = interest['interests'];
+Set<int> selectedValues = {};
+List<String> selectedCreativeCategories = [];
+int? selectedInterestIndex;
 
 class _InterestScreenState extends State<InterestScreen> {
   @override
@@ -32,13 +32,6 @@ class _InterestScreenState extends State<InterestScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
         title: Text(
           'Interests',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -82,14 +75,14 @@ class _InterestScreenState extends State<InterestScreen> {
                 GridView.builder(
                   controller: _scrollController,
                   shrinkWrap: true,
-                  itemCount: interestList.length,
+                  itemCount: interests.length,
                   itemBuilder: (context, index) {
-                    final interest = interestList[index];
+                    final interestItem = interests[index];
                     return InterestsWidget(
-                      onTap: () => _toggleInterest(interest),
-                      text: interest['name'],
-                      emoji: interest['emoji'],
-                      isSelected: selectedInterests.contains(interest),
+                      onTap: () => _toggleSelectedValue(index),
+                      text: interestItem['name'],
+                      emoji: interestItem['emoji'],
+                      isSelected: selectedValues.contains(index),
                     );
                   },
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -99,52 +92,48 @@ class _InterestScreenState extends State<InterestScreen> {
                     crossAxisSpacing: 7.w,
                   ),
                 ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height <
-                          MIN_SUPPORTED_SCREEN_HEIGHT
-                      ? 0.01.sh
-                      : 0.02.sh,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Pick your Creative category (Optional)',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: BLACK,
-                          fontWeight: FontWeight.w100,
-                          fontSize: 16.sp,
-                        ),
-                    textAlign: TextAlign.justify,
+                if (selectedValues.isNotEmpty) ...[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Pick your Creative category (Optional)',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: BLACK,
+                            fontWeight: FontWeight.w100,
+                            fontSize: 16.sp,
+                          ),
+                      textAlign: TextAlign.justify,
+                    ),
                   ),
-                ),
-                AppSpacing.verticalSpaceMedium,
-                GridView.builder(
-                  controller: _scrollController,
-                  shrinkWrap: true,
-                  itemCount: creativeCategories.length,
-                  itemBuilder: (context, index) {
-                    final creativeCategory = creativeCategories[index];
-                    return CreativeCategoriesWidget(
-                      onTap: () => _toggleCreativeCat(creativeCategory),
-                      text: creativeCategory,
-                      isSelected:
-                          selectedCreativeCategories.contains(creativeCategory),
-                    );
-                  },
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 2,
-                    mainAxisSpacing: 7.h,
-                    crossAxisSpacing: 7.w,
+                  AppSpacing.verticalSpaceMedium,
+                  GridView.builder(
+                    controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: getSelectedCategories().length,
+                    itemBuilder: (context, index) {
+                      final creativeCategory = getSelectedCategories()[index];
+                      return CreativeCategoriesWidget(
+                        onTap: () => _toggleCreativeCat(creativeCategory),
+                        text: creativeCategory,
+                        isSelected: selectedCreativeCategories
+                            .contains(creativeCategory),
+                      );
+                    },
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      childAspectRatio: 2,
+                      mainAxisSpacing: 7.h,
+                      crossAxisSpacing: 7.w,
+                    ),
                   ),
-                ),
+                ],
                 AppSpacing.verticalSpaceMedium,
                 Button(
                   'Continue',
                   busy: busy,
                   pill: true,
                   onPressed: () {
-                    if (selectedInterests.isEmpty) {
+                    if (selectedValues.isEmpty) {
                       CustomSnackbar.show(
                         context,
                         'Please select at least one interest',
@@ -169,14 +158,6 @@ class _InterestScreenState extends State<InterestScreen> {
                   },
                 ),
                 AppSpacing.verticalSpaceSmall,
-                GreyButton(
-                  'Skip',
-                  pill: true,
-                  color: GREY,
-                  onPressed: () {
-                    Navigator.of(context).pushNamed(SpaceScreen.routeName);
-                  },
-                ),
               ],
             ),
           ),
@@ -185,18 +166,25 @@ class _InterestScreenState extends State<InterestScreen> {
     );
   }
 
-  void _toggleInterest(Map<String, dynamic> interest) {
+  // Toggle selection for interests
+  void _toggleSelectedValue(int index) {
     setState(() {
-      if (selectedInterests.contains(interest)) {
-        selectedInterests.remove(interest);
+      if (selectedValues.contains(index)) {
+        selectedValues.remove(index);
       } else {
-        selectedInterests.add(interest);
+        selectedValues.add(index);
       }
     });
-    _saveSelectedInterests();
   }
 
-  void _saveSelectedInterests() {}
+  // Gather unique categories from all selected interests
+  List<String> getSelectedCategories() {
+    final categories = <String>{}; // Using a Set to avoid duplicates
+    for (var index in selectedValues) {
+      categories.addAll(interests[index]['categories']);
+    }
+    return categories.toList();
+  }
 
   _toggleCreativeCat(String creativeCategory) {
     setState(() {
@@ -224,45 +212,35 @@ class CreativeCategoriesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Container(
-              margin: EdgeInsets.all(2),
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              width: .25.sw,
-              height: .05.sh,
-              decoration: BoxDecoration(
-                color: isSelected ? Colors.grey : Colors.transparent,
-                borderRadius: BorderRadius.circular(30),
-                border:
-                    Border.all(color: Colors.grey.withOpacity(.4), width: 1),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  onTap();
-                  print(isSelected);
-                },
-                child: Center(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.bold,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
+    return GestureDetector(
+      onTap: () {
+        onTap();
+        print(isSelected);
+      },
+      child: Container(
+        margin: EdgeInsets.all(7),
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        width: .25.sw,
+        height: .05.sh,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.grey : Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.grey.withOpacity(.4), width: 1),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.bold,
+              overflow: TextOverflow.ellipsis,
             ),
-          ],
-        )
-      ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -282,116 +260,51 @@ class InterestsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return GestureDetector(
+      onTap: () {
+        onTap();
+        print(isSelected);
+      },
+      child: Container(
+        margin: EdgeInsets.all(7),
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+        ),
+        width: .25.sw,
+        height: .05.sh,
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.grey.withOpacity(.7) : Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          border: Border.all(color: Colors.grey.withOpacity(.4), width: 1),
+        ),
+        child: Row(
           children: [
-            Container(
-              margin: EdgeInsets.all(2),
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
+            Expanded(
+              flex: 5,
+              child: Text(
+                emoji,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              width: .25.sw,
-              height: .05.sh,
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? Colors.grey.withOpacity(.7)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(30),
-                border:
-                    Border.all(color: Colors.grey.withOpacity(.4), width: 1),
-              ),
-              child: GestureDetector(
-                onTap: () {
-                  onTap();
-                  print(isSelected);
-                },
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 5,
-                      child: Text(
-                        emoji,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 16,
-                      child: Text(
-                        text,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ),
-                  ],
+            ),
+            Expanded(
+              flex: 16,
+              child: Text(
+                text,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.bold,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
           ],
-        )
-      ],
+        ),
+      ),
     );
   }
 }
-
-
-
-
-
-
-
-// class InterestPickerScreen extends StatefulWidget {
-//   @override
-//   _InterestPickerScreenState createState() => _InterestPickerScreenState();
-// }
-
-// class _InterestPickerScreenState extends State<InterestPickerScreen> {
-//   List<Map<String, dynamic>> selectedInterests = [];
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadSelectedInterests();
-//   }
-
-//   Future<void> _loadSelectedInterests() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     List<String> savedInterests = prefs.getStringList('selectedInterests') ?? [];
-
-//     setState(() {
-//       selectedInterests = savedInterests
-//           .map((interest) => interestList.firstWhere((item) => item['name'] == interest))
-//           .toList();
-//     });
-//   }
-
-//   void _toggleInterest(Map<String, dynamic> interest) {
-//     setState(() {
-//       if (selectedInterests.contains(interest)) {
-//         selectedInterests.remove(interest);
-//       } else {
-//         selectedInterests.add(interest);
-//       }
-//     });
-//     _saveSelectedInterests();
-//   }
-
-//   Future<void> _saveSelectedInterests() async {
-//     SharedPreferences prefs = await SharedPreferences.getInstance();
-//     await prefs.setStringList(
-//       'selectedInterests',
-//       selectedInterests.map((interest) => interest['name']).toList(),
-//     );
-//   }
-
- 
-// }

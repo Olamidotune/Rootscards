@@ -34,13 +34,6 @@ class _SpaceScreenState extends State<SpaceScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.black,
-          ),
-        ),
         title: Text(
           'Welcome',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -73,7 +66,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "Let's make a",
+                      "Let's make a ",
                       style: context.textTheme.bodyMedium?.copyWith(
                         fontFamily: 'DarkerGrotesque',
                         color: Colors.black,
@@ -86,7 +79,7 @@ class _SpaceScreenState extends State<SpaceScreen> {
                       height: 50,
                     ),
                     Text(
-                      "space",
+                      " space",
                       style: context.textTheme.bodyMedium?.copyWith(
                         fontFamily: 'DarkerGrotesque',
                         color: Colors.black,

@@ -27,7 +27,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   static const _carouselTitles = <String>[
     "A creative handy tool.",
-    "A creator's handy tool.",
+    // "A creator's handy tool.",
     "Stand Out!",
   ];
 
