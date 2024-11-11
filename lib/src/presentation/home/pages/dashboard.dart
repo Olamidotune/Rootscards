@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:rootscards/config/colors.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rootscards/src/presentation/home/pages/tabs/home.dart';
 import 'package:rootscards/src/presentation/home/pages/tabs/link.dart';
 
@@ -79,7 +78,7 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
           'assets/svg/home.svg',
         ),
       ),
-      title: 'Home',
+      title: 'home',
       textStyle: textStyle,
       activeColorPrimary: activeColorPrimary.withOpacity(0.9),
       activeColorSecondary: activeColorSecondary,
@@ -98,7 +97,7 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
       icon: SvgPicture.asset(
         'assets/svg/screen.svg',
       ),
-      title: 'Home',
+      title: 'home',
       activeColorPrimary: activeColorPrimary,
       inactiveColorPrimary: inactiveColorPrimary,
       activeColorSecondary: activeColorSecondary,
@@ -122,54 +121,4 @@ List<PersistentBottomNavBarItem> _navBarsItems() {
       activeColorSecondary: activeColorSecondary,
     ),
   ];
-}
-
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({
-    super.key,
-    this.title,
-    this.profileImage,
-  });
-
-  final String? title;
-  final String? profileImage;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      centerTitle: false,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 15.0),
-        child: CircleAvatar(
-            radius: 20.w,
-            backgroundColor: GREY,
-            child: profileImage != null
-                ? SvgPicture.asset(
-                    profileImage!,
-                  )
-                : Text(
-                    title!.substring(0, 1).toUpperCase(),
-                  )),
-      ),
-      title: Text(title ?? '',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.black,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.bold,
-              )),
-      actions: [
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications),
-        ),
-        IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications),
-        ),
-      ],
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

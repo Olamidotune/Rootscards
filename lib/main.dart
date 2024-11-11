@@ -71,7 +71,12 @@ class MyApp extends StatelessWidget {
                     theme: ThemeData(
                       visualDensity: VisualDensity.adaptivePlatformDensity,
                       fontFamily: 'Lato',
-                      // scaffoldBackgroundColor: BLACK,
+                      scaffoldBackgroundColor: Colors.white,
+                      appBarTheme: AppBarTheme(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        iconTheme: IconThemeData(color: Colors.black),
+                      ),
                       useMaterial3: true,
                       textTheme: TextTheme(
                         bodyMedium: TextStyle(
