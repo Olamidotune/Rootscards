@@ -397,9 +397,8 @@ class SignInScreen extends HookWidget {
                                   ],
                                 ),
                               ),
-                             SizedBox(
-                                height: height <
-                                        MIN_SUPPORTED_SCREEN_HEIGHT
+                              SizedBox(
+                                height: height < MIN_SUPPORTED_SCREEN_HEIGHT
                                     ? .06.sh
                                     : .15.sh,
                               ),
@@ -532,8 +531,7 @@ class SignInScreen extends HookWidget {
                               ),
                             ),
                             SizedBox(
-                              height: height <
-                                      MIN_SUPPORTED_SCREEN_HEIGHT
+                              height: height < MIN_SUPPORTED_SCREEN_HEIGHT
                                   ? .24.sh
                                   : .28.sh,
                             ),
